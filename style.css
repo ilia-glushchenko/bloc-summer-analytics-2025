@@ -1,0 +1,234 @@
+/* style.css */
+
+/* Base spacing and layout */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    color: #2d3748;
+}
+
+.main .block-container {
+    padding-top: 1rem; /* Reduced top padding */
+    padding-bottom: 1.5rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    max-width: 95%; /* Slightly wider */
+}
+
+/* App Header - Modernized & Compact */
+.app-header {
+    background-color: transparent;
+    padding: 0.5rem 0.75rem; /* Reduced padding */
+    margin-bottom: 1rem; /* Reduced margin */
+    display: flex;
+    align-items: center;
+    border-bottom: 2px solid #edf2f7;
+}
+
+.app-header h1 {
+    color: #5a67d8; /* Modern purple color matching the app theme */
+    margin: 0;
+    font-size: 1.4em; /* Smaller font size */
+    font-weight: 600;
+    letter-spacing: -0.01em; /* Subtle letter spacing adjustment */
+    display: inline-flex;
+    align-items: center;
+}
+
+.app-header h1::before {
+    content: "🧗‍♂️";
+    margin-right: 0.5rem;
+    font-size: 1.2em;
+}
+
+/* Section Containers - Made less visually prominent */
+.section-container {
+    background-color: transparent; /* Removed white background */
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid #edf2f7; /* Lighter subtle border */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+/* Section Header Styling */
+h4, h5 {
+    color: #5a67d8; /* Modern purple color */
+    margin-top: 0.5rem; /* Add some space above headers */
+    margin-bottom: 1rem;
+    padding-bottom: 0.3rem;
+}
+
+/* Specific class to reduce margin below Rankings sub-tab main header */
+h4.rankings-main-header {
+    margin-bottom: 0.5rem; /* Reduce margin specifically for this header */
+}
+
+/* Column/Sub Headers */
+.column-header {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #4a5568;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.25rem;
+}
+
+/* Styling for st.metric */
+div[data-testid="stMetric"] {
+    background-color: transparent;
+    border: 1px solid #edf2f7;
+    border-radius: 5px;
+    padding: 10px 15px;
+    text-align: center;
+}
+
+div[data-testid="stMetricLabel"] {
+    font-size: 0.75rem;
+    color: #718096;
+    text-transform: uppercase;
+}
+
+/* Info Bar Styling */
+.info-bar {
+    background-color: #f7fafc; /* Very light background */
+    color: #5a67d8; /* Modern purple */
+    padding: 0.8rem 1rem;
+    border-radius: 0.3rem;
+    margin-bottom: 1rem;
+    border-left: 5px solid #5a67d8; /* Purple accent line */
+    font-size: 0.95em;
+}
+
+.info-bar.success-info {
+    background-color: #f0fff4; /* Light mint */
+    color: #38a169; /* Green */
+    border-left-color: #38a169; /* Green accent */
+}
+
+.info-bar.warning-info {
+    background-color: #fffaf0; /* Light peach */
+    color: #dd6b20; /* Orange */
+    border-left-color: #dd6b20; /* Orange accent */
+}
+
+/* Custom Styling for Specific Elements */
+.new-gym-highlight {
+    color: #5a67d8;
+    font-weight: bold;
+}
+
+/* Table styling improvements */
+div[data-testid="stDataFrame"] table {
+    width: 100%;
+}
+
+div[data-testid="stDataFrame"] th {
+    background-color: #f7fafc; /* Very light background */
+    font-weight: 600;
+    text-align: center; /* Center align headers */
+    padding: 10px 8px;
+}
+
+div[data-testid="stDataFrame"] td {
+    text-align: center; /* Center align data cells */
+    vertical-align: middle;
+    padding: 8px;
+}
+
+/* Specific alignment for text columns if needed */
+div[data-testid="stDataFrame"] td[data-testid*="-Climber"] {
+    text-align: left; /* Left align climber names */
+}
+
+/* Remove overly complex/fragile CSS for tables */
+
+/* Ensure Plotly charts fit containers */
+div[data-testid="stPlotlyChart"] {
+    width: 100%;
+}
+
+/* Tab Styling */
+.stTabs [data-baseweb="tab-list"] {
+    gap: 12px; /* Space between tab buttons */
+}
+
+.stTabs [data-baseweb="tab"] {
+    height: 44px;
+    background-color: transparent; /* Removed gray background */
+    border-radius: 4px 4px 0 0;
+    padding: 0px 20px;
+    margin-bottom: 0; /* Override default */
+    transition: all 0.2s ease;
+    border-bottom: 2px solid transparent;
+}
+
+.stTabs [data-baseweb="tab"]:hover {
+    background-color: #f7fafc; /* Very light background on hover */
+    color: #5a67d8; /* Purple on hover */
+}
+
+.stTabs [aria-selected="true"] {
+    background-color: transparent; /* Removed blue background */
+    color: #5a67d8; /* Purple for selected tab */
+    border-bottom: 2px solid #5a67d8; /* Underline for selected tab */
+}
+
+.stTabs [aria-selected="true"]:hover {
+    background-color: #f7fafc; /* Very light background on hover */
+    color: #4c51bf; /* Slightly darker purple on hover */
+}
+
+/* DataFrame Styling */
+.stDataFrame {
+    border-radius: 4px;
+}
+
+/* --------------------------------------------------------- */
+/* Styling for Horizontal Radio Buttons (Material-like) -> REMOVED */
+/* --------------------------------------------------------- */
+
+/* Gym Selection Button Styling */
+button[data-testid*="gym_btn_"] {
+    height: auto !important;
+    min-height: 2.5rem;
+    background-color: transparent !important;
+    border: 1px solid #e2e8f0 !important;
+    color: #4a5568 !important;
+    transition: all 0.2s;
+    padding: 0.5rem 1rem !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+button[data-testid*="gym_btn_"][kind="secondary"] {
+    background-color: #f7fafc !important;
+}
+
+button[data-testid*="gym_btn_"][kind="primary"] {
+    background-color: #5a67d8 !important;
+    color: white !important;
+    border-color: #4c51bf !important;
+    font-weight: 500;
+}
+
+button[data-testid*="gym_btn_"]:hover {
+    border-color: #5a67d8 !important;
+    color: #5a67d8 !important;
+}
+
+button[data-testid*="gym_btn_"][kind="primary"]:hover {
+    color: white !important;
+    background-color: #4c51bf !important;
+}
+
+/* End of file */
+
+/* Selected Climber Highlight */
+.selected-climber {
+    background-color: #ebf4ff;
+    color: #4c51bf;
+    font-weight: bold;
+    padding: 2px 5px;
+    border-radius: 3px;
+    border: 1px solid #c3dafe;
+} 

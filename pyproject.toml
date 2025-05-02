@@ -1,0 +1,29 @@
+[tool.poetry]
+name = "blocksummer"
+version = "0.1.0"
+description = ""
+authors = ["Ilya Glushchenko <ilia.glushchenko@gmail.com>"]
+readme = "README.md"
+
+# Recommendation: Regularly scan dependencies for known vulnerabilities.
+# Tools like 'safety' (pip install safety && safety check -r requirements.txt) 
+# or GitHub's Dependabot can help automate this.
+
+[tool.poetry.dependencies]
+python = ">=3.9,<3.13"
+requests = "^2.31.0"
+beautifulsoup4 = "^4.12.3"
+matplotlib = "^3.8.4"
+selenium = "^4.20.0"
+webdriver-manager = "^4.0.2"
+scipy = "^1.13.0"
+streamlit = "^1.33.0"
+plotly = "^5.19.0"
+scikit-learn = "^1.4.1.post1"
+python-dotenv = "^1.0.1"
+pandas = "^2.2.1"
+numpy = "^1.26.4"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
