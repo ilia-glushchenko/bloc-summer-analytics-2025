@@ -4,6 +4,7 @@ version = "0.1.0"
 description = ""
 authors = ["Ilya Glushchenko <ilia.glushchenko@gmail.com>"]
 readme = "README.md"
+package-mode = false
 
 # Recommendation: Regularly scan dependencies for known vulnerabilities.
 # Tools like 'safety' (pip install safety && safety check -r requirements.txt) 
