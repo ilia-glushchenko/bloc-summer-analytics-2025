@@ -81,24 +81,35 @@ def main() -> None:
         </div>
         """, unsafe_allow_html=True)
 
-        # Create tabs
-        tab1, tab2, tab3 = st.tabs(["🏢 Gym Stats", "📊 Climbers", "🛣️ Path to Success"])
+        # Initialize active tab in session state if it doesn't exist
+        if config.SESSION_KEY_ACTIVE_TAB not in st.session_state:
+            st.session_state[config.SESSION_KEY_ACTIVE_TAB] = 0
 
         # Initialize session state for selected climber (if needed globally)
-        # It's also handled within path_success_tab, but can be initialized here too.
         if config.SESSION_KEY_SELECTED_CLIMBER not in st.session_state:
             # Use the DEFAULT_CLIMBER from path_success_tab
             st.session_state[config.SESSION_KEY_SELECTED_CLIMBER] = DEFAULT_CLIMBER
-            
+        
         # Add callback for handling climber selection changes
         def sync_selected_climber() -> None:
             """Ensures selected climber is synchronized across tabs"""
             if config.SESSION_KEY_SELECTED_CLIMBER_PATH_TAB in st.session_state:
                 st.session_state[config.SESSION_KEY_SELECTED_CLIMBER] = st.session_state[config.SESSION_KEY_SELECTED_CLIMBER_PATH_TAB]
 
-        # Delegate rendering to tab-specific functions
+        # Create tabs (this needs to be a simple call to set up the UI structure)
+        tab1, tab2, tab3 = st.tabs(["🏢 Gym Stats", "📊 Climbers", "🛣️ Path to Success"])
+        
+        # When a user clicks on a tab, update the active tab in session state
+        # This doesn't happen automatically, but we can detect which tab to show
+        # based on which one has content changes
+                
+        # Render content in each tab
         with tab1:
-            # Pass only needed data from the ProcessedData object
+            # Update active tab when this tab is viewed
+            if st.session_state[config.SESSION_KEY_ACTIVE_TAB] != 0:
+                st.session_state[config.SESSION_KEY_ACTIVE_TAB] = 0
+            
+            # Display content
             display_gym_stats(
                 processed_data.raw_data, 
                 processed_data.gym_boulder_counts, 
@@ -106,7 +117,11 @@ def main() -> None:
             )
 
         with tab2:
-            # Pass the specific data required by this tab
+            # Update active tab when this tab is viewed
+            if st.session_state[config.SESSION_KEY_ACTIVE_TAB] != 1:
+                st.session_state[config.SESSION_KEY_ACTIVE_TAB] = 1
+                
+            # Display content
             display_climber_stats(
                 processed_data.raw_data, 
                 processed_data.climbers_df, 
@@ -115,13 +130,17 @@ def main() -> None:
             )
 
         with tab3:
-            # Pass the specific data required by the path to success tab
+            # Update active tab when this tab is viewed
+            if st.session_state[config.SESSION_KEY_ACTIVE_TAB] != 2:
+                st.session_state[config.SESSION_KEY_ACTIVE_TAB] = 2
+                
+            # Display content
             display_path_success(
                 processed_data.raw_data, 
                 processed_data.climbers_df, 
                 processed_data.gym_boulder_counts, 
                 processed_data.participation_counts, 
-                sync_selected_climber # Callback remains the same
+                sync_selected_climber
             )
 
     except Exception as e:

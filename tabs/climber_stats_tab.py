@@ -193,10 +193,17 @@ def display_climber_stats(data: List[Dict], climbers_df: pd.DataFrame, completio
                 
             # Previous/Next buttons
             with col1:
-                # Use constant for session key and make button fill column
-                if st.button("← Previous", use_container_width=True, disabled=(st.session_state[config.SESSION_KEY_CURRENT_PAGE_CLIMBER_TAB] <= 1)):
+                # Define callback for previous button
+                def go_to_previous_page():
                     st.session_state[config.SESSION_KEY_CURRENT_PAGE_CLIMBER_TAB] -= 1
-                    st.rerun()
+                
+                # Use constant for session key and make button fill column
+                st.button(
+                    "← Previous", 
+                    use_container_width=True, 
+                    disabled=(st.session_state[config.SESSION_KEY_CURRENT_PAGE_CLIMBER_TAB] <= 1),
+                    on_click=go_to_previous_page
+                )
                     
             with col2:
                 # Use markdown to explicitly center the page indicator text
@@ -207,10 +214,17 @@ def display_climber_stats(data: List[Dict], climbers_df: pd.DataFrame, completio
                     st.write("Page 1 of 1") # Handle case with 0 or 1 page
             
             with col3: # Right column for Next button
-                # Remove nested columns, button directly in col3
-                if st.button("Next →", use_container_width=True, disabled=(st.session_state[config.SESSION_KEY_CURRENT_PAGE_CLIMBER_TAB] >= max_pages)):
+                # Define callback for next button
+                def go_to_next_page():
                     st.session_state[config.SESSION_KEY_CURRENT_PAGE_CLIMBER_TAB] += 1
-                    st.rerun()
+                
+                # Remove nested columns, button directly in col3
+                st.button(
+                    "Next →", 
+                    use_container_width=True, 
+                    disabled=(st.session_state[config.SESSION_KEY_CURRENT_PAGE_CLIMBER_TAB] >= max_pages),
+                    on_click=go_to_next_page
+                )
             
             # Calculate start and end index for slicing
             # Use constant for session key
@@ -353,14 +367,17 @@ def display_climber_stats(data: List[Dict], climbers_df: pd.DataFrame, completio
                         with cols[col_idx]:
                             is_active = st.session_state.selected_gym_dist_tab2 == gym_name
                             
-                            if st.button(
+                            # Define callback for gym button click
+                            def set_selected_gym(gym_name=gym_name):
+                                st.session_state.selected_gym_dist_tab2 = gym_name
+                            
+                            st.button(
                                 gym_name, 
                                 key=f"dist_gym_btn_{gym_name}",
                                 use_container_width=True,
-                                type="primary" if is_active else "secondary"
-                            ):
-                                st.session_state.selected_gym_dist_tab2 = gym_name
-                                st.rerun()
+                                type="primary" if is_active else "secondary",
+                                on_click=set_selected_gym
+                            )
                     
                     # Add visual spacing after button row
                     st.markdown("<div style='margin-bottom: 15px;'></div>", unsafe_allow_html=True)

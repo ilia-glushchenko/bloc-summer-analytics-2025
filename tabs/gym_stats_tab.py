@@ -75,15 +75,18 @@ def display_gym_stats(data: List[Dict], gym_boulder_counts: Dict, participation_
                     is_active = st.session_state[config.SESSION_KEY_SELECTED_GYM_STATS_TAB] == gym_name
                     button_class = "gym-button active" if is_active else "gym-button"
                     
-                    if st.button(
+                    # Define callback for gym button
+                    def select_gym(gym=gym_name):
+                        # Use constant for session key
+                        st.session_state[config.SESSION_KEY_SELECTED_GYM_STATS_TAB] = gym
+                    
+                    st.button(
                         gym_name, 
                         key=f"gym_btn_{gym_name}",
                         use_container_width=True,
-                        type="primary" if is_active else "secondary"
-                    ):
-                        # Use constant for session key
-                        st.session_state[config.SESSION_KEY_SELECTED_GYM_STATS_TAB] = gym_name
-                        st.rerun()
+                        type="primary" if is_active else "secondary",
+                        on_click=select_gym
+                    )
             
             st.markdown("</div>", unsafe_allow_html=True)
             

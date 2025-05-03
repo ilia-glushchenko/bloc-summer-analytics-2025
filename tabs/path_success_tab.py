@@ -267,14 +267,18 @@ def display_path_success(data: List[Dict], climbers_df: pd.DataFrame, gym_boulde
     elif DEFAULT_CLIMBER != "[Select Climber]" and DEFAULT_CLIMBER in climber_list: # Check module fallback
         default_index = climber_list.index(DEFAULT_CLIMBER)
 
-    # Use constant for session key
-    selected_climber = st.selectbox(
-        "Select your Climber",
-        climber_list,
-        index=default_index,
-        key=config.SESSION_KEY_SELECTED_CLIMBER_PATH_TAB, # Use specific key for this widget
-        on_change=sync_callback # Trigger sync when selection changes
-    )
+    # Create columns for climber selection and target rank
+    col_climber, col_target = st.columns([3, 1])
+    
+    with col_climber:
+        # Use constant for session key
+        selected_climber = st.selectbox(
+            "Select your Climber",
+            climber_list,
+            index=default_index,
+            key=config.SESSION_KEY_SELECTED_CLIMBER_PATH_TAB, # Use specific key for this widget
+            on_change=sync_callback # Trigger sync when selection changes
+        )
     
     # Update the main session state (redundant if callback works, but safe)
     # Use constant for session key
@@ -306,27 +310,53 @@ def display_path_success(data: List[Dict], climbers_df: pd.DataFrame, gym_boulde
         st.error(f"Error preparing data for recommendations: {e}")
         return
         
+    # Get current climber's rank for validation
+    current_rank = climber_data['Rank']
+    
+    # Add input for target rank with validation
+    # Initialize session state for target rank if not already set
+    if config.SESSION_KEY_TARGET_RANK not in st.session_state:
+        st.session_state[config.SESSION_KEY_TARGET_RANK] = config.PATH_TARGET_RANK
+    
+    # Add target rank selector with validation in the second column
+    with col_target:
+        # Create a callback function to update target rank without changing tab
+        def update_target_rank():
+            st.session_state[config.SESSION_KEY_TARGET_RANK] = st.session_state["temp_target_rank"]
+        
+        target_rank = st.number_input(
+            "Target Rank",
+            min_value=config.PATH_TARGET_RANK_MIN,
+            max_value=current_rank - 1 if current_rank > 1 else 1,
+            value=st.session_state[config.SESSION_KEY_TARGET_RANK],
+            step=1,
+            help=f"Select your target rank (between {config.PATH_TARGET_RANK_MIN} and your current rank {current_rank})",
+            key="temp_target_rank",
+            on_change=update_target_rank
+        )
+    
     # --- Analysis and Display ---
-    # Recalculate top_10_target (minimum boulders for target rank)
+    # Recalculate top_10_target (minimum boulders for target rank) - now using selected target rank
     top_10_target = 0
     if not climbers_df.empty:
-        target_rank_climbers = climbers_df[climbers_df['Rank'] == config.PATH_TARGET_RANK]
+        # Use selected target rank instead of fixed config value
+        target_rank_climbers = climbers_df[climbers_df['Rank'] == target_rank]
         if not target_rank_climbers.empty:
             # If climbers exist exactly at the target rank, use their boulder count
             top_10_target = target_rank_climbers.iloc[0]['Completed']
         else:
             # Otherwise, find the minimum boulders among those ranked better than or equal to the target
-            top_rank_climbers = climbers_df[climbers_df['Rank'] <= config.PATH_TARGET_RANK]
+            top_rank_climbers = climbers_df[climbers_df['Rank'] <= target_rank]
             if not top_rank_climbers.empty:
                 top_10_target = top_rank_climbers['Completed'].min()
             # If still 0 (no climbers at or better than target rank), it remains 0, which is handled later.
 
     # Use constant for session key
-    current_rank = climber_data['Rank']
     boulders_completed = climber_data['Completed']
     avg_per_gym = climber_data['Avg_Per_Gym_Active']
     active_gyms = climber_data['Gyms_Active']
 
+    # One column for metrics
     render_metrics_row({
         "Current Rank": f"{current_rank}",
         "Boulders Completed": f"{boulders_completed}",
@@ -334,12 +364,11 @@ def display_path_success(data: List[Dict], climbers_df: pd.DataFrame, gym_boulde
         "Avg Boulders/Active Gym": f"{avg_per_gym:.1f}"
     })
     
-    # Use constant for target rank
-    if current_rank <= config.PATH_TARGET_RANK:
-        st.success(f"🎉 Congratulations! You are already ranked {current_rank}, meeting the Top {config.PATH_TARGET_RANK} goal!")
+    # Update success/info messages to use the selected target rank
+    if current_rank <= target_rank:
+        st.success(f"🎉 Congratulations! You are already ranked {current_rank}, meeting the Top {target_rank} goal!")
     else:
-        # Use constant for target rank
-        st.info(f"Currently ranked {current_rank}. Let's find a path to the Top {config.PATH_TARGET_RANK}.")
+        st.info(f"Currently ranked {current_rank}. Let's find a path to the Top {target_rank}.")
 
     # Find similar climbers using the configured N
     # Use constant for session key and N
@@ -400,18 +429,18 @@ def display_path_success(data: List[Dict], climbers_df: pd.DataFrame, gym_boulde
         # --- Optimized Path Section --- 
         # Check if the special key exists from the backend for the optimized path
         if "__TOP_10_PATH__" in recommendations and recommendations["__TOP_10_PATH__"]:
-            render_section_header("Optimized Path to Top 10", level=4)
+            render_section_header(f"Optimized Path to Top {target_rank}", level=4)
             
-            st.markdown("""
-            This is your step-by-step path to reach top 10, using a Bayesian probability model
+            st.markdown(f"""
+            This is your step-by-step path to reach top {target_rank}, using a Bayesian probability model
             that calculates the true likelihood of completing each boulder. This approach combines
             general success rates with data from similar climbers, weighted by confidence.
             """)
             
             # Add explanation about gym sorting
-            st.markdown("""
+            st.markdown(f"""
             <div style="margin-bottom: 15px; padding: 10px; border-left: 3px solid #1E88E5; background-color: #f8f9fa;">
-                <b>Optimized Gym Order:</b> Gyms are sorted by potential contribution to your top 10 goal, 
+                <b>Optimized Gym Order:</b> Gyms are sorted by potential contribution to your top {target_rank} goal, 
                 with those offering the most high-probability boulders listed first. Within each gym, 
                 boulders are sorted by completion probability (highest first).
             </div>
@@ -507,15 +536,15 @@ def display_path_success(data: List[Dict], climbers_df: pd.DataFrame, gym_boulde
                     boulders_needed_for_goal = max(0, top_10_target - boulders_completed)
                     if boulders_needed_for_goal > 0:
                         if total_boulders_in_path >= boulders_needed_for_goal:
-                            st.success(f"✅ Follow this path with {total_boulders_in_path} boulders to reach Top 10!")
+                            st.success(f"✅ Follow this path with {total_boulders_in_path} boulders to reach Top {target_rank}!")
                         else:
-                             st.warning(f"⚠️ This path shows your best options ({total_boulders_in_path} boulders) but may not be sufficient to reach the Top 10 goal ({boulders_needed_for_goal} more needed).")
+                             st.warning(f"⚠️ This path shows your best options ({total_boulders_in_path} boulders) but may not be sufficient to reach the Top {target_rank} goal ({boulders_needed_for_goal} more needed).")
                     else:
-                         st.success("🎉 You have already achieved the Top 10 goal!")
+                         st.success(f"🎉 You have already achieved the Top {target_rank} goal!")
                 else:
                     st.info("No specific recommendations found for creating an optimized path.")
         else:
-             st.info("No optimized path to Top 10 could be generated based on the available data.")
+             st.info(f"No optimized path to Top {target_rank} could be generated based on the available data.")
     
     # Fallback message if no actual recommendations were generated initially
     elif not recommendations:
