@@ -5,6 +5,7 @@ from typing import Dict, List, Optional
 import html # Import the html module for escaping
 
 import config # Import config
+from data_processing import create_climber_boulder_matrix # Add this import to get climber-boulder data
 
 # Assuming ui_components.py is in the parent directory or accessible
 from ui_components import render_metrics_row, render_section_header
@@ -164,6 +165,17 @@ def display_gym_stats(data: List[Dict], gym_boulder_counts: Dict, participation_
                         </div>
                         """, unsafe_allow_html=True)
 
+                        # Get the selected climber's completed boulders for this gym (if any)
+                        selected_climber_boulders = []
+                        if config.SESSION_KEY_SELECTED_CLIMBER in st.session_state:
+                            selected_climber = st.session_state[config.SESSION_KEY_SELECTED_CLIMBER]
+                            # Get climber-boulder matrix to check which boulders they've completed
+                            _, climber_gym_boulders = create_climber_boulder_matrix(data)
+                            
+                            # Check if the selected climber has data for this gym
+                            if selected_climber in climber_gym_boulders and selected_gym in climber_gym_boulders[selected_climber]:
+                                selected_climber_boulders = climber_gym_boulders[selected_climber][selected_gym]
+
                         # Boulder Popularity Chart (use filtered data)
                         render_section_header("Boulder Popularity", level=5)
                         # Sort boulders for the chart based on the filtered dataframe's order
@@ -181,12 +193,18 @@ def display_gym_stats(data: List[Dict], gym_boulder_counts: Dict, participation_
                         fig_pop.add_trace(go.Bar(
                             x=sorted_boulders_for_chart,
                             y=ascents_list,
-                            marker=dict(color=ascents_list, colorscale='Viridis'),
+                            marker=dict(
+                                color=ascents_list,  # Use completion values for the color scale
+                                colorscale='Viridis',  # Use the same Viridis colorscale as in boulder popularity
+                                line=dict(
+                                    width=[2 if boulder in selected_climber_boulders else 0 for boulder in sorted_boulders_for_chart],
+                                    color=['#ff7c24' if boulder in selected_climber_boulders else 'rgba(0,0,0,0)' for boulder in sorted_boulders_for_chart]
+                                )
+                            ),
                             hovertemplate='Boulder %{x}<br>Ascents: %{y}<br>%{customdata:.1f}% of climbers<extra></extra>',
                             customdata=climber_percentages,
                             text=text_values,
                             textposition='outside',
-                            textfont=dict(size=11),
                             cliponaxis=False,
                             showlegend=False
                         ))
@@ -212,6 +230,12 @@ def display_gym_stats(data: List[Dict], gym_boulder_counts: Dict, participation_
                         # Use the filtered DataFrame for display
                         display_df = boulder_df_display[['Boulder', 'Ascents', 'Success Rate (%)', 'Difficulty (1-10)']].copy()
                         display_df.columns = ['Boulder', 'Ascents', 'Success Rate', 'Difficulty'] # Shorten names
+                        # Add a column to indicate if the boulder was completed by the selected climber
+                        if config.SESSION_KEY_SELECTED_CLIMBER in st.session_state and selected_climber_boulders:
+                            display_df['Completed by You'] = display_df['Boulder'].apply(
+                                lambda boulder: "✓" if boulder in selected_climber_boulders else ""
+                            )
+                        
                         st.dataframe(
                             display_df,
                             use_container_width=True,
@@ -220,7 +244,9 @@ def display_gym_stats(data: List[Dict], gym_boulder_counts: Dict, participation_
                                 "Boulder": st.column_config.TextColumn("Boulder"),
                                 "Ascents": st.column_config.NumberColumn("Ascents", format="%d"),
                                 "Success Rate": st.column_config.NumberColumn("Success Rate (%)", format="%.1f%%"),
-                                "Difficulty": st.column_config.NumberColumn("Difficulty (1-10)", format="%d", help="1=easiest, 10=hardest")
+                                "Difficulty": st.column_config.NumberColumn("Difficulty (1-10)", format="%d", help="1=easiest, 10=hardest"),
+                                "Completed by You": st.column_config.TextColumn("Completed", help="Boulders you have topped") 
+                                 if 'Completed by You' in display_df.columns else None
                             }
                         )
 
