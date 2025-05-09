@@ -114,7 +114,7 @@ def display_visited_gyms_recommendations(visited_gyms_list: List[str], rec_df: p
                                    enhanced_recommendations: Optional[Dict[str, List[Tuple[str, float, str]]]] = None) -> None:
     """Display recommendations for gyms the climber has already visited."""
     if visited_gyms_list:
-        # Add custom CSS to ensure tables don't get scrollbars
+        # Add custom CSS to ensure tables don't get scrollbars and to make the layout responsive
         st.markdown("""
         <style>
         [data-testid="stDataFrame"] {
@@ -128,6 +128,26 @@ def display_visited_gyms_recommendations(visited_gyms_list: List[str], rec_df: p
             max-height: none !important;
             overflow: visible !important;
         }
+        /* Responsive grid layout */
+        [data-testid="stHorizontalBlock"] {
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        [data-testid="column"] {
+            min-width: 250px;
+            flex: 1 1 auto !important;
+        }
+        /* Make sure table cells don't cause horizontal scrolling */
+        .dataframe-container {
+            width: 100% !important;
+            overflow-x: hidden !important;
+        }
+        thead th {
+            word-break: break-word !important;
+        }
+        tbody td {
+            word-break: break-word !important;
+        }
         </style>
         """, unsafe_allow_html=True)
         
@@ -140,9 +160,53 @@ def display_visited_gyms_recommendations(visited_gyms_list: List[str], rec_df: p
         </div>
         """, unsafe_allow_html=True)
         
-        cols = st.columns(min(len(visited_gyms_list), 3))
+        # Get number of gyms
+        num_gyms = len(visited_gyms_list)
+        
+        # Auto-detect screen width and adjust columns - Ultra-wide support
+        # Use session state to check if user has manually selected a layout preference
+        if 'visited_layout_preference' not in st.session_state:
+            # Default layouts based on number of gyms
+            if num_gyms <= 3:
+                cols_per_row = num_gyms  # 1, 2, or 3 columns
+            elif num_gyms == 4:
+                cols_per_row = 2  # 2x2 grid for 4 gyms
+            else:
+                # For 5+ gyms, use layout selection to allow responsive layouts
+                layout_options = ["Auto-detect", "2 columns", "3 columns", "4 columns", "5 columns"]
+                default_index = 0  # Auto-detect is default
+                
+                layout_choice = st.radio(
+                    "Layout for visited gyms:", 
+                    layout_options, 
+                    horizontal=True, 
+                    key="visited_layout_radio",
+                    index=default_index
+                )
+                
+                if layout_choice == "Auto-detect":
+                    # Let CSS handle the layout (will be responsive based on screen width)
+                    cols_per_row = min(5, max(2, (num_gyms + 1) // 2))  # Dynamic column count, max 5
+                elif layout_choice == "2 columns":
+                    cols_per_row = 2
+                elif layout_choice == "3 columns":
+                    cols_per_row = 3
+                elif layout_choice == "4 columns":
+                    cols_per_row = 4
+                else:  # 5 columns
+                    cols_per_row = 5
+                
+                # Store choice in session state
+                st.session_state.visited_layout_preference = cols_per_row
+        else:
+            # Use stored preference
+            cols_per_row = st.session_state.visited_layout_preference
+            
+        # Create columns based on determined layout
+        cols = st.columns(cols_per_row)
+        
         for i, gym_name in enumerate(visited_gyms_list):
-            col_idx = i % len(cols)
+            col_idx = i % cols_per_row
             with cols[col_idx]:
                 # Use smaller header for gym name, escaping the name
                 st.markdown(f"<h6>🏠 {html.escape(gym_name)}</h6>", unsafe_allow_html=True)
@@ -160,12 +224,12 @@ def display_visited_gyms_recommendations(visited_gyms_list: List[str], rec_df: p
                         column_config={
                             "Boulder": st.column_config.TextColumn("Boulder"),
                             "Probability": st.column_config.NumberColumn(
-                                "Probability (%)",
+                                "Probability (%)",  # Restored original label
                                 help="Bayesian probability of completion",
                                 format="%.1f%%"
                             ),
                             "Success Probability": st.column_config.NumberColumn(
-                                "Success Rate (%)",
+                                "Success Rate (%)",  # Restored original label
                                 help="Historical completion rate",
                                 format="%.1f%%"
                             )
@@ -184,13 +248,56 @@ def display_unvisited_gyms_recommendations(
 ) -> None:
     """Display recommendations for gyms the climber hasn't visited yet."""
     if unvisited_gyms_list:
-        columns = st.columns(min(len(unvisited_gyms_list), 3))
+        # Get number of gyms
+        num_gyms = len(unvisited_gyms_list)
+        
+        # Auto-detect screen width and adjust columns - Ultra-wide support
+        # Use session state to check if user has manually selected a layout preference
+        if 'unvisited_layout_preference' not in st.session_state:
+            # Default layouts based on number of gyms
+            if num_gyms <= 3:
+                cols_per_row = num_gyms  # 1, 2, or 3 columns
+            elif num_gyms == 4:
+                cols_per_row = 2  # 2x2 grid for 4 gyms
+            else:
+                # For 5+ gyms, use layout selection to allow responsive layouts
+                layout_options = ["Auto-detect", "2 columns", "3 columns", "4 columns", "5 columns"]
+                default_index = 0  # Auto-detect is default
+                
+                layout_choice = st.radio(
+                    "Layout for unvisited gyms:", 
+                    layout_options, 
+                    horizontal=True, 
+                    key="unvisited_layout_radio",
+                    index=default_index
+                )
+                
+                if layout_choice == "Auto-detect":
+                    # Let CSS handle the layout (will be responsive based on screen width)
+                    cols_per_row = min(5, max(2, (num_gyms + 1) // 2))  # Dynamic column count, max 5
+                elif layout_choice == "2 columns":
+                    cols_per_row = 2
+                elif layout_choice == "3 columns":
+                    cols_per_row = 3
+                elif layout_choice == "4 columns":
+                    cols_per_row = 4
+                else:  # 5 columns
+                    cols_per_row = 5
+                
+                # Store choice in session state
+                st.session_state.unvisited_layout_preference = cols_per_row
+        else:
+            # Use stored preference
+            cols_per_row = st.session_state.unvisited_layout_preference
+            
+        # Create columns based on determined layout
+        columns = st.columns(cols_per_row)
         
         # Get just the climber names from similar_climbers
         similar_climber_names = [c[0] for c in similar_climbers]
         
         for i, gym_name in enumerate(unvisited_gyms_list):
-            col_idx = i % len(columns)
+            col_idx = i % cols_per_row
             with columns[col_idx]:
                 # Use smaller header for gym name, escaping the name
                 st.markdown(f"<h6>🆕 {html.escape(gym_name)}</h6>", unsafe_allow_html=True)
@@ -236,12 +343,12 @@ def display_unvisited_gyms_recommendations(
                         column_config={
                             "Boulder": st.column_config.TextColumn("Boulder"),
                             "Probability": st.column_config.NumberColumn(
-                                "Probability (%)",
+                                "Probability (%)",  # Restored original label
                                 format="%.1f%%",
                                 help="Bayesian probability of completion"
                             ),
                             "Success Probability": st.column_config.NumberColumn(
-                                "Success Rate (%)",
+                                "Success Rate (%)",  # Restored original label
                                 format="%.1f%%",
                                 help="Historical completion rate"
                             )
@@ -462,6 +569,17 @@ def display_path_success(data: List[Dict], climbers_df: pd.DataFrame, gym_boulde
             path_container = st.container()
             
             with path_container:
+                # Add CSS for responsive grid layout for the path display
+                st.markdown("""
+                <style>
+                /* Ensure expanders display properly in the responsive grid */
+                .streamlit-expanderContent {
+                    width: 100%;
+                    overflow-x: hidden !important;
+                }
+                </style>
+                """, unsafe_allow_html=True)
+                
                 # Display the optimized path using the format from __TOP_10_PATH__
                 gym_boulders = {}
                 gym_visit_recommendations = {}
@@ -489,48 +607,151 @@ def display_path_success(data: List[Dict], climbers_df: pd.DataFrame, gym_boulde
                     
                     gym_potential.sort(key=lambda x: x[2], reverse=True)
                     
-                    for gym, boulders, _, boulder_count in gym_potential:
-                        is_new_gym_flag = gym in unvisited_gyms
-                        gym_label = f"{gym} 🆕" if is_new_gym_flag else gym
+                    # Create a responsive grid layout for the gym expanders
+                    # Calculate number of gyms to display
+                    num_gyms = len(gym_potential)
+                    
+                    # Use the CSS from style.css for responsiveness
+                    # We'll display gyms in a responsive grid
+                    
+                    # Group gyms by potential (high/medium/low) for better organization if many gyms
+                    gym_groups = []
+                    
+                    # If more than 6 gyms, group them
+                    if num_gyms > 6:
+                        # Use potential score to divide into high/medium/low groups
+                        scores = [score for _, _, score, _ in gym_potential]
+                        max_score = max(scores) if scores else 0
+                        min_score = min(scores) if scores else 0
+                        score_range = max_score - min_score if max_score > min_score else 1
                         
-                        with st.expander(f"{gym_label} - {boulder_count} boulders", expanded=True):
-                            if gym in gym_visit_recommendations:
-                                st.info(f"📍 **Visit this gym** - Recommended with {gym_visit_recommendations[gym]*100:.1f}% priority")
-                            
-                            if boulders:
-                                sorted_boulders = sorted(boulders, key=lambda x: x[1], reverse=True)
-                                boulder_rows = []
-                                for boulder, score in sorted_boulders:
-                                    boulder_completion_count = gym_boulder_counts.get(gym, {}).get(boulder, 0)
-                                    total_climbers_at_gym = participation_counts.get(gym, 0)
-                                    success_rate = boulder_completion_count / total_climbers_at_gym * 100 if total_climbers_at_gym > 0 else 0
-                                    boulder_rows.append({
-                                        "Boulder": boulder, 
-                                        "Probability": f"{score*100:.1f}%",
-                                        "Success Rate": f"{success_rate:.1f}%"
-                                    })
-                                
-                                boulder_df = pd.DataFrame(boulder_rows)
-                                st.dataframe(
-                                    boulder_df,
-                                    use_container_width=True,
-                                    hide_index=True,
-                                    column_config={
-                                        "Boulder": st.column_config.TextColumn("Boulder", help="Boulder to complete"),
-                                        "Probability": st.column_config.TextColumn(
-                                            "Completion Probability", 
-                                            help="Personalized probability of completion based on Bayesian analysis"
-                                        ),
-                                        "Success Rate": st.column_config.TextColumn(
-                                            "Historical Success", 
-                                            help="Percentage of all climbers who completed this boulder"
-                                        )
-                                    }
-                                )
+                        high_gyms = []
+                        medium_gyms = []
+                        low_gyms = []
+                        
+                        for gym, boulders, score, count in gym_potential:
+                            normalized_score = (score - min_score) / score_range
+                            if normalized_score > 0.66:
+                                high_gyms.append((gym, boulders, score, count))
+                            elif normalized_score > 0.33:
+                                medium_gyms.append((gym, boulders, score, count))
                             else:
-                                st.write("No specific boulder recommendations for this gym.")
+                                low_gyms.append((gym, boulders, score, count))
                         
-                        total_boulders_in_path += boulder_count
+                        if high_gyms:
+                            gym_groups.append(("High Potential Gyms", high_gyms))
+                        if medium_gyms:
+                            gym_groups.append(("Medium Potential Gyms", medium_gyms))
+                        if low_gyms:
+                            gym_groups.append(("Lower Potential Gyms", low_gyms))
+                    else:
+                        # Just one group for all gyms
+                        gym_groups.append(("Optimized Gym Order", gym_potential))
+                    
+                    # Process each group
+                    for group_name, gyms in gym_groups:
+                        if group_name != "Optimized Gym Order":
+                            st.markdown(f"##### {group_name}")
+                        
+                        # For each group, create a responsive grid of gyms
+                        num_gyms_in_group = len(gyms)
+                        
+                        # Auto-detect screen width and adjust columns - Ultra-wide support
+                        # Default layouts based on number of gyms
+                        if num_gyms_in_group <= 3:
+                            cols_per_row = num_gyms_in_group  # 1, 2, or 3 columns depending on gym count
+                        elif num_gyms_in_group == 4:
+                            cols_per_row = 2  # For 4 gyms, use 2 columns to get 2x2 grid
+                        elif num_gyms_in_group >= 5 and group_name != "Optimized Gym Order":
+                            # For groups with 5+ gyms, offer layout selection only if this isn't the first run
+                            if 'optimized_layout_preference' not in st.session_state:
+                                # Let CSS handle the layout (will be responsive based on screen width)
+                                cols_per_row = min(5, max(2, (num_gyms_in_group + 1) // 2))  # Dynamic column count, max 5
+                                
+                                layout_options = ["Auto-detect", "2 columns", "3 columns", "4 columns", "5 columns"]
+                                default_index = 0  # Auto-detect is default
+                                
+                                layout_choice = st.radio(
+                                    f"Layout for {group_name}:", 
+                                    layout_options, 
+                                    horizontal=True, 
+                                    key=f"optimized_layout_radio_{group_name.replace(' ', '_')}",
+                                    index=default_index
+                                )
+                                
+                                if layout_choice == "Auto-detect":
+                                    cols_per_row = min(5, max(2, (num_gyms_in_group + 1) // 2))
+                                elif layout_choice == "2 columns":
+                                    cols_per_row = 2
+                                elif layout_choice == "3 columns":
+                                    cols_per_row = 3
+                                elif layout_choice == "4 columns":
+                                    cols_per_row = 4
+                                else:  # 5 columns
+                                    cols_per_row = 5
+                                    
+                                # Store choice in session state for this group
+                                if 'optimized_layout_preference' not in st.session_state:
+                                    st.session_state.optimized_layout_preference = {}
+                                st.session_state.optimized_layout_preference[group_name] = cols_per_row
+                            else:
+                                # Use stored preference for this group if available
+                                if group_name in st.session_state.optimized_layout_preference:
+                                    cols_per_row = st.session_state.optimized_layout_preference[group_name]
+                                else:
+                                    # Default layout if no preference is stored
+                                    cols_per_row = min(5, max(2, (num_gyms_in_group + 1) // 2))
+                        else:
+                            # For first run or single group, use auto-detection
+                            # Choose more columns on wider screens
+                            cols_per_row = min(5, max(2, (num_gyms_in_group + 1) // 2))
+                        
+                        cols = st.columns(cols_per_row)
+                        
+                        for i, (gym, boulders, _, boulder_count) in enumerate(gyms):
+                            col_idx = i % cols_per_row
+                            with cols[col_idx]:
+                                is_new_gym_flag = gym in unvisited_gyms
+                                gym_label = f"{gym} 🆕" if is_new_gym_flag else gym
+                                
+                                with st.expander(f"{gym_label} - {boulder_count} boulders", expanded=True):
+                                    if gym in gym_visit_recommendations:
+                                        st.info(f"📍 **Visit this gym** - Recommended with {gym_visit_recommendations[gym]*100:.1f}% priority")
+                                    
+                                    if boulders:
+                                        sorted_boulders = sorted(boulders, key=lambda x: x[1], reverse=True)
+                                        boulder_rows = []
+                                        for boulder, score in sorted_boulders:
+                                            boulder_completion_count = gym_boulder_counts.get(gym, {}).get(boulder, 0)
+                                            total_climbers_at_gym = participation_counts.get(gym, 0)
+                                            success_rate = boulder_completion_count / total_climbers_at_gym * 100 if total_climbers_at_gym > 0 else 0
+                                            boulder_rows.append({
+                                                "Boulder": boulder, 
+                                                "Probability": f"{score*100:.1f}%",
+                                                "Success Rate": f"{success_rate:.1f}%"
+                                            })
+                                        
+                                        boulder_df = pd.DataFrame(boulder_rows)
+                                        st.dataframe(
+                                            boulder_df,
+                                            use_container_width=True,
+                                            hide_index=True,
+                                            column_config={
+                                                "Boulder": st.column_config.TextColumn("Boulder", help="Boulder to complete"),
+                                                "Probability": st.column_config.TextColumn(
+                                                    "Completion Probability", 
+                                                    help="Personalized probability of completion based on Bayesian analysis"
+                                                ),
+                                                "Success Rate": st.column_config.TextColumn(
+                                                    "Historical Success", 
+                                                    help="Percentage of all climbers who completed this boulder"
+                                                )
+                                            }
+                                        )
+                                    else:
+                                        st.write("No specific boulder recommendations for this gym.")
+                            
+                            total_boulders_in_path += boulder_count
                     
                     # Add summary message based on boulders needed vs provided
                     boulders_needed_for_goal = max(0, top_10_target - boulders_completed)

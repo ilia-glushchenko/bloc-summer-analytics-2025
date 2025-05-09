@@ -231,4 +231,60 @@ button[data-testid*="gym_btn_"][kind="primary"]:hover {
     padding: 2px 5px;
     border-radius: 3px;
     border: 1px solid #c3dafe;
+}
+
+/* Responsive Grid Layout */
+/* These styles ensure the grid adapts to different screen sizes */
+[data-testid="stHorizontalBlock"] {
+    flex-wrap: wrap !important;
+    gap: 1rem !important;
+}
+
+[data-testid="column"] {
+    min-width: 250px !important;
+    flex: 1 1 auto !important;
+}
+
+/* Specific media queries for better responsiveness */
+@media screen and (max-width: 768px) {
+    [data-testid="column"] {
+        min-width: 100% !important; /* Full width on small screens */
+    }
+}
+
+@media screen and (min-width: 769px) and (max-width: 1200px) {
+    [data-testid="column"] {
+        min-width: 300px !important; /* Larger min-width on medium screens */
+        flex-basis: calc(50% - 1rem) !important; /* Two columns on medium screens */
+    }
+}
+
+@media screen and (min-width: 1201px) and (max-width: 1800px) {
+    [data-testid="column"] {
+        flex-basis: calc(33.333% - 1rem) !important; /* Three columns on large screens */
+        max-width: calc(33.333% - 1rem) !important; /* Limit maximum width */
+    }
+}
+
+/* Ultra-wide screens */
+@media screen and (min-width: 1801px) and (max-width: 2400px) {
+    [data-testid="column"] {
+        flex-basis: calc(25% - 1rem) !important; /* Four columns on ultra-wide screens */
+        max-width: calc(25% - 1rem) !important; /* Limit maximum width */
+        min-width: 250px !important; /* Ensure minimum width */
+    }
+}
+
+/* Super ultra-wide screens */
+@media screen and (min-width: 2401px) {
+    [data-testid="column"] {
+        flex-basis: calc(20% - 1rem) !important; /* Five columns on super ultra-wide screens */
+        max-width: calc(20% - 1rem) !important; /* Limit maximum width */
+        min-width: 250px !important; /* Ensure minimum width */
+    }
+}
+
+/* Ensure the dataframes inside the columns fit properly */
+[data-testid="column"] [data-testid="stDataFrame"] {
+    width: 100% !important;
 } 

@@ -7,9 +7,9 @@ An interactive web application to analyze climbing competition data from the Bou
 ## Features
 
 - **Interactive Dashboard**: Summary statistics and visualizations for overall competition results
-- **Climber Analysis**: Search and sort functionality for finding specific climbers and their performance
+- **Rankings Analysis**: Search and sort functionality for finding specific climbers and their performance
 - **Gym Analysis**: Compare statistics across different gyms with filtering options
-- **Boulder Analysis**: Detailed investigation of boulder popularity and completion rates
+- **Planning Tools**: Detailed investigation of boulder popularity and completion rates for improvement
 - **Data Visualization**: Interactive charts and metrics for comprehensive analysis
 
 ## Project Structure
@@ -77,12 +77,11 @@ The statistical analysis module provides functions to:
 
 ### Web Interface (`app.py`)
 
-The Streamlit interface is organized into four main tabs:
+The Streamlit interface is organized into three main tabs:
 
-1. **Dashboard**: Overall metrics and key insights
-2. **Climbers**: Searchable climber database with detailed performance metrics
-3. **Gyms**: Comparative analysis between different climbing gyms
-4. **Boulder Analysis**: Detailed statistics on boulder popularity and completion rates
+1. **Gyms**: Comparative analysis between different climbing gyms
+2. **Rankings**: Searchable climber database with detailed performance metrics
+3. **Plan**: Detailed statistics and recommendations for improvement
 
 ## Code Practices
 

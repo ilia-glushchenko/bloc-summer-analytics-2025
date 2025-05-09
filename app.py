@@ -97,7 +97,7 @@ def main() -> None:
                 st.session_state[config.SESSION_KEY_SELECTED_CLIMBER] = st.session_state[config.SESSION_KEY_SELECTED_CLIMBER_PATH_TAB]
 
         # Create tabs (this needs to be a simple call to set up the UI structure)
-        tab1, tab2, tab3 = st.tabs(["🏢 Gym Stats", "📊 Climbers", "🛣️ Path to Success"])
+        tab1, tab2, tab3 = st.tabs(["🧗‍♀️ Gyms", "🏆 Rankings", "🛣️ Plan"])
         
         # When a user clicks on a tab, update the active tab in session state
         # This doesn't happen automatically, but we can detect which tab to show
@@ -113,7 +113,9 @@ def main() -> None:
             display_gym_stats(
                 processed_data.raw_data, 
                 processed_data.gym_boulder_counts, 
-                processed_data.participation_counts
+                processed_data.participation_counts,
+                processed_data.completion_histograms,
+                processed_data.outlier_warning_message
             )
 
         with tab2:

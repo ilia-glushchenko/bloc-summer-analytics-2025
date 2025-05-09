@@ -3,6 +3,8 @@ import pandas as pd
 import plotly.graph_objects as go
 from typing import Dict, List, Optional
 import html # Import the html module for escaping
+import numpy as np
+from scipy.stats import norm
 
 import config # Import config
 from data_processing import create_climber_boulder_matrix # Add this import to get climber-boulder data
@@ -10,7 +12,7 @@ from data_processing import create_climber_boulder_matrix # Add this import to g
 # Assuming ui_components.py is in the parent directory or accessible
 from ui_components import render_metrics_row, render_section_header
 
-def display_gym_stats(data: List[Dict], gym_boulder_counts: Dict, participation_counts: Dict) -> None:
+def display_gym_stats(data: List[Dict], gym_boulder_counts: Dict, participation_counts: Dict, completion_histograms: Dict = None, outlier_warning_message: Optional[str] = None) -> None:
     """Displays the Gym Statistics tab content."""
     st.markdown("### Climbing Gym Statistics")
 
@@ -259,5 +261,108 @@ def display_gym_stats(data: List[Dict], gym_boulder_counts: Dict, participation_
                 else:
                     # Display warning OUTSIDE the container if no initial boulder_counts
                     st.warning(f"No boulder data available for {selected_gym}")
+                
+                # Add distribution analysis to gym stats tab - MOVED OUTSIDE the boulder_df checks
+                if completion_histograms and selected_gym in completion_histograms:
+                    render_section_header("Climber Distribution Analysis", level=4)
+                    
+                    hist = completion_histograms.get(selected_gym, {})
+                    if hist:
+                        # Prepare data for distribution visualization
+                        hist_data = []
+                        for n_completed, count in hist.items():
+                            if n_completed > 0:  # Exclude 0 completions
+                                hist_data.extend([n_completed] * count)
+
+                        # Now, only if we have valid hist_data, draw the content
+                        if hist_data:
+                            hist_array = np.array(hist_data)
+                            mean = np.mean(hist_array)
+                            median = np.median(hist_array)
+                            std_dev = np.std(hist_array)
+
+                            # Summary metrics in info bar
+                            st.markdown(f"""
+                            <div class="info-bar">
+                                <b>Climbers:</b> {len(hist_array)} | 
+                                <b>Mean:</b> {mean:.2f} | <b>Median:</b> {median:.2f} | <b>Std Dev:</b> {std_dev:.2f}
+                            </div>
+                            """, unsafe_allow_html=True)
+
+                            # Distribution Plot
+                            render_section_header("Distribution of Completed Boulders", level=5)
+                            st.caption("Note: Distribution analysis excludes climbers who completed 0 boulders at this gym.")
+
+                            # Generate x values across the full range 1-40 for the normal distribution
+                            x = np.linspace(0, 41, 400)  # Increased range and resolution
+                            normal_dist = None
+                            plot_normal = (len(np.unique(hist_array)) >= 5 and std_dev > 0.1)
+                            if plot_normal:
+                                normal_dist = norm.pdf(x, mean, std_dev)
+
+                            unique, counts = np.unique(hist_array, return_counts=True)
+                            hist_df = pd.DataFrame({'Boulders_Completed': unique, 'Climber_Count': counts}).sort_values('Boulders_Completed')
+
+                            fig_dist = go.Figure()
+                            fig_dist.add_trace(go.Bar(x=hist_df['Boulders_Completed'], y=hist_df['Climber_Count'], name='Actual Data', marker_color='royalblue', opacity=0.7))
+
+                            # Calculate a more accurate scaling factor for the normal distribution
+                            # Scale to match the total area under the histogram
+                            total_climbers = np.sum(counts)
+                            bin_width = 1  # Each boulder count is 1 unit wide
+                            # Scale the PDF to match the histogram area
+                            y_scale_factor = total_climbers * bin_width
+                            
+                            # Only plot normal distribution if data is suitable
+                            if plot_normal and normal_dist is not None:
+                                fig_dist.add_trace(go.Scatter(x=x, y=normal_dist * y_scale_factor, mode='lines', name='Normal Dist.', line=dict(color='red', width=2)))
+
+                            fig_dist.add_vline(x=mean, line_dash="dash", line_color="red", annotation_text=f"Mean: {mean:.2f}", annotation_position="top right")
+
+                            # Generate all possible boulder values from 1 to 40 (the maximum per gym)
+                            min_boulders = 1
+                            max_boulders = 40
+                            all_possible_x_values = list(range(min_boulders, max_boulders + 1))
+                            
+                            fig_dist.update_layout(
+                                xaxis_title="Number of Boulders Completed", yaxis_title="Number of Climbers", barmode='overlay', height=400,
+                                margin=dict(l=40, r=40, t=20, b=40),
+                                legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="center", x=0.5),
+                                xaxis=dict(
+                                    tickmode='array', 
+                                    tickvals=all_possible_x_values, 
+                                    ticktext=[str(val) for val in all_possible_x_values],
+                                    range=[0.5, 40.5]  # Set fixed range from 0.5 to 40.5 to ensure bars display properly
+                                ),
+                                plot_bgcolor='rgba(0,0,0,0.02)', paper_bgcolor='rgba(0,0,0,0)'
+                            )
+                            st.plotly_chart(fig_dist, use_container_width=True)
+
+                            # Distribution Data Table
+                            render_section_header("Distribution Data", level=5)
+                            hist_df.columns = ['Boulders Completed', 'Climber Count']
+                            hist_df['Percentage'] = (hist_df['Climber Count'] / hist_df['Climber Count'].sum() * 100)
+                            with st.expander("View Full Distribution Data", expanded=False):
+                                st.dataframe(
+                                    hist_df,
+                                    use_container_width=True,
+                                    column_config={
+                                        "Boulders Completed": st.column_config.NumberColumn(format="%d"),
+                                        "Climber Count": st.column_config.NumberColumn(format="%d"),
+                                        "Percentage": st.column_config.NumberColumn(format="%.1f%%")
+                                    }
+                                )
+                        else:
+                            # Info message if hist exists but hist_data is empty (no >0 completions)
+                            st.info(f"No climbers completed > 0 boulders at {selected_gym} to analyze distribution.")
+                    else:
+                        # Warning if hist is empty for the selected gym
+                        st.warning(f"No completion histogram data available for {selected_gym}")
+                    
+                    # Display the outlier warning at the bottom of the distribution analysis
+                    if outlier_warning_message and "outlier" in outlier_warning_message.lower():
+                        st.markdown("---")
+                        st.info(f"📊 Note: {outlier_warning_message}")
+
     else:
         st.warning("No gym data loaded.") 
