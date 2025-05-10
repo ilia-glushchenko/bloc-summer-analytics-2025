@@ -463,10 +463,21 @@ def display_path_success(data: List[Dict], climbers_df: pd.DataFrame, gym_boulde
     avg_per_gym = climber_data['Avg_Per_Gym_Active']
     active_gyms = climber_data['Gyms_Active']
 
+    # Get total climbers for rank display
+    total_climbers = len(climbers_df)
+    
+    # Get total boulders in dataset
+    # First, find all unique boulders across all gyms
+    all_boulders = set()
+    for climber, gyms_dict in climber_gym_boulders.items():
+        for gym, boulders in gyms_dict.items():
+            all_boulders.update(boulders)
+    total_boulders = len(all_boulders)
+
     # One column for metrics
     render_metrics_row({
-        "Current Rank": f"{current_rank}",
-        "Boulders Completed": f"{boulders_completed}",
+        "Current Rank": f"{current_rank}/{total_climbers}",
+        "Boulders Completed": f"{boulders_completed}/{total_boulders}",
         "Active Gyms Visited": f"{active_gyms}",
         "Avg Boulders/Active Gym": f"{avg_per_gym:.1f}"
     })
