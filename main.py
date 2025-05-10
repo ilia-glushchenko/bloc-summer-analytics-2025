@@ -11,8 +11,26 @@ from selenium.webdriver.support import expected_conditions as EC
 import json
 import random
 import re
+import sys
+
+# Configure console encoding to UTF-8
+if sys.stdout.encoding != 'utf-8':
+    try:
+        sys.stdout.reconfigure(encoding='utf-8')
+    except AttributeError:
+        # For Python < 3.7
+        import io
+        sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
 URL = "https://boulder-top.com/comp/bss25/page/ranking/r=62&k=152&v=42&c=53&h="
+
+def safe_print(text):
+    """Print text safely, handling Unicode characters."""
+    try:
+        print(text)
+    except UnicodeEncodeError:
+        # If encoding fails, try to encode with 'utf-8' and replace unmappable characters
+        print(text.encode('utf-8', errors='replace').decode('utf-8', errors='replace'))
 
 def get_optimized_chrome_options():
     """Return optimized Chrome options for Selenium."""
@@ -159,15 +177,15 @@ def scrape_and_save_results(url=URL, output_file='results.json'):
     html = fetch_page_selenium(url)
     participants = parse_participants(html)
     total = len(participants)
-    print(f"Found {total} participants. Starting scraping...")
+    safe_print(f"Found {total} participants. Starting scraping...")
     options = get_optimized_chrome_options()
     driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
     all_results = []
     for idx, participant in enumerate(participants, 1):
         if not participant['details_link']:
-            print(f"[{idx}/{total}] Skipping {participant['climber']} (no details link)")
+            safe_print(f"[{idx}/{total}] Skipping {participant['climber']} (no details link)")
             continue
-        print(f"[{idx}/{total}] Scraping {participant['climber']} (rank: {participant['rank']})...")
+        safe_print(f"[{idx}/{total}] Scraping {participant['climber']} (rank: {participant['rank']})...")
         details_html = fetch_page_selenium_single(driver, participant['details_link'])
         soup_details = BeautifulSoup(details_html, 'html.parser')
         gyms = parse_gym_details(soup_details)
@@ -177,12 +195,12 @@ def scrape_and_save_results(url=URL, output_file='results.json'):
             'completed': participant['completed'],
             'gyms': gyms
         })
-        time.sleep(random.uniform(0.5, 2))
+        time.sleep(random.uniform(0.4, 1.2))
     driver.quit()
     with open(output_file, 'w', encoding='utf-8') as f:
         json.dump(all_results, f, ensure_ascii=False, indent=2)
-    print(f"Saved {len(all_results)} participants to {output_file}")
-    print("Scraping complete.")
+    safe_print(f"Saved {len(all_results)} participants to {output_file}")
+    safe_print("Scraping complete.")
 
 def main():
     scrape_and_save_results()
