@@ -6981,7 +6981,7 @@
           "18",
           "32",
           "33",
-          "36",
+          "34",
           "37",
           "38",
           "39"
@@ -17086,6 +17086,74 @@
     ]
   },
   {
+    "climber": "Fejes Mate",
+    "rank": 160,
+    "completed": 31,
+    "gyms": [
+      {
+        "gym": "BigWall",
+        "completed": 0,
+        "total": 40,
+        "percent": 0,
+        "completed_climbs": []
+      },
+      {
+        "gym": "Blockfabrik",
+        "completed": 18,
+        "total": 40,
+        "percent": 45,
+        "completed_climbs": [
+          "2",
+          "7",
+          "8",
+          "10",
+          "11",
+          "13",
+          "15",
+          "20",
+          "21",
+          "23",
+          "25",
+          "27",
+          "31",
+          "35",
+          "36",
+          "37",
+          "39",
+          "40"
+        ]
+      },
+      {
+        "gym": "Boulder Monkeys",
+        "completed": 0,
+        "total": 40,
+        "percent": 0,
+        "completed_climbs": []
+      },
+      {
+        "gym": "Boulderbar Wienerberg",
+        "completed": 13,
+        "total": 40,
+        "percent": 32,
+        "completed_climbs": [
+          "6",
+          "7",
+          "8",
+          "9",
+          "15",
+          "16",
+          "17",
+          "29",
+          "30",
+          "37",
+          "38",
+          "39",
+          "40"
+        ]
+      }
+    ]
+  },
+  {
     "climber": "galler Moritz",
     "rank": 160,
     "completed": 31,
@@ -17220,76 +17288,8 @@
     ]
   },
   {
-    "climber": "Fejes Mate",
-    "rank": 163,
-    "completed": 30,
-    "gyms": [
-      {
-        "gym": "BigWall",
-        "completed": 0,
-        "total": 40,
-        "percent": 0,
-        "completed_climbs": []
-      },
-      {
-        "gym": "Blockfabrik",
-        "completed": 18,
-        "total": 40,
-        "percent": 45,
-        "completed_climbs": [
-          "2",
-          "7",
-          "8",
-          "10",
-          "11",
-          "13",
-          "15",
-          "20",
-          "21",
-          "23",
-          "25",
-          "27",
-          "31",
-          "35",
-          "36",
-          "37",
-          "39",
-          "40"
-        ]
-      },
-      {
-        "gym": "Boulder Monkeys",
-        "completed": 0,
-        "total": 40,
-        "percent": 0,
-        "completed_climbs": []
-      },
-      {
-        "gym": "Boulderbar Wienerberg",
-        "completed": 13,
-        "total": 40,
-        "percent": 32,
-        "completed_climbs": [
-          "6",
-          "7",
-          "8",
-          "9",
-          "15",
-          "16",
-          "17",
-          "29",
-          "30",
-          "37",
-          "38",
-          "39",
-          "40"
-        ]
-      }
-    ]
-  },
-  {
     "climber": "Frischmann  Patrick",
-    "rank": 163,
+    "rank": 164,
     "completed": 30,
     "gyms": [
       {
@@ -17356,7 +17356,7 @@
   },
   {
     "climber": "Jenisch Felix",
-    "rank": 163,
+    "rank": 164,
     "completed": 30,
     "gyms": [
       {
