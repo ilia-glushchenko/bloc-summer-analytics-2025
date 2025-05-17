@@ -5,6 +5,7 @@ from typing import Dict, List, Optional
 import html # Import the html module for escaping
 import numpy as np
 from scipy.stats import norm
+import json
 
 import config # Import config
 from data_processing import create_climber_boulder_matrix # Add this import to get climber-boulder data
@@ -363,6 +364,126 @@ def display_gym_stats(data: List[Dict], gym_boulder_counts: Dict, participation_
                     if outlier_warning_message and "outlier" in outlier_warning_message.lower():
                         st.markdown("---")
                         st.info(f"📊 Note: {outlier_warning_message}")
+                
+                # Add Boulder Category Analysis section - NEW SECTION
+                render_section_header("Boulder Category Analysis", level=4)
+                
+                # Load boulders.json
+                try:
+                    with open("boulders.json", "r") as f:
+                        boulders_data = json.load(f)
+                    
+                    # Check if we have data for the selected gym
+                    if selected_gym in boulders_data:
+                        gym_boulders = boulders_data[selected_gym]
+                        
+                        # Extract categories and count boulders in each category
+                        categories = {}
+                        for boulder in gym_boulders:
+                            category = boulder["tags"]["category"]
+                            if category:  # Only count if category is not empty
+                                if category not in categories:
+                                    categories[category] = {"total": 0, "completed": 0}
+                                categories[category]["total"] += 1
+                        
+                        # If we have category data, generate the radar chart
+                        if categories:
+                            # Check which boulders the selected climber has completed
+                            selected_climber_boulders_ids = []
+                            if config.SESSION_KEY_SELECTED_CLIMBER in st.session_state:
+                                selected_climber = st.session_state[config.SESSION_KEY_SELECTED_CLIMBER]
+                                _, climber_gym_boulders = create_climber_boulder_matrix(data)
+                                
+                                if selected_climber in climber_gym_boulders and selected_gym in climber_gym_boulders[selected_climber]:
+                                    selected_climber_boulders_ids = [int(b) for b in climber_gym_boulders[selected_climber][selected_gym] if b.isdigit()]
+                            
+                            # Mark completed boulders for the selected climber
+                            for boulder in gym_boulders:
+                                if boulder["id"] in selected_climber_boulders_ids and boulder["tags"]["category"]:
+                                    category = boulder["tags"]["category"]
+                                    if category in categories:
+                                        categories[category]["completed"] += 1
+                            
+                            # Prepare data for radar chart
+                            category_names = list(categories.keys())
+                            total_counts = [categories[cat]["total"] for cat in category_names]
+                            completed_counts = [categories[cat]["completed"] for cat in category_names]
+                            
+                            # Make the radar chart close by repeating the first point
+                            if category_names:
+                                category_names_closed = category_names + [category_names[0]]
+                                total_counts_closed = total_counts + [total_counts[0]]
+                                completed_counts_closed = completed_counts + [completed_counts[0]]
+                            else:
+                                category_names_closed = category_names
+                                total_counts_closed = total_counts
+                                completed_counts_closed = completed_counts
+                            
+                            # Add radar chart
+                            fig_radar = go.Figure()
+                            
+                            # Add total boulders per category
+                            fig_radar.add_trace(go.Scatterpolar(
+                                r=total_counts_closed,
+                                theta=category_names_closed,
+                                fill='toself',
+                                name='Total Boulders',
+                                fillcolor='rgba(65, 105, 225, 0.2)',
+                                line=dict(color='royalblue')
+                            ))
+                            
+                            # Add completed boulders by selected climber
+                            if any(completed_counts) and config.SESSION_KEY_SELECTED_CLIMBER in st.session_state:
+                                fig_radar.add_trace(go.Scatterpolar(
+                                    r=completed_counts_closed,
+                                    theta=category_names_closed,
+                                    fill='toself',
+                                    name=f'Completed by {st.session_state[config.SESSION_KEY_SELECTED_CLIMBER]}',
+                                    fillcolor='rgba(255, 124, 36, 0.2)',
+                                    line=dict(color='#ff7c24')
+                                ))
+                            
+                            fig_radar.update_layout(
+                                polar=dict(
+                                    radialaxis=dict(
+                                        visible=True,
+                                        range=[0, max(total_counts) + 1]
+                                    )),
+                                showlegend=True,
+                                height=450,
+                                margin=dict(l=40, r=40, t=40, b=40)
+                            )
+                            
+                            st.plotly_chart(fig_radar, use_container_width=True)
+                            
+                            # Category data table
+                            category_df = pd.DataFrame({
+                                'Category': category_names,
+                                'Total Boulders': total_counts
+                            })
+                            
+                            if any(completed_counts) and config.SESSION_KEY_SELECTED_CLIMBER in st.session_state:
+                                category_df['Completed'] = completed_counts
+                                category_df['Completion Rate (%)'] = [(c/t*100 if t > 0 else 0) for c, t in zip(completed_counts, total_counts)]
+                            
+                            st.dataframe(
+                                category_df,
+                                use_container_width=True,
+                                column_config={
+                                    "Category": st.column_config.TextColumn("Category"),
+                                    "Total Boulders": st.column_config.NumberColumn("Total Boulders", format="%d"),
+                                    "Completed": st.column_config.NumberColumn("Completed", format="%d") 
+                                        if "Completed" in category_df.columns else None,
+                                    "Completion Rate (%)": st.column_config.NumberColumn("Completion Rate", format="%.1f%%") 
+                                        if "Completion Rate (%)" in category_df.columns else None
+                                }
+                            )
+                        else:
+                            st.info(f"No category data available for boulders in {selected_gym}.")
+                    else:
+                        st.info(f"No boulder data found for {selected_gym} in boulders.json.")
+                except Exception as e:
+                    st.error(f"Error loading boulder category data: {str(e)}")
 
     else:
         st.warning("No gym data loaded.") 
