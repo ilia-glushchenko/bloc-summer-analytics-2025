@@ -1092,25 +1092,30 @@
         "category": "physical",
         "holds": [
           "crimps",
-          "footchips"
+          "footchips",
+          "volume"
         ],
-        "angle": "vertical",
+        "angle": "overhang",
         "techniques": [
-          "balance"
+          "balance",
+          "tension"
         ]
       }
     },
     {
       "id": 2,
       "tags": {
-        "category": "physical",
+        "category": "technical",
         "holds": [
           "pinches",
-          "crimps"
+          "crimps",
+          "volume",
+          "footchips"
         ],
-        "angle": "vertical",
+        "angle": "overhang",
         "techniques": [
-          "balance"
+          "balance",
+          "tension"
         ]
       }
     },
@@ -1122,7 +1127,9 @@
           "jugs"
         ],
         "angle": "roof",
-        "techniques": []
+        "techniques": [
+          "tension"
+        ]
       }
     },
     {
@@ -1131,16 +1138,15 @@
         "category": "electric",
         "holds": [
           "slopers",
+          "pinches",
           "volume",
           "footchips"
         ],
         "angle": "vertical",
         "techniques": [
           "dyno",
-          "sidestep",
           "mobility",
-          "balance",
-          "slab"
+          "balance"
         ]
       }
     },
@@ -1164,10 +1170,13 @@
         "category": "physical",
         "holds": [
           "crimps",
-          "pinches"
+          "pinches",
+          "slopers"
         ],
         "angle": "overhang",
-        "techniques": []
+        "techniques": [
+          "tension"
+        ]
       }
     },
     {
@@ -1181,9 +1190,10 @@
         ],
         "angle": "vertical",
         "techniques": [
-          "footswap",
           "mobility",
-          "slab"
+          "slab",
+          "balance",
+          "tension"
         ]
       }
     },
@@ -1199,7 +1209,8 @@
         "angle": "vertical",
         "techniques": [
           "mobility",
-          "slab"
+          "slab",
+          "balance"
         ]
       }
     },
@@ -1211,21 +1222,24 @@
           "crimps"
         ],
         "angle": "overhang",
-        "techniques": []
+        "techniques": [
+          "tension"
+        ]
       }
     },
     {
       "id": 10,
       "tags": {
-        "category": "coordination",
+        "category": "electric",
         "holds": [
           "crimps",
-          "slopers"
+          "slopers",
+          "volume"
         ],
         "angle": "overhang",
         "techniques": [
-          "toehook",
-          "dyno"
+          "dyno",
+          "tension"
         ]
       }
     },
@@ -1247,7 +1261,9 @@
         "holds": [
           "jugs",
           "slopers",
-          "dualtex"
+          "dualtex",
+          "slopers",
+          "footchips"
         ],
         "angle": "overhang",
         "techniques": [
@@ -1268,9 +1284,7 @@
         "techniques": [
           "dyno",
           "chimney",
-          "dropknee",
-          "balance",
-          "mantle"
+          "balance"
         ]
       }
     },
@@ -1287,11 +1301,11 @@
         ],
         "angle": "overhang",
         "techniques": [
-          "stepthrough",
-          "sidestep",
-          "undercling",
-          "dropknee",
-          "slab"
+          "slab",
+          "balance",
+          "tension",
+          "dyno",
+          "mobility"
         ]
       }
     },
@@ -1306,9 +1320,9 @@
         ],
         "angle": "vertical",
         "techniques": [
-          "mantle",
-          "stepthrough",
-          "slab"
+          "slab",
+          "balance",
+          "tension"
         ]
       }
     },
@@ -1333,7 +1347,9 @@
           "pockets"
         ],
         "angle": "roof",
-        "techniques": []
+        "techniques": [
+          "tension"
+        ]
       }
     },
     {
@@ -1357,7 +1373,7 @@
         ],
         "angle": "roof",
         "techniques": [
-          "toehook"
+          "dyno"
         ]
       }
     },
@@ -1369,13 +1385,12 @@
           "jugs",
           "crimps",
           "slopers",
-          "notex",
           "dualtex"
         ],
         "angle": "roof",
         "techniques": [
-          "undercling",
-          "toehook"
+          "tension",
+          "dyno"
         ]
       }
     },
@@ -1388,7 +1403,9 @@
           "slopers"
         ],
         "angle": "roof",
-        "techniques": []
+        "techniques": [
+          "tension"
+        ]
       }
     },
     {
@@ -1413,18 +1430,19 @@
           "slopers",
           "crimps",
           "volume",
-          "pinches"
+          "pinches",
+          "footchips"
         ],
         "angle": "overhang",
         "techniques": [
-          "gaston"
+          "dyno"
         ]
       }
     },
     {
       "id": 24,
       "tags": {
-        "category": "physical",
+        "category": "electric",
         "holds": [
           "crimps",
           "volume",
@@ -1433,7 +1451,6 @@
         ],
         "angle": "overhang",
         "techniques": [
-          "mantle",
           "dyno"
         ]
       }
@@ -1448,9 +1465,9 @@
         ],
         "angle": "vertical",
         "techniques": [
-          "nohands",
-          "footswap",
-          "slab"
+          "slab",
+          "balance",
+          "mobility"
         ]
       }
     },
@@ -1460,12 +1477,12 @@
         "category": "electric",
         "holds": [
           "slopers",
-          "volume"
+          "volume",
+          "jugs"
         ],
         "angle": "vertical",
         "techniques": [
           "dyno",
-          "undercling",
           "balance"
         ]
       }
@@ -1482,7 +1499,8 @@
         "angle": "vertical",
         "techniques": [
           "balance",
-          "mobility"
+          "mobility",
+          "tension"
         ]
       }
     },
@@ -1498,9 +1516,9 @@
         ],
         "angle": "vertical",
         "techniques": [
-          "stepup",
           "dyno",
-          "balance"
+          "balance",
+          "tension"
         ]
       }
     },
@@ -1516,7 +1534,6 @@
         ],
         "angle": "vertical",
         "techniques": [
-          "stepup",
           "dyno",
           "balance"
         ]
@@ -1532,8 +1549,7 @@
         ],
         "angle": "overhang",
         "techniques": [
-          "dyno",
-          "undercling"
+          "dyno"
         ]
       }
     },
@@ -1544,13 +1560,13 @@
         "holds": [
           "crimps",
           "slopers",
-          "pinches"
+          "volume",
+          "footchips"
         ],
         "angle": "overhang",
         "techniques": [
           "chimney",
-          "gaston",
-          "dropknee"
+          "tension"
         ]
       }
     },
@@ -1560,12 +1576,14 @@
         "category": "electric",
         "holds": [
           "jugs",
-          "volume"
+          "slopers",
+          "volume",
+          "footchips"
         ],
         "angle": "vertical",
         "techniques": [
           "balance",
-          "sidestep"
+          "dyno"
         ]
       }
     },
@@ -1574,11 +1592,14 @@
       "tags": {
         "category": "physical",
         "holds": [
-          "crimps"
+          "crimps",
+          "volume",
+          "footchips"
         ],
         "angle": "vertical",
         "techniques": [
-          "balance"
+          "balance",
+          "tension"
         ]
       }
     },
@@ -1593,8 +1614,7 @@
         ],
         "angle": "roof",
         "techniques": [
-          "toehook",
-          "heelhook"
+          "tension"
         ]
       }
     },
@@ -1607,7 +1627,10 @@
           "slopers"
         ],
         "angle": "roof",
-        "techniques": []
+        "techniques": [
+          "tension",
+          "balance"
+        ]
       }
     },
     {
@@ -1621,9 +1644,9 @@
         ],
         "angle": "vertical",
         "techniques": [
-          "pressup",
           "mobility",
-          "slab"
+          "slab",
+          "balance"
         ]
       }
     },
@@ -1638,7 +1661,6 @@
         "angle": "vertical",
         "techniques": [
           "chimney",
-          "dropknee",
           "balance"
         ]
       }
@@ -1654,7 +1676,8 @@
         ],
         "angle": "vertical",
         "techniques": [
-          "slab"
+          "slab",
+          "balance"
         ]
       }
     },
@@ -1669,9 +1692,9 @@
         ],
         "angle": "vertical",
         "techniques": [
-          "stepup",
           "dyno",
-          "slab"
+          "slab",
+          "balance"
         ]
       }
     },
@@ -1684,13 +1707,13 @@
           "volume",
           "footchips"
         ],
-        "angle": "vertical",
+        "angle": "overhang",
         "techniques": [
-          "dropknee",
           "chimney",
           "mobility",
-          "footswap",
-          "slab"
+          "slab",
+          "balance",
+          "tension"
         ]
       }
     }

@@ -449,39 +449,379 @@ def display_gym_stats(data: List[Dict], gym_boulder_counts: Dict, participation_
                                         visible=True,
                                         range=[0, max(total_counts) + 1]
                                     )),
-                                showlegend=True,
+                                showlegend=False,
                                 height=450,
                                 margin=dict(l=40, r=40, t=40, b=40)
                             )
                             
-                            st.plotly_chart(fig_radar, use_container_width=True)
+                            # Create two columns for chart and table layout
+                            col1, col2 = st.columns([0.6, 0.4])
                             
-                            # Category data table
-                            category_df = pd.DataFrame({
-                                'Category': category_names,
-                                'Total Boulders': total_counts
-                            })
+                            # Place chart in left column
+                            with col1:
+                                st.plotly_chart(fig_radar, use_container_width=True)
                             
-                            if any(completed_counts) and config.SESSION_KEY_SELECTED_CLIMBER in st.session_state:
-                                category_df['Completed'] = completed_counts
-                                category_df['Completion Rate (%)'] = [(c/t*100 if t > 0 else 0) for c, t in zip(completed_counts, total_counts)]
-                            
-                            st.dataframe(
-                                category_df,
-                                use_container_width=True,
-                                column_config={
-                                    "Category": st.column_config.TextColumn("Category"),
-                                    "Total Boulders": st.column_config.NumberColumn("Total Boulders", format="%d"),
-                                    "Completed": st.column_config.NumberColumn("Completed", format="%d") 
-                                        if "Completed" in category_df.columns else None,
-                                    "Completion Rate (%)": st.column_config.NumberColumn("Completion Rate", format="%.1f%%") 
-                                        if "Completion Rate (%)" in category_df.columns else None
-                                }
-                            )
+                            # Category data table in right column
+                            with col2:
+                                category_df = pd.DataFrame({
+                                    'Category': category_names,
+                                    'Total Boulders': total_counts
+                                })
+                                
+                                if any(completed_counts) and config.SESSION_KEY_SELECTED_CLIMBER in st.session_state:
+                                    category_df['Completed'] = completed_counts
+                                    category_df['Completion Rate (%)'] = [(c/t*100 if t > 0 else 0) for c, t in zip(completed_counts, total_counts)]
+                                
+                                st.dataframe(
+                                    category_df,
+                                    use_container_width=True,
+                                    column_config={
+                                        "Category": st.column_config.TextColumn("Category"),
+                                        "Total Boulders": st.column_config.NumberColumn("Total Boulders", format="%d"),
+                                        "Completed": st.column_config.NumberColumn("Completed", format="%d") 
+                                            if "Completed" in category_df.columns else None,
+                                        "Completion Rate (%)": st.column_config.NumberColumn("Completion Rate", format="%.1f%%") 
+                                            if "Completion Rate (%)" in category_df.columns else None
+                                    }
+                                )
                         else:
                             st.info(f"No category data available for boulders in {selected_gym}.")
                     else:
                         st.info(f"No boulder data found for {selected_gym} in boulders.json.")
+                
+                    # Wall Angle Analysis - NEW SECTION
+                    render_section_header("Wall Angle Analysis", level=5)
+                    
+                    # Extract angles and count boulders for each angle
+                    angles = {}
+                    for boulder in gym_boulders:
+                        angle = boulder["tags"]["angle"]
+                        if angle:  # Only count if angle is not empty
+                            if angle not in angles:
+                                angles[angle] = {"total": 0, "completed": 0}
+                            angles[angle]["total"] += 1
+                    
+                    # If we have angle data, generate the radar chart
+                    if angles:
+                        # Mark completed boulders for the selected climber
+                        for boulder in gym_boulders:
+                            if boulder["id"] in selected_climber_boulders_ids and boulder["tags"]["angle"]:
+                                angle = boulder["tags"]["angle"]
+                                if angle in angles:
+                                    angles[angle]["completed"] += 1
+                        
+                        # Prepare data for radar chart
+                        angle_names = list(angles.keys())
+                        angle_total_counts = [angles[ang]["total"] for ang in angle_names]
+                        angle_completed_counts = [angles[ang]["completed"] for ang in angle_names]
+                        
+                        # Make the radar chart close by repeating the first point
+                        if angle_names:
+                            angle_names_closed = angle_names + [angle_names[0]]
+                            angle_total_counts_closed = angle_total_counts + [angle_total_counts[0]]
+                            angle_completed_counts_closed = angle_completed_counts + [angle_completed_counts[0]]
+                        else:
+                            angle_names_closed = angle_names
+                            angle_total_counts_closed = angle_total_counts
+                            angle_completed_counts_closed = angle_completed_counts
+                        
+                        # Add radar chart
+                        fig_angle_radar = go.Figure()
+                        
+                        # Add total boulders per angle
+                        fig_angle_radar.add_trace(go.Scatterpolar(
+                            r=angle_total_counts_closed,
+                            theta=angle_names_closed,
+                            fill='toself',
+                            name='Total Boulders',
+                            fillcolor='rgba(65, 105, 225, 0.2)',
+                            line=dict(color='royalblue')
+                        ))
+                        
+                        # Add completed boulders by selected climber
+                        if any(angle_completed_counts) and config.SESSION_KEY_SELECTED_CLIMBER in st.session_state:
+                            fig_angle_radar.add_trace(go.Scatterpolar(
+                                r=angle_completed_counts_closed,
+                                theta=angle_names_closed,
+                                fill='toself',
+                                name=f'Completed by {st.session_state[config.SESSION_KEY_SELECTED_CLIMBER]}',
+                                fillcolor='rgba(255, 124, 36, 0.2)',
+                                line=dict(color='#ff7c24')
+                            ))
+                        
+                        fig_angle_radar.update_layout(
+                            polar=dict(
+                                radialaxis=dict(
+                                    visible=True,
+                                    range=[0, max(angle_total_counts) + 1]
+                                )),
+                            showlegend=False,
+                            height=450,
+                            margin=dict(l=40, r=40, t=40, b=40)
+                        )
+                        
+                        # Create two columns for chart and table layout
+                        col1, col2 = st.columns([0.6, 0.4])
+                        
+                        # Place chart in left column
+                        with col1:
+                            st.plotly_chart(fig_angle_radar, use_container_width=True)
+                        
+                        # Angle data table in right column
+                        with col2:
+                            angle_df = pd.DataFrame({
+                                'Wall Angle': angle_names,
+                                'Total Boulders': angle_total_counts
+                            })
+                            
+                            if any(angle_completed_counts) and config.SESSION_KEY_SELECTED_CLIMBER in st.session_state:
+                                angle_df['Completed'] = angle_completed_counts
+                                angle_df['Completion Rate (%)'] = [(c/t*100 if t > 0 else 0) for c, t in zip(angle_completed_counts, angle_total_counts)]
+                            
+                            st.dataframe(
+                                angle_df,
+                                use_container_width=True,
+                                column_config={
+                                    "Wall Angle": st.column_config.TextColumn("Wall Angle"),
+                                    "Total Boulders": st.column_config.NumberColumn("Total Boulders", format="%d"),
+                                    "Completed": st.column_config.NumberColumn("Completed", format="%d") 
+                                        if "Completed" in angle_df.columns else None,
+                                    "Completion Rate (%)": st.column_config.NumberColumn("Completion Rate", format="%.1f%%") 
+                                        if "Completion Rate (%)" in angle_df.columns else None
+                                }
+                            )
+                    else:
+                        st.info(f"No wall angle data available for boulders in {selected_gym}.")
+                    
+                    # Hold Types Analysis - NEW SECTION
+                    render_section_header("Hold Types Analysis", level=5)
+                    
+                    # Extract hold types and count boulders for each hold type
+                    holds = {}
+                    for boulder in gym_boulders:
+                        # Hold types are stored as an array - each boulder can have multiple hold types
+                        hold_types = boulder["tags"]["holds"]
+                        if hold_types and isinstance(hold_types, list):
+                            for hold_type in hold_types:
+                                if hold_type:  # Only count if hold type is not empty
+                                    if hold_type not in holds:
+                                        holds[hold_type] = {"total": 0, "completed": 0}
+                                    holds[hold_type]["total"] += 1
+                    
+                    # If we have hold data, generate the radar chart
+                    if holds:
+                        # Mark completed boulders for the selected climber
+                        for boulder in gym_boulders:
+                            if boulder["id"] in selected_climber_boulders_ids and boulder["tags"]["holds"]:
+                                hold_types = boulder["tags"]["holds"]
+                                if isinstance(hold_types, list):
+                                    for hold_type in hold_types:
+                                        if hold_type and hold_type in holds:
+                                            holds[hold_type]["completed"] += 1
+                        
+                        # Prepare data for radar chart
+                        hold_names = list(holds.keys())
+                        hold_total_counts = [holds[hold]["total"] for hold in hold_names]
+                        hold_completed_counts = [holds[hold]["completed"] for hold in hold_names]
+                        
+                        # Sort hold types by count (highest to lowest)
+                        sorted_indices = sorted(range(len(hold_total_counts)), key=lambda i: hold_total_counts[i], reverse=True)
+                        hold_names = [hold_names[i] for i in sorted_indices]
+                        hold_total_counts = [hold_total_counts[i] for i in sorted_indices]
+                        hold_completed_counts = [hold_completed_counts[i] for i in sorted_indices]
+                        
+                        # Make the radar chart close by repeating the first point
+                        if hold_names:
+                            hold_names_closed = hold_names + [hold_names[0]]
+                            hold_total_counts_closed = hold_total_counts + [hold_total_counts[0]]
+                            hold_completed_counts_closed = hold_completed_counts + [hold_completed_counts[0]]
+                        else:
+                            hold_names_closed = hold_names
+                            hold_total_counts_closed = hold_total_counts
+                            hold_completed_counts_closed = hold_completed_counts
+                        
+                        # Add radar chart
+                        fig_hold_radar = go.Figure()
+                        
+                        # Add total boulders per hold type
+                        fig_hold_radar.add_trace(go.Scatterpolar(
+                            r=hold_total_counts_closed,
+                            theta=hold_names_closed,
+                            fill='toself',
+                            name='Total Boulders',
+                            fillcolor='rgba(65, 105, 225, 0.2)',
+                            line=dict(color='royalblue')
+                        ))
+                        
+                        # Add completed boulders by selected climber
+                        if any(hold_completed_counts) and config.SESSION_KEY_SELECTED_CLIMBER in st.session_state:
+                            fig_hold_radar.add_trace(go.Scatterpolar(
+                                r=hold_completed_counts_closed,
+                                theta=hold_names_closed,
+                                fill='toself',
+                                name=f'Completed by {st.session_state[config.SESSION_KEY_SELECTED_CLIMBER]}',
+                                fillcolor='rgba(255, 124, 36, 0.2)',
+                                line=dict(color='#ff7c24')
+                            ))
+                        
+                        fig_hold_radar.update_layout(
+                            polar=dict(
+                                radialaxis=dict(
+                                    visible=True,
+                                    range=[0, max(hold_total_counts) + 1]
+                                )),
+                            showlegend=False,
+                            height=450,
+                            margin=dict(l=40, r=40, t=40, b=40)
+                        )
+                        
+                        # Create two columns for chart and table layout
+                        col1, col2 = st.columns([0.6, 0.4])
+                        
+                        # Place chart in left column
+                        with col1:
+                            st.plotly_chart(fig_hold_radar, use_container_width=True)
+                        
+                        # Hold data table in right column
+                        with col2:
+                            hold_df = pd.DataFrame({
+                                'Hold Type': hold_names,
+                                'Total Boulders': hold_total_counts
+                            })
+                            
+                            if any(hold_completed_counts) and config.SESSION_KEY_SELECTED_CLIMBER in st.session_state:
+                                hold_df['Completed'] = hold_completed_counts
+                                hold_df['Completion Rate (%)'] = [(c/t*100 if t > 0 else 0) for c, t in zip(hold_completed_counts, hold_total_counts)]
+                            
+                            st.dataframe(
+                                hold_df,
+                                use_container_width=True,
+                                column_config={
+                                    "Hold Type": st.column_config.TextColumn("Hold Type"),
+                                    "Total Boulders": st.column_config.NumberColumn("Total Boulders", format="%d"),
+                                    "Completed": st.column_config.NumberColumn("Completed", format="%d") 
+                                        if "Completed" in hold_df.columns else None,
+                                    "Completion Rate (%)": st.column_config.NumberColumn("Completion Rate", format="%.1f%%") 
+                                        if "Completion Rate (%)" in hold_df.columns else None
+                                }
+                            )
+                    else:
+                        st.info(f"No hold type data available for boulders in {selected_gym}.")
+                    
+                    # Techniques Analysis - NEW SECTION
+                    render_section_header("Techniques Analysis", level=5)
+                    
+                    # Extract techniques and count boulders for each technique
+                    techniques = {}
+                    for boulder in gym_boulders:
+                        # Techniques are stored as an array - each boulder can have multiple techniques
+                        technique_types = boulder["tags"]["techniques"]
+                        if technique_types and isinstance(technique_types, list):
+                            for technique in technique_types:
+                                if technique:  # Only count if technique is not empty
+                                    if technique not in techniques:
+                                        techniques[technique] = {"total": 0, "completed": 0}
+                                    techniques[technique]["total"] += 1
+                    
+                    # If we have technique data, generate the radar chart
+                    if techniques:
+                        # Mark completed boulders for the selected climber
+                        for boulder in gym_boulders:
+                            if boulder["id"] in selected_climber_boulders_ids and boulder["tags"]["techniques"]:
+                                technique_types = boulder["tags"]["techniques"]
+                                if isinstance(technique_types, list):
+                                    for technique in technique_types:
+                                        if technique and technique in techniques:
+                                            techniques[technique]["completed"] += 1
+                        
+                        # Prepare data for radar chart
+                        technique_names = list(techniques.keys())
+                        technique_total_counts = [techniques[tech]["total"] for tech in technique_names]
+                        technique_completed_counts = [techniques[tech]["completed"] for tech in technique_names]
+                        
+                        # Sort techniques by count (highest to lowest)
+                        sorted_indices = sorted(range(len(technique_total_counts)), key=lambda i: technique_total_counts[i], reverse=True)
+                        technique_names = [technique_names[i] for i in sorted_indices]
+                        technique_total_counts = [technique_total_counts[i] for i in sorted_indices]
+                        technique_completed_counts = [technique_completed_counts[i] for i in sorted_indices]
+                        
+                        # Make the radar chart close by repeating the first point
+                        if technique_names:
+                            technique_names_closed = technique_names + [technique_names[0]]
+                            technique_total_counts_closed = technique_total_counts + [technique_total_counts[0]]
+                            technique_completed_counts_closed = technique_completed_counts + [technique_completed_counts[0]]
+                        else:
+                            technique_names_closed = technique_names
+                            technique_total_counts_closed = technique_total_counts
+                            technique_completed_counts_closed = technique_completed_counts
+                        
+                        # Add radar chart
+                        fig_technique_radar = go.Figure()
+                        
+                        # Add total boulders per technique
+                        fig_technique_radar.add_trace(go.Scatterpolar(
+                            r=technique_total_counts_closed,
+                            theta=technique_names_closed,
+                            fill='toself',
+                            name='Total Boulders',
+                            fillcolor='rgba(65, 105, 225, 0.2)',
+                            line=dict(color='royalblue')
+                        ))
+                        
+                        # Add completed boulders by selected climber
+                        if any(technique_completed_counts) and config.SESSION_KEY_SELECTED_CLIMBER in st.session_state:
+                            fig_technique_radar.add_trace(go.Scatterpolar(
+                                r=technique_completed_counts_closed,
+                                theta=technique_names_closed,
+                                fill='toself',
+                                name=f'Completed by {st.session_state[config.SESSION_KEY_SELECTED_CLIMBER]}',
+                                fillcolor='rgba(255, 124, 36, 0.2)',
+                                line=dict(color='#ff7c24')
+                            ))
+                        
+                        fig_technique_radar.update_layout(
+                            polar=dict(
+                                radialaxis=dict(
+                                    visible=True,
+                                    range=[0, max(technique_total_counts) + 1]
+                                )),
+                            showlegend=False,
+                            height=450,
+                            margin=dict(l=40, r=40, t=40, b=40)
+                        )
+                        
+                        # Create two columns for chart and table layout
+                        col1, col2 = st.columns([0.6, 0.4])
+                        
+                        # Place chart in left column
+                        with col1:
+                            st.plotly_chart(fig_technique_radar, use_container_width=True)
+                        
+                        # Technique data table in right column
+                        with col2:
+                            technique_df = pd.DataFrame({
+                                'Technique': technique_names,
+                                'Total Boulders': technique_total_counts
+                            })
+                            
+                            if any(technique_completed_counts) and config.SESSION_KEY_SELECTED_CLIMBER in st.session_state:
+                                technique_df['Completed'] = technique_completed_counts
+                                technique_df['Completion Rate (%)'] = [(c/t*100 if t > 0 else 0) for c, t in zip(technique_completed_counts, technique_total_counts)]
+                            
+                            st.dataframe(
+                                technique_df,
+                                use_container_width=True,
+                                column_config={
+                                    "Technique": st.column_config.TextColumn("Technique"),
+                                    "Total Boulders": st.column_config.NumberColumn("Total Boulders", format="%d"),
+                                    "Completed": st.column_config.NumberColumn("Completed", format="%d") 
+                                        if "Completed" in technique_df.columns else None,
+                                    "Completion Rate (%)": st.column_config.NumberColumn("Completion Rate", format="%.1f%%") 
+                                        if "Completion Rate (%)" in technique_df.columns else None
+                                }
+                            )
+                    else:
+                        st.info(f"No technique data available for boulders in {selected_gym}.")
                 except Exception as e:
                     st.error(f"Error loading boulder category data: {str(e)}")
 
