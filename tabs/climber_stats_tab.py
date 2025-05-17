@@ -126,7 +126,7 @@ def display_climber_stats(data: List[Dict], climbers_df: pd.DataFrame, completio
             fig_top.update_layout(
                 xaxis_title='Climber', 
                 yaxis_title='Boulders Completed', 
-                height=400,
+                height=450,  # Increased from 400 to 450 to provide more space for labels
                 margin=dict(l=25, r=15, t=5, b=100), 
                 xaxis=dict(tickangle=45, type='category'),
                 uniformtext_minsize=8, 
