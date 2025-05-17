@@ -1,170 +1,1698 @@
 {
   "BigWall": [
-    { "id": 1, "tags": [] },
-    { "id": 2, "tags": [] },
-    { "id": 3, "tags": [] },
-    { "id": 4, "tags": [] },
-    { "id": 5, "tags": [] },
-    { "id": 6, "tags": [] },
-    { "id": 7, "tags": [] },
-    { "id": 8, "tags": [] },
-    { "id": 9, "tags": [] },
-    { "id": 10, "tags": [] },
-    { "id": 11, "tags": [] },
-    { "id": 12, "tags": [] },
-    { "id": 13, "tags": [] },
-    { "id": 14, "tags": [] },
-    { "id": 15, "tags": [] },
-    { "id": 16, "tags": [] },
-    { "id": 17, "tags": [] },
-    { "id": 18, "tags": [] },
-    { "id": 19, "tags": [] },
-    { "id": 20, "tags": [] },
-    { "id": 21, "tags": [] },
-    { "id": 22, "tags": [] },
-    { "id": 23, "tags": [] },
-    { "id": 24, "tags": [] },
-    { "id": 25, "tags": [] },
-    { "id": 26, "tags": [] },
-    { "id": 27, "tags": [] },
-    { "id": 28, "tags": [] },
-    { "id": 29, "tags": [] },
-    { "id": 30, "tags": [] },
-    { "id": 31, "tags": [] },
-    { "id": 32, "tags": [] },
-    { "id": 33, "tags": [] },
-    { "id": 34, "tags": [] },
-    { "id": 35, "tags": [] },
-    { "id": 36, "tags": [] },
-    { "id": 37, "tags": [] },
-    { "id": 38, "tags": [] },
-    { "id": 39, "tags": [] },
-    { "id": 40, "tags": [] }
+    {
+      "id": 1,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 2,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 3,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 4,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 5,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 6,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 7,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 8,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 9,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 10,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 11,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 12,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 13,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 14,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 15,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 16,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 17,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 18,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 19,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 20,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 21,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 22,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 23,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 24,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 25,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 26,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 27,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 28,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 29,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 30,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 31,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 32,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 33,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 34,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 35,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 36,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 37,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 38,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 39,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 40,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    }
   ],
   "Blockfabrik": [
-    { "id": 1, "tags": [] },
-    { "id": 2, "tags": [] },
-    { "id": 3, "tags": [] },
-    { "id": 4, "tags": [] },
-    { "id": 5, "tags": [] },
-    { "id": 6, "tags": [] },
-    { "id": 7, "tags": [] },
-    { "id": 8, "tags": [] },
-    { "id": 9, "tags": [] },
-    { "id": 10, "tags": [] },
-    { "id": 11, "tags": [] },
-    { "id": 12, "tags": [] },
-    { "id": 13, "tags": [] },
-    { "id": 14, "tags": [] },
-    { "id": 15, "tags": [] },
-    { "id": 16, "tags": [] },
-    { "id": 17, "tags": [] },
-    { "id": 18, "tags": [] },
-    { "id": 19, "tags": [] },
-    { "id": 20, "tags": [] },
-    { "id": 21, "tags": [] },
-    { "id": 22, "tags": [] },
-    { "id": 23, "tags": [] },
-    { "id": 24, "tags": [] },
-    { "id": 25, "tags": [] },
-    { "id": 26, "tags": [] },
-    { "id": 27, "tags": [] },
-    { "id": 28, "tags": [] },
-    { "id": 29, "tags": [] },
-    { "id": 30, "tags": [] },
-    { "id": 31, "tags": [] },
-    { "id": 32, "tags": [] },
-    { "id": 33, "tags": [] },
-    { "id": 34, "tags": [] },
-    { "id": 35, "tags": [] },
-    { "id": 36, "tags": [] },
-    { "id": 37, "tags": [] },
-    { "id": 38, "tags": [] },
-    { "id": 39, "tags": [] },
-    { "id": 40, "tags": [] }
+    {
+      "id": 1,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 2,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 3,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 4,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 5,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 6,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 7,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 8,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 9,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 10,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 11,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 12,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 13,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 14,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 15,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 16,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 17,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 18,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 19,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 20,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 21,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 22,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 23,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 24,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 25,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 26,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 27,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 28,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 29,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 30,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 31,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 32,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 33,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 34,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 35,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 36,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 37,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 38,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 39,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 40,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    }
   ],
   "Boulder Monkeys": [
-    { "id": 1, "tags": [] },
-    { "id": 2, "tags": [] },
-    { "id": 3, "tags": [] },
-    { "id": 4, "tags": [] },
-    { "id": 5, "tags": [] },
-    { "id": 6, "tags": [] },
-    { "id": 7, "tags": [] },
-    { "id": 8, "tags": [] },
-    { "id": 9, "tags": [] },
-    { "id": 10, "tags": [] },
-    { "id": 11, "tags": [] },
-    { "id": 12, "tags": [] },
-    { "id": 13, "tags": [] },
-    { "id": 14, "tags": [] },
-    { "id": 15, "tags": [] },
-    { "id": 16, "tags": [] },
-    { "id": 17, "tags": [] },
-    { "id": 18, "tags": [] },
-    { "id": 19, "tags": [] },
-    { "id": 20, "tags": [] },
-    { "id": 21, "tags": [] },
-    { "id": 22, "tags": [] },
-    { "id": 23, "tags": [] },
-    { "id": 24, "tags": [] },
-    { "id": 25, "tags": [] },
-    { "id": 26, "tags": [] },
-    { "id": 27, "tags": [] },
-    { "id": 28, "tags": [] },
-    { "id": 29, "tags": [] },
-    { "id": 30, "tags": [] },
-    { "id": 31, "tags": [] },
-    { "id": 32, "tags": [] },
-    { "id": 33, "tags": [] },
-    { "id": 34, "tags": [] },
-    { "id": 35, "tags": [] },
-    { "id": 36, "tags": [] },
-    { "id": 37, "tags": [] },
-    { "id": 38, "tags": [] },
-    { "id": 39, "tags": [] },
-    { "id": 40, "tags": [] }
+    {
+      "id": 1,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 2,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 3,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 4,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 5,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 6,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 7,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 8,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 9,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 10,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 11,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 12,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 13,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 14,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 15,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 16,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 17,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 18,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 19,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 20,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 21,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 22,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 23,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 24,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 25,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 26,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 27,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 28,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 29,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 30,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 31,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 32,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 33,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 34,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 35,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 36,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 37,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 38,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 39,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    },
+    {
+      "id": 40,
+      "tags": {
+        "category": "",
+        "holds": [],
+        "angle": "",
+        "techniques": []
+      }
+    }
   ],
   "Boulderbar Wienerberg": [
-    { "id": 1, "tags": ["physical", "crimps", "balance", "footchips", "vertical"] },
-    { "id": 2, "tags": ["physical", "pinches", "crimps", "balance", "vertical"] },
-    { "id": 3, "tags": ["physical", "jugs", "roof"] },
-    { "id": 4, "tags": ["electric", "slopers", "volume", "footchips", "dyno", "sidestep", "mobility", "balance", "vertical"] },
-    { "id": 5, "tags": ["physical", "crimps", "footchips", "balance", "vertical"] },
-    { "id": 6, "tags": ["physical", "crimps", "pinches", "overhang"] },
-    { "id": 7, "tags": ["technical", "crimps", "footchips", "volume", "footswap", "slab", "mobility", "vertical"] },
-    { "id": 8, "tags": ["technical", "jugs", "crimps", "volume", "slab", "mobility", "vertical"] },
-    { "id": 9, "tags": ["physical", "crimps", "overhang"] },
-    { "id": 10, "tags": ["coordination", "crimps", "slopers", "toehook", "dyno", "overhang"] },
-    { "id": 11, "tags": ["physical", "jugs", "vertical"] },
-    { "id": 12, "tags": ["coordination", "jugs", "slopers", "dyno", "dualtex", "overhang"] },
-    { "id": 13, "tags": ["electric", "crimps", "jugs", "volume", "dyno", "chimney", "dropknee", "balance", "mantle"] },
-    { "id": 14, "tags": ["technical", "crimps", "volume", "slopers", "footchips", "stepthrough", "sidestep", "undercling", "dropknee", "dualtex", "slab", "overhang"] },
-    { "id": 15, "tags": ["technical", "crimps", "volume", "footchips", "mantle", "stepthrough", "slab", "vertical"] },
-    { "id": 16, "tags": ["physical", "slopers", "vertical"] },
-    { "id": 17, "tags": ["physical", "crimps", "slopers", "pockets", "roof"] },
-    { "id": 18, "tags": ["physical", "jugs", "roof"] },
-    { "id": 19, "tags": ["physical", "slopers", "crimps", "toehook", "roof"] },
-    { "id": 20, "tags": ["physical", "jugs", "crimps", "slopers", "notex", "dualtex", "undercling", "toehook", "roof"] },
-    { "id": 21, "tags": ["physical", "crimps", "slopers", "roof"] },
-    { "id": 22, "tags": ["coordination", "slopers", "pockets", "dyno", "roof"] },
-    { "id": 23, "tags": ["physical", "slopers", "crimps", "volume", "pinches", "gaston", "overhang"] },
-    { "id": 24, "tags": ["physical", "crimps", "volume", "slopers", "overhang", "footchips", "mantle", "dyno"] },
-    { "id": 25, "tags": ["technical", "footchips", "volume", "nohands", "vertical", "slab", "footswap"] },
-    { "id": 26, "tags": ["electric", "slopers", "volume", "dyno", "undercling", "balance", "vertical"] },
-    { "id": 27, "tags": ["physical", "crimps", "volume", "footchips", "balance", "mobility", "vertical"] },
-    { "id": 28, "tags": ["electric", "jugs", "crimps", "dualtex", "stepup", "dyno", "balance", "vertical", "footchips"] },
-    { "id": 29, "tags": ["electric", "crimps", "jugs", "slopers", "volume", "stepup", "dyno", "vertical", "balance"] },
-    { "id": 30, "tags": ["coordination", "jugs", "slopers", "overhang", "dyno", "undercling"] },
-    { "id": 31, "tags": ["physical", "crimps", "slopers", "pinches", "chimney", "gaston", "dropknee", "overhang"] },
-    { "id": 32, "tags": ["electric", "jugs", "balance", "volume", "sidestep", "vertical"] },
-    { "id": 33, "tags": ["physical", "crimps", "vertical", "balance"] },
-    { "id": 34, "tags": ["physical", "jugs", "slopers", "pockets", "toehook", "heelhook", "roof"] },
-    { "id": 35, "tags": ["physical", "crimps", "slopers", "roof"] },
-    { "id": 36, "tags": ["technical", "slopers", "footchips", "dualtex", "pressup", "mobility", "slab", "vertical"] },
-    { "id": 37, "tags": ["technical", "volume", "footchips", "chimney", "dropknee", "balance"] },
-    { "id": 38, "tags": ["technical", "jugs", "slopers", "slab", "volume", "vertical"] },
-    { "id": 39, "tags": ["technical", "jugs", "slopers", "volume", "stepup", "slab", "dyno", "vertical"] },
-    { "id": 40, "tags": ["technical", "crimps", "volume", "dropknee", "chimney", "slab", "footchips", "mobility", "footswap", "vertical"] }
+    {
+      "id": 1,
+      "tags": {
+        "category": "physical",
+        "holds": [
+          "crimps",
+          "footchips"
+        ],
+        "angle": "vertical",
+        "techniques": [
+          "balance"
+        ]
+      }
+    },
+    {
+      "id": 2,
+      "tags": {
+        "category": "physical",
+        "holds": [
+          "pinches",
+          "crimps"
+        ],
+        "angle": "vertical",
+        "techniques": [
+          "balance"
+        ]
+      }
+    },
+    {
+      "id": 3,
+      "tags": {
+        "category": "physical",
+        "holds": [
+          "jugs"
+        ],
+        "angle": "roof",
+        "techniques": []
+      }
+    },
+    {
+      "id": 4,
+      "tags": {
+        "category": "electric",
+        "holds": [
+          "slopers",
+          "volume",
+          "footchips"
+        ],
+        "angle": "vertical",
+        "techniques": [
+          "dyno",
+          "sidestep",
+          "mobility",
+          "balance",
+          "slab"
+        ]
+      }
+    },
+    {
+      "id": 5,
+      "tags": {
+        "category": "physical",
+        "holds": [
+          "crimps",
+          "footchips"
+        ],
+        "angle": "vertical",
+        "techniques": [
+          "balance"
+        ]
+      }
+    },
+    {
+      "id": 6,
+      "tags": {
+        "category": "physical",
+        "holds": [
+          "crimps",
+          "pinches"
+        ],
+        "angle": "overhang",
+        "techniques": []
+      }
+    },
+    {
+      "id": 7,
+      "tags": {
+        "category": "technical",
+        "holds": [
+          "crimps",
+          "footchips",
+          "volume"
+        ],
+        "angle": "vertical",
+        "techniques": [
+          "footswap",
+          "mobility",
+          "slab"
+        ]
+      }
+    },
+    {
+      "id": 8,
+      "tags": {
+        "category": "technical",
+        "holds": [
+          "jugs",
+          "crimps",
+          "volume"
+        ],
+        "angle": "vertical",
+        "techniques": [
+          "mobility",
+          "slab"
+        ]
+      }
+    },
+    {
+      "id": 9,
+      "tags": {
+        "category": "physical",
+        "holds": [
+          "crimps"
+        ],
+        "angle": "overhang",
+        "techniques": []
+      }
+    },
+    {
+      "id": 10,
+      "tags": {
+        "category": "coordination",
+        "holds": [
+          "crimps",
+          "slopers"
+        ],
+        "angle": "overhang",
+        "techniques": [
+          "toehook",
+          "dyno"
+        ]
+      }
+    },
+    {
+      "id": 11,
+      "tags": {
+        "category": "physical",
+        "holds": [
+          "jugs"
+        ],
+        "angle": "vertical",
+        "techniques": []
+      }
+    },
+    {
+      "id": 12,
+      "tags": {
+        "category": "coordination",
+        "holds": [
+          "jugs",
+          "slopers",
+          "dualtex"
+        ],
+        "angle": "overhang",
+        "techniques": [
+          "dyno"
+        ]
+      }
+    },
+    {
+      "id": 13,
+      "tags": {
+        "category": "electric",
+        "holds": [
+          "crimps",
+          "jugs",
+          "volume"
+        ],
+        "angle": "vertical",
+        "techniques": [
+          "dyno",
+          "chimney",
+          "dropknee",
+          "balance",
+          "mantle"
+        ]
+      }
+    },
+    {
+      "id": 14,
+      "tags": {
+        "category": "technical",
+        "holds": [
+          "crimps",
+          "volume",
+          "slopers",
+          "footchips",
+          "dualtex"
+        ],
+        "angle": "overhang",
+        "techniques": [
+          "stepthrough",
+          "sidestep",
+          "undercling",
+          "dropknee",
+          "slab"
+        ]
+      }
+    },
+    {
+      "id": 15,
+      "tags": {
+        "category": "technical",
+        "holds": [
+          "crimps",
+          "volume",
+          "footchips"
+        ],
+        "angle": "vertical",
+        "techniques": [
+          "mantle",
+          "stepthrough",
+          "slab"
+        ]
+      }
+    },
+    {
+      "id": 16,
+      "tags": {
+        "category": "physical",
+        "holds": [
+          "slopers"
+        ],
+        "angle": "vertical",
+        "techniques": []
+      }
+    },
+    {
+      "id": 17,
+      "tags": {
+        "category": "physical",
+        "holds": [
+          "crimps",
+          "slopers",
+          "pockets"
+        ],
+        "angle": "roof",
+        "techniques": []
+      }
+    },
+    {
+      "id": 18,
+      "tags": {
+        "category": "physical",
+        "holds": [
+          "jugs"
+        ],
+        "angle": "roof",
+        "techniques": []
+      }
+    },
+    {
+      "id": 19,
+      "tags": {
+        "category": "physical",
+        "holds": [
+          "slopers",
+          "crimps"
+        ],
+        "angle": "roof",
+        "techniques": [
+          "toehook"
+        ]
+      }
+    },
+    {
+      "id": 20,
+      "tags": {
+        "category": "physical",
+        "holds": [
+          "jugs",
+          "crimps",
+          "slopers",
+          "notex",
+          "dualtex"
+        ],
+        "angle": "roof",
+        "techniques": [
+          "undercling",
+          "toehook"
+        ]
+      }
+    },
+    {
+      "id": 21,
+      "tags": {
+        "category": "physical",
+        "holds": [
+          "crimps",
+          "slopers"
+        ],
+        "angle": "roof",
+        "techniques": []
+      }
+    },
+    {
+      "id": 22,
+      "tags": {
+        "category": "coordination",
+        "holds": [
+          "slopers",
+          "pockets"
+        ],
+        "angle": "roof",
+        "techniques": [
+          "dyno"
+        ]
+      }
+    },
+    {
+      "id": 23,
+      "tags": {
+        "category": "physical",
+        "holds": [
+          "slopers",
+          "crimps",
+          "volume",
+          "pinches"
+        ],
+        "angle": "overhang",
+        "techniques": [
+          "gaston"
+        ]
+      }
+    },
+    {
+      "id": 24,
+      "tags": {
+        "category": "physical",
+        "holds": [
+          "crimps",
+          "volume",
+          "slopers",
+          "footchips"
+        ],
+        "angle": "overhang",
+        "techniques": [
+          "mantle",
+          "dyno"
+        ]
+      }
+    },
+    {
+      "id": 25,
+      "tags": {
+        "category": "technical",
+        "holds": [
+          "footchips",
+          "volume"
+        ],
+        "angle": "vertical",
+        "techniques": [
+          "nohands",
+          "footswap",
+          "slab"
+        ]
+      }
+    },
+    {
+      "id": 26,
+      "tags": {
+        "category": "electric",
+        "holds": [
+          "slopers",
+          "volume"
+        ],
+        "angle": "vertical",
+        "techniques": [
+          "dyno",
+          "undercling",
+          "balance"
+        ]
+      }
+    },
+    {
+      "id": 27,
+      "tags": {
+        "category": "physical",
+        "holds": [
+          "crimps",
+          "volume",
+          "footchips"
+        ],
+        "angle": "vertical",
+        "techniques": [
+          "balance",
+          "mobility"
+        ]
+      }
+    },
+    {
+      "id": 28,
+      "tags": {
+        "category": "electric",
+        "holds": [
+          "jugs",
+          "crimps",
+          "footchips",
+          "dualtex"
+        ],
+        "angle": "vertical",
+        "techniques": [
+          "stepup",
+          "dyno",
+          "balance"
+        ]
+      }
+    },
+    {
+      "id": 29,
+      "tags": {
+        "category": "electric",
+        "holds": [
+          "crimps",
+          "jugs",
+          "slopers",
+          "volume"
+        ],
+        "angle": "vertical",
+        "techniques": [
+          "stepup",
+          "dyno",
+          "balance"
+        ]
+      }
+    },
+    {
+      "id": 30,
+      "tags": {
+        "category": "coordination",
+        "holds": [
+          "jugs",
+          "slopers"
+        ],
+        "angle": "overhang",
+        "techniques": [
+          "dyno",
+          "undercling"
+        ]
+      }
+    },
+    {
+      "id": 31,
+      "tags": {
+        "category": "physical",
+        "holds": [
+          "crimps",
+          "slopers",
+          "pinches"
+        ],
+        "angle": "overhang",
+        "techniques": [
+          "chimney",
+          "gaston",
+          "dropknee"
+        ]
+      }
+    },
+    {
+      "id": 32,
+      "tags": {
+        "category": "electric",
+        "holds": [
+          "jugs",
+          "volume"
+        ],
+        "angle": "vertical",
+        "techniques": [
+          "balance",
+          "sidestep"
+        ]
+      }
+    },
+    {
+      "id": 33,
+      "tags": {
+        "category": "physical",
+        "holds": [
+          "crimps"
+        ],
+        "angle": "vertical",
+        "techniques": [
+          "balance"
+        ]
+      }
+    },
+    {
+      "id": 34,
+      "tags": {
+        "category": "physical",
+        "holds": [
+          "jugs",
+          "slopers",
+          "pockets"
+        ],
+        "angle": "roof",
+        "techniques": [
+          "toehook",
+          "heelhook"
+        ]
+      }
+    },
+    {
+      "id": 35,
+      "tags": {
+        "category": "physical",
+        "holds": [
+          "crimps",
+          "slopers"
+        ],
+        "angle": "roof",
+        "techniques": []
+      }
+    },
+    {
+      "id": 36,
+      "tags": {
+        "category": "technical",
+        "holds": [
+          "slopers",
+          "footchips",
+          "dualtex"
+        ],
+        "angle": "vertical",
+        "techniques": [
+          "pressup",
+          "mobility",
+          "slab"
+        ]
+      }
+    },
+    {
+      "id": 37,
+      "tags": {
+        "category": "technical",
+        "holds": [
+          "volume",
+          "footchips"
+        ],
+        "angle": "vertical",
+        "techniques": [
+          "chimney",
+          "dropknee",
+          "balance"
+        ]
+      }
+    },
+    {
+      "id": 38,
+      "tags": {
+        "category": "technical",
+        "holds": [
+          "jugs",
+          "slopers",
+          "volume"
+        ],
+        "angle": "vertical",
+        "techniques": [
+          "slab"
+        ]
+      }
+    },
+    {
+      "id": 39,
+      "tags": {
+        "category": "technical",
+        "holds": [
+          "jugs",
+          "slopers",
+          "volume"
+        ],
+        "angle": "vertical",
+        "techniques": [
+          "stepup",
+          "dyno",
+          "slab"
+        ]
+      }
+    },
+    {
+      "id": 40,
+      "tags": {
+        "category": "technical",
+        "holds": [
+          "crimps",
+          "volume",
+          "footchips"
+        ],
+        "angle": "vertical",
+        "techniques": [
+          "dropknee",
+          "chimney",
+          "mobility",
+          "footswap",
+          "slab"
+        ]
+      }
+    }
   ]
 }
