@@ -14,6 +14,7 @@ SESSION_KEY_SELECTED_GYM_STATS_TAB = 'selected_gym_tab1'
 SESSION_KEY_CURRENT_PAGE_CLIMBER_TAB = 'current_page' # Used for climber rankings pagination
 SESSION_KEY_TARGET_RANK = 'target_rank' # Key for storing the user-selected target rank
 SESSION_KEY_ACTIVE_TAB = 'active_tab' # Key for storing the currently active tab
+SESSION_KEY_SELECTED_GENDER = 'selected_gender' # Key for storing the selected gender (men/women)
 
 # --- Environment Variable Defaults ---
 # Used in utils.py when reading .env

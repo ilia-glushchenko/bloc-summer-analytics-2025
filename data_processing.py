@@ -8,6 +8,7 @@ from dataclasses import dataclass
 
 # Local module import (assuming stats.py is in the same directory or PYTHONPATH)
 from stats import load_results, compute_gym_stats
+import config
 
 #------------------------------------------------------------------------------
 # DATACLASS FOR PROCESSED DATA
@@ -64,9 +65,12 @@ def validate_data(data: List[Dict]) -> bool:
 #------------------------------------------------------------------------------
 # Data processing function
 @st.cache_data(ttl=600)
-def process_data() -> ProcessedData:
+def process_data(gender: str = 'men') -> ProcessedData:
     """
     Load and process data from results.json, with caching for performance.
+    
+    Args:
+        gender: Gender category to process ('men' or 'women'). Defaults to 'men'.
     
     Returns:
         ProcessedData: An object containing all processed data structures.
@@ -83,7 +87,7 @@ def process_data() -> ProcessedData:
         outlier_warning_message="Data validation failed." # Default error message
     )
     try:
-        data = load_results()
+        data = load_results(gender=gender)
         if not validate_data(data):
             st.warning("Data validation failed: missing or inconsistent fields detected. Please check your results.json file.")
             # Return the empty structure with validation error message

@@ -14,6 +14,7 @@ import streamlit as st
 import traceback
 import numpy as np # Keep numpy for seed setting
 import random # Keep random for seed setting
+import json # Added for loading metadata
 
 # Local modules
 import config # Import the config file
@@ -68,18 +69,71 @@ load_css(config.CSS_FILE)
 def main() -> None:
     """Main function to run the Streamlit application."""
     try:
-        # Wrap data loading and processing in a spinner for better UX
+        # Global Gender Selector - Initialize session state first
+        if config.SESSION_KEY_SELECTED_GENDER not in st.session_state:
+            st.session_state[config.SESSION_KEY_SELECTED_GENDER] = 'men'
+        
+        # Get current gender for header (ensure lowercase)
+        current_gender_for_header = st.session_state.get(config.SESSION_KEY_SELECTED_GENDER, 'men')
+        if current_gender_for_header not in ['men', 'women']:
+            current_gender_for_header = 'men'
+        gender_display = current_gender_for_header.title() + " Division"
+        
+        # Header with integrated division name and right-aligned selector
+        # Use smaller column ratio to force dropdown constraint
+        col1, col2 = st.columns([4, 1], gap="medium")
+        
+        with col1:
+            st.markdown(f"""
+            <div class="app-header">
+                <h1>BLOC Summer Sessions 2025 Analysis - {gender_display}</h1>
+            </div>
+            """, unsafe_allow_html=True)
+        
+        with col2:
+            # Simpler approach - just use the column constraint
+            st.markdown("""
+            <style>
+            .header-dropdown-container {
+                padding: 0.5rem 0.75rem !important;
+                margin: 0 !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: flex-end !important;
+            }
+            </style>
+            """, unsafe_allow_html=True)
+            
+            st.markdown('<div class="header-dropdown-container">', unsafe_allow_html=True)
+            selected_gender = st.selectbox(
+                "Select Category:",
+                options=['Men', 'Women'],
+                index=0 if st.session_state[config.SESSION_KEY_SELECTED_GENDER] == 'men' else 1,
+                key='gender_selector',
+                help="Switch between male and female competition results",
+                label_visibility="collapsed"
+            )
+            st.markdown('</div>', unsafe_allow_html=True)
+            
+            # Update session state when selection changes
+            # Convert back to lowercase for internal use
+            selected_gender_internal = selected_gender.lower()
+            if selected_gender_internal != st.session_state[config.SESSION_KEY_SELECTED_GENDER]:
+                st.session_state[config.SESSION_KEY_SELECTED_GENDER] = selected_gender_internal
+                # Clear cache when gender changes to ensure fresh data
+                st.cache_data.clear()
+                st.rerun()
+        
+        # Use the selected gender for data processing (ensure it's always lowercase)
+        current_gender = st.session_state[config.SESSION_KEY_SELECTED_GENDER]
+        # Safety check to ensure it's lowercase
+        if current_gender not in ['men', 'women']:
+            current_gender = 'men'  # fallback to default
+        
         with st.spinner("Crunching the numbers... Please wait."):
             # Load and process data using the dedicated function
             # This now returns a single ProcessedData object
-            processed_data: ProcessedData = process_data()
-
-        # Modern compact app header
-        st.markdown("""
-        <div class="app-header">
-            <h1>BLOC Summer Sessions 2025 Analysis</h1>
-        </div>
-        """, unsafe_allow_html=True)
+            processed_data: ProcessedData = process_data(gender=current_gender)
 
         # Initialize active tab in session state if it doesn't exist
         if config.SESSION_KEY_ACTIVE_TAB not in st.session_state:

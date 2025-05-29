@@ -21,7 +21,6 @@ body {
     margin-bottom: 1rem; /* Reduced margin */
     display: flex;
     align-items: center;
-    border-bottom: 2px solid #edf2f7;
 }
 
 .app-header h1 {
@@ -146,35 +145,78 @@ div[data-testid="stPlotlyChart"] {
     width: 100%;
 }
 
-/* Tab Styling */
+/* Tab Styling - Completely override Streamlit's default behavior */
 .stTabs [data-baseweb="tab-list"] {
-    gap: 12px; /* Space between tab buttons */
+    gap: 12px;
+    border-bottom: none !important;
+}
+
+.stTabs [data-baseweb="tab-list"] button {
+    background: transparent !important;
+    border: none !important;
+    border-bottom: 2px solid transparent !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    outline: none !important;
 }
 
 .stTabs [data-baseweb="tab"] {
     height: 44px;
-    background-color: transparent; /* Removed gray background */
-    border-radius: 4px 4px 0 0;
+    background-color: transparent !important;
+    border: none !important;
+    border-bottom: 2px solid transparent !important;
+    border-radius: 0 !important;
     padding: 0px 20px;
-    margin-bottom: 0; /* Override default */
-    transition: all 0.2s ease;
-    border-bottom: 2px solid transparent;
+    margin-bottom: 0;
+    transition: border-bottom-color 0.2s ease !important;
+    position: relative !important;
+}
+
+/* Remove all pseudo-elements and animations */
+.stTabs [data-baseweb="tab"]::before,
+.stTabs [data-baseweb="tab"]::after,
+.stTabs [data-baseweb="tab"] *::before,
+.stTabs [data-baseweb="tab"] *::after {
+    display: none !important;
+    content: none !important;
 }
 
 .stTabs [data-baseweb="tab"]:hover {
-    background-color: #f7fafc; /* Very light background on hover */
-    color: #5a67d8; /* Purple on hover */
+    background-color: #f7fafc !important;
+    color: #5a67d8 !important;
+    border-bottom: 2px solid #cbd5e0 !important;
 }
 
 .stTabs [aria-selected="true"] {
-    background-color: transparent; /* Removed blue background */
-    color: #5a67d8; /* Purple for selected tab */
-    border-bottom: 2px solid #5a67d8; /* Underline for selected tab */
+    background-color: transparent !important;
+    color: #5a67d8 !important;
+    border-bottom: 2px solid #5a67d8 !important;
 }
 
 .stTabs [aria-selected="true"]:hover {
-    background-color: #f7fafc; /* Very light background on hover */
-    color: #4c51bf; /* Slightly darker purple on hover */
+    background-color: #f7fafc !important;
+    color: #4c51bf !important;
+    border-bottom: 2px solid #4c51bf !important;
+}
+
+/* Remove any children elements that might have borders/indicators */
+.stTabs [data-baseweb="tab"] > div,
+.stTabs [data-baseweb="tab"] > span,
+.stTabs [data-baseweb="tab"] button {
+    border: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+}
+
+/* Remove Streamlit's default active tab indicator */
+.stTabs [data-baseweb="tab-panel"] {
+    border-top: none !important;
+}
+
+/* Hide any animated elements */
+.stTabs [data-baseweb="tab"] [class*="animate"],
+.stTabs [data-baseweb="tab"] [class*="transition"] {
+    display: none !important;
 }
 
 /* DataFrame Styling */
@@ -287,4 +329,80 @@ button[data-testid*="gym_btn_"][kind="primary"]:hover {
 /* Ensure the dataframes inside the columns fit properly */
 [data-testid="column"] [data-testid="stDataFrame"] {
     width: 100% !important;
+}
+
+/* Header-aligned gender selector styling */
+.header-gender-selector {
+    padding: 0.5rem 0.75rem !important; /* Match header padding */
+    margin: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    height: 100% !important; /* Ensure full height alignment */
+}
+
+/* More specific selectors for the dropdown */
+.header-gender-selector div[data-testid="stSelectbox"] {
+    margin: 0 !important;
+    width: 140px !important; /* Fixed width for consistency */
+    min-width: 140px !important;
+    max-width: 140px !important;
+}
+
+.header-gender-selector div[data-testid="stSelectbox"] > div {
+    width: 100% !important;
+}
+
+.header-gender-selector div[data-testid="stSelectbox"] > div > div {
+    background: white !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 4px !important;
+    font-size: 0.9rem !important;
+    padding: 0.5rem 0.75rem !important; /* Match header padding */
+    height: auto !important;
+    min-height: 2.5rem !important;
+    width: 100% !important;
+}
+
+/* Additional selectbox styling - target Streamlit's internal structure */
+.header-gender-selector [data-baseweb="select"] > div[role="combobox"] {
+    padding: 0.5rem 0.75rem !important;
+    min-height: 2.5rem !important;
+    font-size: 0.9rem !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 4px !important;
+}
+
+/* Force the selectbox container width */
+.header-gender-selector [data-testid="stSelectbox"] > div {
+    width: 140px !important;
+    max-width: 140px !important;
+}
+
+/* Target the actual input element */
+.header-gender-selector input[role="combobox"] {
+    padding: 0.5rem 0.75rem !important;
+    font-size: 0.9rem !important;
+}
+
+/* Ensure the dropdown arrow container doesn't expand */
+.header-gender-selector [data-baseweb="select"] [data-baseweb="select-control-container"] {
+    width: 140px !important;
+    max-width: 140px !important;
+}
+
+/* Ensure header columns align properly - using more compatible selectors */
+.stHorizontalBlock > div[data-testid="column"]:first-child,
+.stHorizontalBlock > div[data-testid="column"]:last-child {
+    display: flex !important;
+    align-items: flex-start !important;
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+}
+
+/* Ensure both header containers have same vertical alignment */
+.app-header,
+.header-gender-selector {
+    margin-top: 0 !important;
+    margin-bottom: 1rem !important;
 } 

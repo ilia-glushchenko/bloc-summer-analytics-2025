@@ -16,19 +16,30 @@ from scipy import stats
 from typing import Dict, List, Tuple, DefaultDict, Any, Optional, Set, Union
 
 
-def load_results(filename: str = 'results.json') -> List[Dict[str, Any]]:
+def load_results(filename: str = 'results.json', gender: str = 'men') -> List[Dict[str, Any]]:
     """
     Load climbing results from a JSON file.
     
     Args:
         filename: Path to the JSON file containing competition results.
                  Defaults to 'results.json'.
+        gender: Gender category to load ('men' or 'women'). 
+                Defaults to 'men'.
     
     Returns:
-        List of dictionaries representing climber data.
+        List of dictionaries representing climber data for the specified gender.
     """
     with open(filename, 'r', encoding='utf-8') as f:
-        return json.load(f)
+        data = json.load(f)
+    
+    # Handle new format with separate men/women sections
+    if isinstance(data, dict) and gender in data:
+        return data[gender]
+    # Fallback for old format (list of all climbers)
+    elif isinstance(data, list):
+        return data
+    else:
+        raise ValueError(f"Invalid data format or gender '{gender}' not found in results file.")
 
 
 # Helper function to replace lambda in defaultdict
@@ -221,7 +232,7 @@ def plot_boulder_popularity(
     plt.show()
 
 
-def plot_gym_completion_distributions(completion_histograms: DefaultDict[str, Counter]) -> None:
+def plot_gym_completion_distributions(completion_histograms: DefaultDict[str, Counter], gender: str = 'men') -> None:
     """
     Plot histogram for number of boulders topped per climber for each gym.
     
@@ -230,9 +241,10 @@ def plot_gym_completion_distributions(completion_histograms: DefaultDict[str, Co
     
     Args:
         completion_histograms: Distribution of number of completed boulders per gym
+        gender: Gender category to load ('men' or 'women'). Defaults to 'men'.
     """
     # Load results to get total boulders per gym
-    data = load_results()
+    data = load_results(gender=gender)
     gym_to_total: Dict[str, int] = {}
     for climber in data:
         for gym in climber['gyms']:
@@ -347,13 +359,18 @@ def plot_gym_completion_distributions(completion_histograms: DefaultDict[str, Co
     plt.show()
 
 
-def main() -> None:
-    """Main entry point for running statistical analysis from command line."""
-    data = load_results()
+def main(gender: str = 'men') -> None:
+    """
+    Main entry point for running statistical analysis from command line.
+    
+    Args:
+        gender: Gender category to analyze ('men' or 'women'). Defaults to 'men'.
+    """
+    data = load_results(gender=gender)
     gym_boulder_counts, completion_histograms, participation_counts = compute_gym_stats(data)
     print_gym_stats(gym_boulder_counts, completion_histograms, participation_counts)
     plot_boulder_popularity(gym_boulder_counts, completion_histograms)
-    plot_gym_completion_distributions(completion_histograms)
+    plot_gym_completion_distributions(completion_histograms, gender=gender)
 
 
 if __name__ == "__main__":
