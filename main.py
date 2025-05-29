@@ -22,7 +22,9 @@ if sys.stdout.encoding != 'utf-8':
         import io
         sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
-URL = "https://boulder-top.com/comp/bss25/page/ranking/r=62&k=152&v=42&c=53&h="
+# URLs for different categories
+URL_WOMEN = "https://boulder-top.com/comp/bss25/page/ranking/r=62&k=153&v=42&c=53&h="  # k=153 for Frauen (women)
+URL_MEN = "https://boulder-top.com/comp/bss25/page/ranking/r=62&k=152&v=42&c=53&h="    # k=152 for Männer (men)
 
 def safe_print(text):
     """Print text safely, handling Unicode characters."""
@@ -172,38 +174,93 @@ def parse_participants(html):
                 })
     return participants
 
-def scrape_and_save_results(url=URL, output_file='results.json'):
-    """Scrape the ranking and details pages, then save results to a JSON file."""
+def scrape_category(url, category_name):
+    """Scrape participants for a specific category and return the data."""
+    safe_print(f"🔍 Scraping {category_name}...")
+    safe_print(f"🌐 URL: {url}")
+    
     html = fetch_page_selenium(url)
     participants = parse_participants(html)
     total = len(participants)
-    safe_print(f"Found {total} participants. Starting scraping...")
+    
+    if total == 0:
+        safe_print(f"❌ No participants found for {category_name}")
+        return []
+    
+    safe_print(f"👥 Found {total} {category_name}. Starting detailed scraping...")
+    
     options = get_optimized_chrome_options()
     driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
     all_results = []
+    
     for idx, participant in enumerate(participants, 1):
         if not participant['details_link']:
-            safe_print(f"[{idx}/{total}] Skipping {participant['climber']} (no details link)")
+            safe_print(f"[{idx}/{total}] ⚠️  Skipping {participant['climber']} (no details link)")
             continue
-        safe_print(f"[{idx}/{total}] Scraping {participant['climber']} (rank: {participant['rank']})...")
-        details_html = fetch_page_selenium_single(driver, participant['details_link'])
-        soup_details = BeautifulSoup(details_html, 'html.parser')
-        gyms = parse_gym_details(soup_details)
-        all_results.append({
-            'climber': participant['climber'],
-            'rank': participant['rank'],
-            'completed': participant['completed'],
-            'gyms': gyms
-        })
+        
+        safe_print(f"[{idx}/{total}] 🧗 Scraping {participant['climber']} (rank: {participant['rank']})...")
+        
+        try:
+            details_html = fetch_page_selenium_single(driver, participant['details_link'])
+            soup_details = BeautifulSoup(details_html, 'html.parser')
+            gyms = parse_gym_details(soup_details)
+            
+            participant_data = {
+                'climber': participant['climber'],
+                'rank': participant['rank'],
+                'completed': participant['completed'],
+                'gyms': gyms
+            }
+            
+            all_results.append(participant_data)
+            
+        except Exception as e:
+            safe_print(f"❌ Error scraping {participant['climber']}: {e}")
+            continue
+        
+        # Add random delay to be respectful to the server
         time.sleep(random.uniform(0.4, 1.2))
+    
     driver.quit()
-    with open(output_file, 'w', encoding='utf-8') as f:
-        json.dump(all_results, f, ensure_ascii=False, indent=2)
-    safe_print(f"Saved {len(all_results)} participants to {output_file}")
-    safe_print("Scraping complete.")
+    safe_print(f"✅ Completed scraping {len(all_results)} {category_name}")
+    return all_results
 
 def main():
-    scrape_and_save_results()
+    """Main function to scrape both men and women and save to results.json"""
+    safe_print("🚀 Starting Boulder Summer Sessions 2025 scraping...")
+    
+    # Scrape men's results
+    safe_print("\n=== SCRAPING MEN'S RESULTS ===")
+    men_data = scrape_category(URL_MEN, "male participants")
+    
+    # Scrape women's results  
+    safe_print("\n=== SCRAPING WOMEN'S RESULTS ===")
+    women_data = scrape_category(URL_WOMEN, "female participants")
+    
+    # Combine and save results
+    safe_print("\n=== SAVING COMBINED RESULTS ===")
+    combined_data = {
+        "metadata": {
+            "scraped_at": time.strftime("%Y-%m-%d %H:%M:%S UTC", time.gmtime()),
+            "total_participants": len(men_data) + len(women_data),
+            "men_count": len(men_data),
+            "women_count": len(women_data)
+        },
+        "men": men_data,
+        "women": women_data
+    }
+    
+    try:
+        with open('results.json', 'w', encoding='utf-8') as f:
+            json.dump(combined_data, f, ensure_ascii=False, indent=2)
+        
+        safe_print(f"🎉 Successfully saved results to results.json!")
+        safe_print(f"   📊 Total participants: {len(men_data) + len(women_data)}")
+        safe_print(f"   👨 Men: {len(men_data)}")
+        safe_print(f"   👩 Women: {len(women_data)}")
+        
+    except Exception as e:
+        safe_print(f"❌ Error saving results: {e}")
 
 if __name__ == "__main__":
     main()
