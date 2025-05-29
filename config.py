@@ -8,6 +8,7 @@ CSS_FILE = "style.css"
 
 # --- Session State Keys ---
 # Used to store user selections and states across reruns
+SESSION_KEY_SESSION_ID = 'session_id'  # Unique identifier for each user session
 SESSION_KEY_SELECTED_CLIMBER = 'selected_climber'
 SESSION_KEY_SELECTED_CLIMBER_PATH_TAB = 'path_climber_selector_tab3' # Specific key for the path tab selector
 SESSION_KEY_SELECTED_GYM_STATS_TAB = 'selected_gym_tab1'

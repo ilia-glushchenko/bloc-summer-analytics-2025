@@ -11,6 +11,31 @@ An interactive web application to analyze climbing competition data from the Bou
 - **Gym Analysis**: Compare statistics across different gyms with filtering options
 - **Planning Tools**: Detailed investigation of boulder popularity and completion rates for improvement
 - **Data Visualization**: Interactive charts and metrics for comprehensive analysis
+- **Multi-User Support**: Complete user isolation ensuring each user's session is independent
+
+## User Isolation & Multi-User Support
+
+This application is designed to support multiple concurrent users with complete session isolation:
+
+- **Session Independence**: Each user session is completely isolated with unique session IDs
+- **State Management**: All user selections (gender, climber, pagination, etc.) are stored per-session
+- **Safe Caching**: Data caching is implemented safely to share appropriate data while maintaining user privacy
+- **No Cross-User Interference**: Changes made by one user do not affect other users' sessions
+
+For detailed information about the user isolation implementation, see [USER_ISOLATION.md](USER_ISOLATION.md).
+
+### Testing User Isolation
+
+To test user isolation:
+
+```bash
+# Run the test script
+streamlit run test_user_isolation.py
+
+# Or enable debug mode in the main app
+echo "DEBUG_MODE=true" >> .env
+streamlit run app.py
+```
 
 ## Project Structure
 

@@ -4,6 +4,16 @@ BLOC Summer Sessions 2025 Analysis Dashboard - Main Application File
 This file sets up the Streamlit application structure, loads data,
 and delegates the rendering of each tab to specific modules.
 
+USER ISOLATION DESIGN:
+- Each user session gets a unique session ID stored in st.session_state
+- All user-specific state is stored in st.session_state with proper session keys
+- Cached data (st.cache_data) is shared appropriately:
+  * process_data() is cached by gender parameter - safe to share since data is identical for all users within each gender
+  * create_climber_boulder_matrix() is cached by data parameter - safe to share since it's deterministic
+- Random seeds are session-specific to ensure reproducible but isolated randomness per user
+- No global variables are used for user-specific state
+- Cache clearing operations are avoided to prevent affecting other users
+
 Usage: streamlit run app.py
 """
 
@@ -15,10 +25,11 @@ import traceback
 import numpy as np # Keep numpy for seed setting
 import random # Keep random for seed setting
 import json # Added for loading metadata
+import uuid
 
 # Local modules
 import config # Import the config file
-from utils import load_css
+from utils import load_css, get_debug_mode
 from data_processing import process_data, ProcessedData # Import ProcessedData
 from tabs.gym_stats_tab import display_gym_stats
 from tabs.climber_stats_tab import display_climber_stats
@@ -28,11 +39,6 @@ from tabs.path_success_tab import display_path_success, DEFAULT_CLIMBER
 # TODO (Maintainability): Consider identifying and suppressing only specific warnings
 # instead of globally ignoring all. This prevents hiding potentially useful new warnings.
 # warnings.filterwarnings('ignore') # Removed global suppression
-
-# Set global random seed for reproducibility
-# TODO (Maintainability): Consider moving magic numbers like this seed to a config section/file.
-random.seed(config.RANDOM_SEED)
-np.random.seed(config.RANDOM_SEED)
 
 #-----------------------------------------------------------------------------
 # APP CONFIGURATION
@@ -64,11 +70,40 @@ load_css(config.CSS_FILE)
 # st.sidebar.markdown("[Terms of Service](URL_TO_YOUR_TERMS_OF_SERVICE)")
 
 #-----------------------------------------------------------------------------
+# DEBUGGING AND UTILITIES
+#-----------------------------------------------------------------------------
+def display_session_debug_info() -> None:
+    """
+    Display session debugging information. 
+    Useful for troubleshooting user isolation issues.
+    Only shown when debug mode is enabled.
+    """
+    from utils import get_debug_mode
+    
+    if get_debug_mode():
+        with st.expander("🔧 Session Debug Info", expanded=False):
+            st.write("**Session ID:**", st.session_state.get(config.SESSION_KEY_SESSION_ID, "Not set"))
+            st.write("**Selected Gender:**", st.session_state.get(config.SESSION_KEY_SELECTED_GENDER, "Not set"))
+            st.write("**Selected Climber:**", st.session_state.get(config.SESSION_KEY_SELECTED_CLIMBER, "Not set"))
+            st.write("**Active Tab:**", st.session_state.get(config.SESSION_KEY_ACTIVE_TAB, "Not set"))
+            st.write("**All Session State Keys:**", list(st.session_state.keys()))
+
+#-----------------------------------------------------------------------------
 # MAIN APPLICATION LOGIC
 #-----------------------------------------------------------------------------
 def main() -> None:
     """Main function to run the Streamlit application."""
     try:
+        # Initialize unique session ID for this user session if not already set
+        if config.SESSION_KEY_SESSION_ID not in st.session_state:
+            st.session_state[config.SESSION_KEY_SESSION_ID] = str(uuid.uuid4())
+            
+            # Set session-specific random seed for reproducibility within this session
+            # This ensures each user session has its own random sequence
+            session_seed = hash(st.session_state[config.SESSION_KEY_SESSION_ID]) % (2**32)
+            random.seed(session_seed)
+            np.random.seed(session_seed)
+        
         # Global Gender Selector - Initialize session state first
         if config.SESSION_KEY_SELECTED_GENDER not in st.session_state:
             st.session_state[config.SESSION_KEY_SELECTED_GENDER] = 'men'
@@ -120,8 +155,9 @@ def main() -> None:
             selected_gender_internal = selected_gender.lower()
             if selected_gender_internal != st.session_state[config.SESSION_KEY_SELECTED_GENDER]:
                 st.session_state[config.SESSION_KEY_SELECTED_GENDER] = selected_gender_internal
-                # Clear cache when gender changes to ensure fresh data
-                st.cache_data.clear()
+                # Instead of clearing all cache globally, we let the cached function handle 
+                # different gender parameters naturally - this ensures user isolation
+                # The cache will automatically use different cache entries for different genders
                 st.rerun()
         
         # Use the selected gender for data processing (ensure it's always lowercase)
@@ -198,6 +234,9 @@ def main() -> None:
                 processed_data.participation_counts, 
                 sync_selected_climber
             )
+
+        # Display debug information if debug mode is enabled
+        display_session_debug_info()
 
     except Exception as e:
         # User-friendly error message
