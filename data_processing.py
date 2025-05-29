@@ -273,6 +273,10 @@ def create_climber_boulder_matrix(data: List[Dict]) -> Tuple[pd.DataFrame, Dict[
             'Completed': completed
         }
         
+        # Add gender information if available (for combined division)
+        if 'gender' in climber_data:
+            row['Gender'] = climber_data['gender']
+        
         # Add completed boulders for each gym
         for gym_data in climber_data['gyms']:
             gym_name = gym_data['gym']
@@ -290,4 +294,199 @@ def create_climber_boulder_matrix(data: List[Dict]) -> Tuple[pd.DataFrame, Dict[
     
     # Removed the unused top_10_total calculation
     
-    return matrix_df, climber_gym_boulders 
+    return matrix_df, climber_gym_boulders
+
+#------------------------------------------------------------------------------
+# COMBINED DIVISION PROCESSING
+#------------------------------------------------------------------------------
+
+@st.cache_data(ttl=600)
+def process_combined_division() -> ProcessedData:
+    """
+    Process combined division data by merging men and women divisions.
+    
+    Important: This function does NOT use the ranks provided in the JSON file.
+    Instead, it recalculates ranks based on total completed boulders across
+    both divisions to create a truly combined ranking.
+    
+    Returns:
+        ProcessedData: An object containing all processed data structures for combined division.
+    """
+    outlier_warning_message = None
+    # Create empty default structures for error cases
+    empty_data = ProcessedData(
+        raw_data=[],
+        gym_boulder_counts={},
+        completion_histograms={},
+        participation_counts={},
+        climbers_df=pd.DataFrame(),
+        gyms_df=pd.DataFrame(),
+        outlier_warning_message="Combined division data processing failed."
+    )
+    
+    try:
+        # Load both men and women data
+        men_data = load_results(gender='men')
+        women_data = load_results(gender='women')
+        
+        # Combine the data and add gender information
+        combined_data = []
+        
+        # Add men data with gender marker
+        for climber in men_data:
+            climber_copy = climber.copy()
+            climber_copy['gender'] = 'M'
+            combined_data.append(climber_copy)
+        
+        # Add women data with gender marker
+        for climber in women_data:
+            climber_copy = climber.copy()
+            climber_copy['gender'] = 'F'
+            combined_data.append(climber_copy)
+        
+        # Sort by completed boulders (descending) and recalculate ranks
+        # This ignores the original JSON ranks and creates new combined ranks
+        combined_data.sort(key=lambda x: x['completed'], reverse=True)
+        
+        # Assign new ranks based on completed boulders
+        # Handle ties properly by giving same rank to climbers with same completion count
+        current_rank = 1
+        prev_completed = None
+        climbers_with_same_completion = 0
+        
+        for i, climber in enumerate(combined_data):
+            if prev_completed is not None and climber['completed'] != prev_completed:
+                # Different completion count - update rank
+                current_rank = i + 1
+            
+            # Assign the rank (ignoring the original JSON rank)
+            climber['combined_rank'] = current_rank
+            climber['original_rank'] = climber['rank']  # Keep original for reference
+            climber['rank'] = current_rank  # Update rank for consistency with other functions
+            
+            prev_completed = climber['completed']
+        
+        # Validate the combined data
+        if not validate_data(combined_data):
+            st.warning("Combined division data validation failed: missing or inconsistent fields detected.")
+            return empty_data
+        
+        # Compute gym stats for combined data
+        gym_boulder_counts, completion_histograms, participation_counts = compute_gym_stats(combined_data)
+        
+        # Create a DataFrame for climbers (similar to process_data but with gender column)
+        climbers_data = []
+        all_gym_names = sorted(participation_counts.keys())
+
+        for climber in combined_data:
+            climber_info = {
+                'Climber': climber['climber'],
+                'Gender': climber['gender'],
+                'Combined_Rank': climber['combined_rank'],
+                'Original_Rank': climber['original_rank'],
+                'Completed': climber['completed'],
+            }
+            
+            gyms_active_count = 0
+            gym_completions = {}
+
+            # Handle special cases and normal processing (same logic as process_data)
+            if climber['completed'] > 0 and not climber['gyms']:
+                gyms_active_count = 4
+                even_distribution = climber['completed'] // 4
+                remainder = climber['completed'] % 4
+                
+                for i, gym_name in enumerate(all_gym_names):
+                    completed_count = even_distribution + (1 if i < remainder else 0)
+                    gym_completions[gym_name] = completed_count
+            else:
+                for gym in climber['gyms']:
+                    gym_name = gym['gym']
+                    completed_count = gym.get('completed', 0) or 0
+                    gym_completions[gym_name] = completed_count
+                    
+                    if completed_count > 0:
+                        gyms_active_count += 1
+            
+            climber_info['Gyms_Active'] = gyms_active_count
+
+            # Add gym-specific completion columns
+            for gym_name in all_gym_names:
+                safe_gym_name_col = f"Comp_{gym_name.replace(' ', '_')}"
+                climber_info[safe_gym_name_col] = gym_completions.get(gym_name, 0)
+
+            climbers_data.append(climber_info)
+        
+        climbers_df = pd.DataFrame(climbers_data)
+        
+        # Outlier detection for combined division
+        if not climbers_df.empty:
+            Q1 = climbers_df['Completed'].quantile(0.25)
+            Q3 = climbers_df['Completed'].quantile(0.75)
+            IQR = Q3 - Q1
+            lower_bound = Q1 - 1.5 * IQR
+            upper_bound = Q3 + 1.5 * IQR
+            outlier_mask = (climbers_df['Completed'] < lower_bound) | (climbers_df['Completed'] > upper_bound)
+            outliers = climbers_df[outlier_mask]
+            if not outliers.empty:
+                outlier_list = ', '.join(f"{row['Climber']} ({row['Gender']}, {row['Completed']})" for _, row in outliers.iterrows())
+                outlier_warning_message = f"Potential outliers detected in 'Completed Boulders' (Combined Division): {outlier_list}. (Values outside {lower_bound:.1f} - {upper_bound:.1f})"
+            
+            # Calculate average per gym
+            climbers_df['Avg_Per_Gym_Active'] = (climbers_df['Completed'] / climbers_df['Gyms_Active']).replace([np.inf, -np.inf], 0).fillna(0).round(1)
+        
+        # Create gym DataFrame (same logic as process_data)
+        gym_data = []
+        for gym_name, count in participation_counts.items():
+            boulder_counts = gym_boulder_counts.get(gym_name, {})
+            total_ascents = sum(boulder_counts.values()) if boulder_counts else 0
+            
+            completed_counts_filtered = []
+            for n_completed, climber_count in completion_histograms.get(gym_name, {}).items():
+                if n_completed > 0:
+                    completed_counts_filtered.extend([n_completed] * climber_count)
+            
+            avg_completed_active = 0
+            if completed_counts_filtered:
+                avg_completed_active = round(np.mean(completed_counts_filtered), 2)
+
+            avg_completed_all = round(total_ascents / count, 2) if count > 0 else 0
+            
+            max_boulder = 0
+            if boulder_counts:
+                try:
+                    max_boulder = max(int(b) for b in boulder_counts.keys() if b.isdigit())
+                except (ValueError, AttributeError) as e:
+                    st.warning(f"Warning processing gym {gym_name} in combined division: {str(e)}")
+                    max_boulder = 0
+            
+            gym_data.append({
+                'Gym': gym_name,
+                'Participants': count,
+                'Total_Ascents': total_ascents,
+                'Avg_Completed_Per_Active_Climber': avg_completed_active,
+                'Avg_Completed_All_Participants': avg_completed_all,
+                'Boulder_Count': max_boulder
+            })
+        
+        gyms_df = pd.DataFrame(gym_data)
+        
+        return ProcessedData(
+            raw_data=combined_data,
+            gym_boulder_counts=gym_boulder_counts,
+            completion_histograms=completion_histograms,
+            participation_counts=participation_counts,
+            climbers_df=climbers_df,
+            gyms_df=gyms_df,
+            outlier_warning_message=outlier_warning_message
+        )
+        
+    except Exception as e:
+        st.error(f"Error processing combined division data: {str(e)}")
+        st.code(traceback.format_exc())
+        empty_data.outlier_warning_message = f"Error during combined division processing: {str(e)}"
+        return empty_data
+
+#------------------------------------------------------------------------------
+# DATACLASS FOR PROCESSED DATA
+#------------------------------------------------------------------------------

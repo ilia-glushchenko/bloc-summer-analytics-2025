@@ -12,26 +12,44 @@ def display_climber_stats(data: List[Dict], climbers_df: pd.DataFrame, completio
     """Displays the Climber Statistics tab content."""
     st.markdown("### Climber Distribution Analysis")
 
+    # Check if this is combined division by looking for Gender column
+    is_combined_division = 'Gender' in climbers_df.columns
+
     # Use helper for metrics row
     if not climbers_df.empty:
         avg_boulders = climbers_df['Completed'].mean()
         # Use the new 'Gyms_Active' column for the average
         avg_gyms_active = climbers_df['Gyms_Active'].mean()
-        render_metrics_row({
-            "Total Climbers": len(data),
-            "Avg Boulders/Climber": f"{avg_boulders:.1f}", # Format value here
-            "Avg Active Gyms Visited": f"{avg_gyms_active:.1f}" # Updated label and value
-        })
+        
+        # Create metrics based on division type
+        if is_combined_division:
+            men_count = len(climbers_df[climbers_df['Gender'] == 'M'])
+            women_count = len(climbers_df[climbers_df['Gender'] == 'F'])
+            render_metrics_row({
+                "Total Climbers": len(data),
+                "Men": men_count,
+                "Women": women_count,
+                "Avg Boulders/Climber": f"{avg_boulders:.1f}",
+                "Avg Active Gyms Visited": f"{avg_gyms_active:.1f}"
+            })
+        else:
+            render_metrics_row({
+                "Total Climbers": len(data),
+                "Avg Boulders/Climber": f"{avg_boulders:.1f}", # Format value here
+                "Avg Active Gyms Visited": f"{avg_gyms_active:.1f}" # Updated label and value
+            })
     else:
          st.warning("No climber data to display metrics.")
 
     # Display rankings directly without subtabs
     if not climbers_df.empty:
         # Apply the specific class to reduce margin below this header
-        render_section_header("Climber Rankings", level=4, css_class="rankings-main-header")
+        header_text = "Combined Division Rankings" if is_combined_division else "Climber Rankings"
+        render_section_header(header_text, level=4, css_class="rankings-main-header")
 
-        # Sort climbers by rank
-        sorted_climbers = climbers_df.sort_values('Rank')
+        # Sort climbers by appropriate rank column
+        rank_column = 'Combined_Rank' if is_combined_division else 'Rank'
+        sorted_climbers = climbers_df.sort_values(rank_column)
 
         # Top climbers visualization
         render_section_header("Top Climbers by Boulder Completion", level=5)
@@ -48,6 +66,15 @@ def display_climber_stats(data: List[Dict], climbers_df: pd.DataFrame, completio
             
             # We need to maintain the original order of climbers, including the selected climber
             # Instead of removing the selected climber, we'll create a graph with all blue bars first
+            
+            # Create hover template based on division type
+            if is_combined_division:
+                hover_template = 'Climber: %{x}<br>Gender: %{customdata[1]}<br>Completed: %{y}<br>Rank: %{customdata[0]}<extra></extra>'
+                custom_data = list(zip(top_climbers[rank_column], top_climbers['Gender']))
+            else:
+                hover_template = 'Climber: %{x}<br>Completed: %{y}<br>Rank: %{customdata}<extra></extra>'
+                custom_data = top_climbers[rank_column]
+            
             fig_top.add_trace(go.Bar(
                 x=top_climbers['Climber'],
                 y=top_climbers['Completed'],
@@ -55,8 +82,8 @@ def display_climber_stats(data: List[Dict], climbers_df: pd.DataFrame, completio
                     color=top_climbers['Completed'],  # Use completion values for the color scale
                     colorscale='Viridis'  # Use the same Viridis colorscale as in boulder popularity
                 ),
-                hovertemplate='Climber: %{x}<br>Completed: %{y}<br>Rank: %{customdata}<extra></extra>',
-                customdata=top_climbers['Rank'],
+                hovertemplate=hover_template,
+                customdata=custom_data,
                 text=top_climbers['Completed'], 
                 textposition='outside',  # Show all values outside the bars
                 cliponaxis=False,
@@ -79,7 +106,7 @@ def display_climber_stats(data: List[Dict], climbers_df: pd.DataFrame, completio
                 selected_climber_row = top_climbers[top_climbers['Climber'] == selected_climber_name].iloc[0]
                 selected_idx = selected_climber_row.name # Use DataFrame index
                 selected_value = selected_climber_row['Completed']
-                selected_rank = selected_climber_row['Rank']
+                selected_rank = selected_climber_row[rank_column]
                 selected_overlay.loc[selected_idx, 'Value'] = selected_value
                 
                 # Calculate max possible boulders for percentage calculation
@@ -102,8 +129,8 @@ def display_climber_stats(data: List[Dict], climbers_df: pd.DataFrame, completio
                             color=['rgba(0,0,0,0)' if c != st.session_state[config.SESSION_KEY_SELECTED_CLIMBER] else '#ff7c24' for c in selected_overlay['Climber']]
                         )
                     ),
-                    hovertemplate='Climber: %{x}<br>Completed: %{y}<br>Rank: %{customdata}<extra></extra>',
-                    customdata=top_climbers['Rank'],  # Use the same rank data
+                    hovertemplate=hover_template,
+                    customdata=custom_data,  # Use the same custom data as the main trace
                     text=['' if c != st.session_state[config.SESSION_KEY_SELECTED_CLIMBER] else f"{selected_value}" for c in selected_overlay['Climber']],
                     textposition='outside',
                     cliponaxis=False,
@@ -153,8 +180,11 @@ def display_climber_stats(data: List[Dict], climbers_df: pd.DataFrame, completio
         # Create cleaner display names for gym columns
         gym_display_names = {col: col.replace('Comp_', '').replace('_', ' ') for col in gym_comp_cols}
         
-        # Define base columns and add the dynamic gym columns
-        base_cols = ['Rank', 'Climber', 'Completed', 'Gyms_Active', 'Avg_Per_Gym_Active']
+        # Define base columns based on division type
+        if is_combined_division:
+            base_cols = ['Combined_Rank', 'Climber', 'Gender', 'Completed', 'Gyms_Active', 'Avg_Per_Gym_Active']
+        else:
+            base_cols = ['Rank', 'Climber', 'Completed', 'Gyms_Active', 'Avg_Per_Gym_Active']
         all_display_cols = base_cols + gym_comp_cols
         
         # Keep the original sorted_climbers df which has Comp_GymName columns
@@ -290,10 +320,17 @@ def display_climber_stats(data: List[Dict], climbers_df: pd.DataFrame, completio
             
             # Table Headers - Minimal inline styles
             html_table += "<thead><tr>" 
-            html_table += f"<th style='text-align: center;'>Rank</th>"
-            html_table += f"<th style='text-align: left;'>Climber</th>"
-            html_table += f"<th style='text-align: center;'>Stats</th>"
-            html_table += f"<th style='text-align: left;'>Gym Completions (Max 40)</th>"
+            if is_combined_division:
+                html_table += f"<th style='text-align: center;'>Rank</th>"
+                html_table += f"<th style='text-align: left;'>Climber</th>"
+                html_table += f"<th style='text-align: center;'>Gender</th>"
+                html_table += f"<th style='text-align: center;'>Stats</th>"
+                html_table += f"<th style='text-align: left;'>Gym Completions (Max 40)</th>"
+            else:
+                html_table += f"<th style='text-align: center;'>Rank</th>"
+                html_table += f"<th style='text-align: left;'>Climber</th>"
+                html_table += f"<th style='text-align: center;'>Stats</th>"
+                html_table += f"<th style='text-align: left;'>Gym Completions (Max 40)</th>"
             html_table += "</tr></thead>"
             
             # Table Body - Minimal inline styles
@@ -304,11 +341,22 @@ def display_climber_stats(data: List[Dict], climbers_df: pd.DataFrame, completio
                 
                 html_table += f"<tr style='{row_style}'>"
                 
-                # Columns - minimal inline styles
-                html_table += f"<td style='text-align: center;'>{int(row['Rank'])}</td>"
+                # Rank column
+                rank_value = int(row[rank_column])
+                html_table += f"<td style='text-align: center;'>{rank_value}</td>"
+                
+                # Climber name column
                 climber_name = row['Climber']
                 font_weight = "bold" if is_selected else "normal"
                 html_table += f"<td style='text-align: left; font-weight: {font_weight};'>{climber_name}</td>"
+                
+                # Gender column (only for combined division)
+                if is_combined_division:
+                    gender_display = "♂" if row['Gender'] == 'M' else "♀"
+                    gender_color = "#4169E1" if row['Gender'] == 'M' else "#DC143C"
+                    html_table += f"<td style='text-align: center; color: {gender_color}; font-size: 1.2em;'>{gender_display}</td>"
+                
+                # Stats column
                 stats_html = f"<div>Toped: <strong>{int(row['Completed'])}</strong></div>" \
                              f"<div>Gyms: <strong>{int(row['Gyms_Active'])}</strong></div>" \
                              f"<div>Avg/Gym: <strong>{row['Avg_Per_Gym_Active']:.1f}</strong></div>"

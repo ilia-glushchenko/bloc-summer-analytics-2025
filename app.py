@@ -30,7 +30,7 @@ import uuid
 # Local modules
 import config # Import the config file
 from utils import load_css, get_debug_mode
-from data_processing import process_data, ProcessedData # Import ProcessedData
+from data_processing import process_data, process_combined_division, ProcessedData # Import ProcessedData and new function
 from tabs.gym_stats_tab import display_gym_stats
 from tabs.climber_stats_tab import display_climber_stats
 from tabs.path_success_tab import display_path_success, DEFAULT_CLIMBER
@@ -110,9 +110,14 @@ def main() -> None:
         
         # Get current gender for header (ensure lowercase)
         current_gender_for_header = st.session_state.get(config.SESSION_KEY_SELECTED_GENDER, 'men')
-        if current_gender_for_header not in ['men', 'women']:
+        if current_gender_for_header not in ['men', 'women', 'combined']:
             current_gender_for_header = 'men'
-        gender_display = current_gender_for_header.title() + " Division"
+        
+        # Create appropriate division display name
+        if current_gender_for_header == 'combined':
+            gender_display = "Combined Division"
+        else:
+            gender_display = current_gender_for_header.title() + " Division"
         
         # Header with integrated division name and right-aligned selector
         # Use smaller column ratio to force dropdown constraint
@@ -142,10 +147,10 @@ def main() -> None:
             st.markdown('<div class="header-dropdown-container">', unsafe_allow_html=True)
             selected_gender = st.selectbox(
                 "Select Category:",
-                options=['Men', 'Women'],
-                index=0 if st.session_state[config.SESSION_KEY_SELECTED_GENDER] == 'men' else 1,
+                options=['Men', 'Women', 'Combined'],
+                index={'men': 0, 'women': 1, 'combined': 2}.get(st.session_state[config.SESSION_KEY_SELECTED_GENDER], 0),
                 key='gender_selector',
-                help="Switch between male and female competition results",
+                help="Switch between male, female, and combined competition results",
                 label_visibility="collapsed"
             )
             st.markdown('</div>', unsafe_allow_html=True)
@@ -162,14 +167,16 @@ def main() -> None:
         
         # Use the selected gender for data processing (ensure it's always lowercase)
         current_gender = st.session_state[config.SESSION_KEY_SELECTED_GENDER]
-        # Safety check to ensure it's lowercase
-        if current_gender not in ['men', 'women']:
+        # Safety check to ensure it's valid
+        if current_gender not in ['men', 'women', 'combined']:
             current_gender = 'men'  # fallback to default
         
         with st.spinner("Crunching the numbers... Please wait."):
-            # Load and process data using the dedicated function
-            # This now returns a single ProcessedData object
-            processed_data: ProcessedData = process_data(gender=current_gender)
+            # Load and process data using the appropriate function
+            if current_gender == 'combined':
+                processed_data: ProcessedData = process_combined_division()
+            else:
+                processed_data: ProcessedData = process_data(gender=current_gender)
 
         # Initialize active tab in session state if it doesn't exist
         if config.SESSION_KEY_ACTIVE_TAB not in st.session_state:

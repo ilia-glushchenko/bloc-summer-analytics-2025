@@ -418,7 +418,9 @@ def display_path_success(data: List[Dict], climbers_df: pd.DataFrame, gym_boulde
         return
         
     # Get current climber's rank for validation
-    current_rank = climber_data['Rank']
+    # Handle both regular 'Rank' and combined division 'Combined_Rank' columns
+    rank_column = 'Combined_Rank' if 'Combined_Rank' in climber_data.index else 'Rank'
+    current_rank = climber_data[rank_column]
     
     # Add input for target rank with validation
     # Initialize session state for target rank if not already set
@@ -447,13 +449,14 @@ def display_path_success(data: List[Dict], climbers_df: pd.DataFrame, gym_boulde
     top_10_target = 0
     if not climbers_df.empty:
         # Use selected target rank instead of fixed config value
-        target_rank_climbers = climbers_df[climbers_df['Rank'] == target_rank]
+        # Use the same rank column that exists in the DataFrame
+        target_rank_climbers = climbers_df[climbers_df[rank_column] == target_rank]
         if not target_rank_climbers.empty:
             # If climbers exist exactly at the target rank, use their boulder count
             top_10_target = target_rank_climbers.iloc[0]['Completed']
         else:
             # Otherwise, find the minimum boulders among those ranked better than or equal to the target
-            top_rank_climbers = climbers_df[climbers_df['Rank'] <= target_rank]
+            top_rank_climbers = climbers_df[climbers_df[rank_column] <= target_rank]
             if not top_rank_climbers.empty:
                 top_10_target = top_rank_climbers['Completed'].min()
             # If still 0 (no climbers at or better than target rank), it remains 0, which is handled later.
