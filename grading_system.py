@@ -50,7 +50,11 @@ class FrenchGradingSystem:
     everywhere, regardless of gym. Different completion rates at different gyms reflect
     population strength differences, not boulder difficulty differences.
     
-    Uses Boulder 31 at Boulderbar Wienerberg (6c) as primary calibration point.
+    UNIFIED GRADING: Always uses men's division data for calibration across all divisions
+    (men's, women's, and combined) to ensure consistent absolute grading. This means
+    a boulder graded as 6c will be 6c for all divisions.
+    
+    Uses Boulder 31 at Boulderbar Wienerberg (6c) as primary calibration point from men's division.
     """
     
     # French grade scale mapping to numeric values
@@ -475,14 +479,17 @@ def initialize_grading_system_with_known_data(gym_boulder_counts: Dict[str, Dict
     """
     Initialize the grading system with known calibration data and real-world constraints.
     
-    Real-world calibration data:
+    UNIFIED GRADING: This function uses men's division data for calibration to ensure
+    consistent absolute grading across all divisions (men's, women's, and combined).
+    
+    Real-world calibration data (from men's division):
     - Boulder 31 at Boulderbar Wienerberg = 6c
     - Boulderbar Wienerberg maximum grade = 8a (constraint)
     - Boulderbar Wienerberg grade range = 5a to 8a
     
     Args:
-        gym_boulder_counts: Boulder completion counts per gym
-        participation_counts: Total participants per gym
+        gym_boulder_counts: Boulder completion counts per gym (from men's division)
+        participation_counts: Total participants per gym (from men's division)
     
     Returns:
         Configured FrenchGradingSystem instance with real-world constraints applied

@@ -9,7 +9,7 @@ import html # Import the html module for escaping
 from ui_components import render_metrics_row, render_section_header
 from data_processing import create_climber_boulder_matrix
 from recommendations import find_similar_climbers, recommend_boulders
-from utils import get_debug_mode, get_default_selected_climber
+from utils import get_default_selected_climber
 import config # Import config
 
 # Try to import grading system
@@ -562,13 +562,11 @@ def display_path_success(data: List[Dict], climbers_df: pd.DataFrame, gym_boulde
                 similar_climbers=similar_climbers, 
                 top_10_target=top_10_target,       
                 gym_boulder_counts=gym_boulder_counts,
-                participation_counts=participation_counts,
-                debug_mode=get_debug_mode()
+                participation_counts=participation_counts
             )
     except Exception as e:
         st.error(f"Error generating recommendations: {e}")
-        if get_debug_mode():
-            st.exception(e)
+        # Debug exception handling removed for production
         return # Stop if recommendations fail
     
     all_gyms_in_dataset = set(participation_counts.keys())
@@ -858,13 +856,5 @@ def display_path_success(data: List[Dict], climbers_df: pd.DataFrame, gym_boulde
     else: # Handles case where rec_df was empty or only had 'No specific recommendations'
         st.info(f"No specific boulder recommendations could be generated for {st.session_state[config.SESSION_KEY_SELECTED_CLIMBER]} at this time.")
 
-    # --- Debug Info (Optional) ---
-    if get_debug_mode():
-        st.subheader("Debug Info")
-        # Use constant for session key
-        st.write("Selected Climber (Session State):", st.session_state.get(config.SESSION_KEY_SELECTED_CLIMBER))
-        st.write("Selected Climber (Widget State):", st.session_state.get(config.SESSION_KEY_SELECTED_CLIMBER_PATH_TAB))
-        st.write("Visited Gyms:", visited_gyms)
-        st.write("Unvisited Gyms for Recs:", unvisited_gyms)
-        st.dataframe(rec_df)
-        st.write("Raw Recommendations:", recommendations) 
+    # --- Debug Info (Optional) --- REMOVED
+    # Debug information has been removed from the Plan tab for production use

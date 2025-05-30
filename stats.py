@@ -397,9 +397,13 @@ def compute_boulder_grades(data: List[Dict[str, Any]], gender: str = 'men') -> O
     """
     Compute French boulder grades for all gyms using the completion rate method.
     
+    UPDATED: Always uses men's division data for grading calibration to ensure consistent
+    grading across all divisions (men's, women's, and combined). This ensures that
+    a 6c boulder is graded as 6c regardless of which division is being analyzed.
+    
     Args:
         data: List of climber dictionaries from the competition
-        gender: Gender category being analyzed
+        gender: Gender category being analyzed (used for display/logging only)
     
     Returns:
         FrenchGradingSystem instance with calculated grades, or None if grading system unavailable
@@ -408,13 +412,26 @@ def compute_boulder_grades(data: List[Dict[str, Any]], gender: str = 'men') -> O
         logger.warning("Grading system not available. Cannot compute boulder grades.")
         return None
     
-    # Compute basic gym statistics
-    gym_boulder_counts, completion_histograms, participation_counts = compute_gym_stats(data)
+    # UPDATED: Always use men's division data for grading calibration
+    # This ensures consistent absolute grading across all divisions
+    try:
+        # Load men's division data for grading calibration
+        mens_data = load_results(gender='men')
+        logger.info(f"Using men's division data for grading calibration (analyzing {gender} division)")
+        
+        # Compute gym statistics from men's division data
+        gym_boulder_counts, completion_histograms, participation_counts = compute_gym_stats(mens_data)
+        
+    except Exception as e:
+        logger.warning(f"Could not load men's division data for grading: {e}")
+        logger.info(f"Falling back to {gender} division data for grading")
+        # Fallback to provided data if men's data unavailable
+        gym_boulder_counts, completion_histograms, participation_counts = compute_gym_stats(data)
     
-    # Initialize and configure the grading system
+    # Initialize and configure the grading system with calibration data
     grading_system = initialize_grading_system_with_known_data(gym_boulder_counts, participation_counts)
     
-    logger.info(f"Computed French boulder grades for {len(grading_system.boulder_grades)} gyms")
+    logger.info(f"Computed French boulder grades for {len(grading_system.boulder_grades)} gyms (calibrated on men's division)")
     return grading_system
 
 

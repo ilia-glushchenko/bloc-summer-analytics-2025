@@ -2,9 +2,13 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import json
+import logging
 import traceback
 from typing import List, Dict, Tuple, Optional, Any
 from dataclasses import dataclass
+
+# Set up logging
+logger = logging.getLogger(__name__)
 
 # Local module import (assuming stats.py is in the same directory or PYTHONPATH)
 from stats import load_results, compute_gym_stats, compute_boulder_grades
@@ -330,6 +334,9 @@ def process_combined_division() -> ProcessedData:
     Instead, it recalculates ranks based on total completed boulders across
     both divisions to create a truly combined ranking.
     
+    GRADING: Uses men's division data for boulder grade calibration to ensure
+    consistent absolute grading across all divisions.
+    
     Returns:
         ProcessedData: An object containing all processed data structures for combined division.
     """
@@ -342,7 +349,8 @@ def process_combined_division() -> ProcessedData:
         participation_counts={},
         climbers_df=pd.DataFrame(),
         gyms_df=pd.DataFrame(),
-        outlier_warning_message="Combined division data processing failed."
+        outlier_warning_message="Combined division data processing failed.",
+        grading_system=None
     )
     
     try:
@@ -492,6 +500,18 @@ def process_combined_division() -> ProcessedData:
         
         gyms_df = pd.DataFrame(gym_data)
         
+        # Compute French boulder grades using men's division calibration
+        # This ensures consistent grading across all divisions
+        grading_system = None
+        if GRADING_SYSTEM_AVAILABLE:
+            try:
+                # Always use 'combined' as gender parameter, but compute_boulder_grades
+                # will internally use men's division data for calibration
+                grading_system = compute_boulder_grades(combined_data, gender='combined')
+                logger.info("Computed French boulder grades for combined division using men's division calibration")
+            except Exception as e:
+                st.warning(f"Failed to compute boulder grades for combined division: {str(e)}")
+        
         return ProcessedData(
             raw_data=combined_data,
             gym_boulder_counts=gym_boulder_counts,
@@ -499,7 +519,8 @@ def process_combined_division() -> ProcessedData:
             participation_counts=participation_counts,
             climbers_df=climbers_df,
             gyms_df=gyms_df,
-            outlier_warning_message=outlier_warning_message
+            outlier_warning_message=outlier_warning_message,
+            grading_system=grading_system
         )
         
     except Exception as e:

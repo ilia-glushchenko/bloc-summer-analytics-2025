@@ -29,7 +29,7 @@ import uuid
 
 # Local modules
 import config # Import the config file
-from utils import load_css, get_debug_mode
+from utils import load_css
 from data_processing import process_data, process_combined_division, ProcessedData # Import ProcessedData and new function
 from tabs.gym_stats_tab import display_gym_stats
 from tabs.climber_stats_tab import display_climber_stats

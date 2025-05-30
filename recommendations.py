@@ -292,8 +292,7 @@ def find_optimal_boulders(
     bayesian_probs: Dict[str, Dict[str, Tuple[float, float, str]]],
     top_10_target: int,
     climber_gym_boulders: Dict[str, Dict[str, List[str]]],
-    gym_boulder_counts: Dict[str, Dict[str, int]],
-    debug_mode: bool = False
+    gym_boulder_counts: Dict[str, Dict[str, int]]
 ) -> List[Tuple[str, str, float, str]]:
     """
     Find the optimal boulders based on pure Bayesian probabilities.
@@ -312,8 +311,6 @@ def find_optimal_boulders(
         Nested dictionary mapping climbers to gyms to completed boulder lists
     gym_boulder_counts : Dict[str, Dict[str, int]]
         Mapping of gym names to boulder numbers to completion counts
-    debug_mode : bool, default=False
-        Whether to print debug information
         
     Returns:
     --------
@@ -395,25 +392,6 @@ def find_optimal_boulders(
         rank = i + 1
         result.append((gym, boulder, probability, f"#{rank} highest probability; {insight}"))
     
-    # Print debug information 
-    if debug_mode:
-        print("\n----- BAYESIAN PROBABILITY MODEL -----")
-        print(f"Boulders needed to reach top 10: {boulders_needed}")
-        
-        # Group by gym for better visualization
-        gym_counts = defaultdict(int)
-        for gym, _, _, _ in result:
-            gym_counts[gym] += 1
-        
-        print("\nGym distribution in final selection:")
-        for gym, count in gym_counts.items():
-            print(f"{gym}: {count} boulders")
-        
-        print("\nFinal boulder selection:")
-        for i, (gym, boulder, probability, insight) in enumerate(result):
-            print(f"{i+1}. Gym: {gym} | Boulder: {boulder} | Probability: {probability:.4f} ({probability*100:.1f}%)")
-        print("--------------------------------------------\n")
-    
     return result
 
 # Function to recommend boulders based on Bayesian probability
@@ -424,8 +402,7 @@ def recommend_boulders(
     similar_climbers: List[Tuple[str, float, int, int]],
     top_10_target: int,
     gym_boulder_counts: Dict[str, Dict[str, int]],
-    participation_counts: Dict[str, int],
-    debug_mode: bool = False
+    participation_counts: Dict[str, int]
 ) -> Tuple[Dict[str, List[Tuple[str, float]]], Set[str]]:
     """
     Generate personalized boulder recommendations using Bayesian probabilities.
@@ -446,8 +423,6 @@ def recommend_boulders(
         Mapping of gym names to boulder numbers to completion counts
     participation_counts : Dict[str, int]
         Mapping of gym names to number of participants
-    debug_mode : bool, default=False
-        Whether to print debug information
         
     Returns:
     --------
@@ -478,12 +453,6 @@ def recommend_boulders(
     
     # Identify unvisited gyms
     unvisited_gyms = all_gyms - visited_gyms
-    
-    # Debug print: Verify every gym is being considered
-    if debug_mode:
-        print(f"All gyms found: {sorted(list(all_gyms))}")
-        print(f"Visited gyms: {sorted(list(visited_gyms))}")
-        print(f"Unvisited gyms: {sorted(list(unvisited_gyms))}")
     
     # 1. Calculate Bayesian probabilities for all boulders
     bayesian_probs = calculate_bayesian_probabilities(
@@ -521,8 +490,7 @@ def recommend_boulders(
         bayesian_probs,
         top_10_target,
         climber_gym_boulders,
-        gym_boulder_counts,
-        debug_mode
+        gym_boulder_counts
     )
     
     # Store in format for UI compatibility
@@ -532,62 +500,6 @@ def recommend_boulders(
             for gym, boulder, probability, insight in optimal_path
         ]
     
-    # Print debug information only if debug mode is enabled
-    if debug_mode:
-        print_top10_path_debug(recommendations, debug_mode)
-        print_all_problem_scores(recommendations, debug_mode)
-    
     return recommendations, unvisited_gyms
 
-# Debug function to print the optimized path to top 10
-def print_top10_path_debug(recommendations, debug_mode=True):
-    """Print the optimized path to top 10 with recommendation scores for debugging purposes."""
-    if not debug_mode:
-        return
-        
-    if "__TOP_10_PATH__" in recommendations and recommendations["__TOP_10_PATH__"]:
-        print("\n----- OPTIMIZED PATH TO TOP 10 (DEBUG) -----")
-        for i, (item, score) in enumerate(recommendations["__TOP_10_PATH__"]):
-            # Handle both gym_boulder and gym-only formats
-            if "_" in item:
-                gym, boulder = item.split("_", 1)
-                print(f"{i+1}. Gym: {gym} | Boulder: {boulder} | Score: {score:.4f} ({score*100:.1f}%)")
-            else:
-                print(f"{i+1}. Visit Gym: {item} | Priority: {score:.4f} ({score*100:.1f}%)")
-        print("--------------------------------------------\n")
-    else:
-        print("No optimized path to top 10 available for debugging.")
-
-# Debug function to print scores for all problems
-def print_all_problem_scores(recommendations, debug_mode=True):
-    """Print scores for all problems across all gyms for debugging purposes."""
-    if not debug_mode:
-        return
-        
-    print("\n----- ALL PROBLEM SCORES (DEBUG) -----")
-    # First count how many problems we have to determine if we should limit output
-    total_problems = sum(len(problems) for gym, problems in recommendations.items() if gym != "__TOP_10_PATH__")
-    
-    if total_problems > 0:
-        print(f"Total problems across all gyms: {total_problems}")
-        
-        # Print top problems for each gym
-        for gym, problems in sorted(recommendations.items()):
-            if gym == "__TOP_10_PATH__":
-                continue  # Skip the TOP_10_PATH as it's handled separately
-                
-            if problems:  # Only print gyms with problems
-                print(f"\nGym: {gym} - {len(problems)} problems")
-                # Sort problems by score (descending)
-                sorted_problems = sorted(problems, key=lambda x: x[1], reverse=True)
-                
-                # Print top 10 problems or all if less than 10
-                display_count = min(10, len(sorted_problems))
-                for i, (boulder, score) in enumerate(sorted_problems[:display_count]):
-                    print(f"  {i+1}. Boulder: {boulder} | Score: {score:.4f} ({score*100:.1f}%)")
-                
-                if len(sorted_problems) > 10:
-                    print(f"  ... and {len(sorted_problems) - 10} more problems")
-    else:
-        print("No problem scores available for debugging.")
-    print("--------------------------------------------\n") 
+# Debug functions removed - no longer needed for production use 
