@@ -478,7 +478,12 @@ def display_path_success(data: List[Dict], climbers_df: pd.DataFrame, gym_boulde
     # Initialize session state for target rank if not already set
     if config.SESSION_KEY_TARGET_RANK not in st.session_state:
         st.session_state[config.SESSION_KEY_TARGET_RANK] = config.PATH_TARGET_RANK
-    
+
+    # Ensure the session state target rank doesn't exceed the maximum allowed value
+    max_allowed_rank = current_rank - 1 if current_rank > 1 else 1
+    if st.session_state[config.SESSION_KEY_TARGET_RANK] > max_allowed_rank:
+        st.session_state[config.SESSION_KEY_TARGET_RANK] = max_allowed_rank
+
     # Add target rank selector with validation in the second column
     with col_target:
         # Create a callback function to update target rank without changing tab
@@ -488,7 +493,7 @@ def display_path_success(data: List[Dict], climbers_df: pd.DataFrame, gym_boulde
         target_rank = st.number_input(
             "Target Rank",
             min_value=config.PATH_TARGET_RANK_MIN,
-            max_value=current_rank - 1 if current_rank > 1 else 1,
+            max_value=max_allowed_rank,
             value=st.session_state[config.SESSION_KEY_TARGET_RANK],
             step=1,
             help=f"Select your target rank (between {config.PATH_TARGET_RANK_MIN} and your current rank {current_rank})",
