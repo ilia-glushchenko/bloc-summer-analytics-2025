@@ -11,6 +11,37 @@ import config
 from data_processing import create_climber_boulder_matrix
 from ui_components import render_metrics_row, render_section_header
 
+# Try to import grading system
+try:
+    from grading_system import FrenchGradingSystem
+    GRADING_SYSTEM_AVAILABLE = True
+except ImportError:
+    GRADING_SYSTEM_AVAILABLE = False
+
+#------------------------------------------------------------------------------
+# HELPER FUNCTIONS FOR GRADING
+#------------------------------------------------------------------------------
+
+def get_boulder_french_grade(grading_system, gym_name: str, boulder_id: str) -> str:
+    """
+    Get the estimated French grade for a boulder.
+    
+    Args:
+        grading_system: FrenchGradingSystem instance
+        gym_name: Name of the gym
+        boulder_id: ID of the boulder
+        
+    Returns:
+        French grade string or "N/A" if not available
+    """
+    if not grading_system:
+        return "N/A"
+    
+    boulder_grade = grading_system.get_boulder_grade(gym_name, boulder_id)
+    if boulder_grade:
+        return boulder_grade.french_grade
+    return "N/A"
+
 #------------------------------------------------------------------------------
 # HELPER FUNCTIONS FOR CHART GENERATION
 #------------------------------------------------------------------------------
@@ -244,17 +275,20 @@ def display_gym_stats(
     gym_boulder_counts: Dict, 
     participation_counts: Dict, 
     completion_histograms: Dict = None, 
-    outlier_warning_message: Optional[str] = None
+    outlier_warning_message: Optional[str] = None,
+    processed_data: Optional[Any] = None
 ) -> None:
     """
-    Displays the Gym Statistics tab content including boulder analyses.
+    Display comprehensive gym statistics including gym overview, individual boulder 
+    analysis, and completion distributions. Now includes French grading when available.
     
     Args:
-        data: List of climber data dictionaries
-        gym_boulder_counts: Dictionary mapping gyms to boulder completion counts
-        participation_counts: Dictionary mapping gyms to participant counts
-        completion_histograms: Dictionary of completion count histograms by gym
-        outlier_warning_message: Warning message about statistical outliers
+        data: List of climber dictionaries from the competition
+        gym_boulder_counts: Dictionary mapping gym names to boulder completion counts
+        participation_counts: Dictionary mapping gym names to total participants
+        completion_histograms: Dictionary mapping gym names to completion distribution data
+        outlier_warning_message: Optional warning message about outliers in the data
+        processed_data: Optional ProcessedData object containing grading system
     """
     st.markdown("### Climbing Gym Statistics")
 
@@ -429,11 +463,41 @@ def display_gym_stats(
                         climber_percentages = [round((ascents / total_climbers_at_gym * 100), 1) if total_climbers_at_gym > 0 else 0
                                               for ascents in ascents_list]
                         
-                        # Combined text values
-                        text_values = [f"{a}<br>{p:.1f}%" for a, p in zip(ascents_list, climber_percentages)]
+                        # Get French grades for chart display
+                        french_grades_for_chart = []
+                        if processed_data and hasattr(processed_data, 'grading_system') and processed_data.grading_system:
+                            for boulder in sorted_boulders_for_chart:
+                                grade = get_boulder_french_grade(processed_data.grading_system, selected_gym, str(boulder))
+                                french_grades_for_chart.append(grade)
+                        else:
+                            french_grades_for_chart = ["N/A"] * len(sorted_boulders_for_chart)
+                        
+                        # Enhanced text values with French grades
+                        if any(grade != "N/A" for grade in french_grades_for_chart):
+                            text_values = [f"{a}<br>{p:.1f}%<br>{grade}" for a, p, grade in zip(ascents_list, climber_percentages, french_grades_for_chart)]
+                            hover_template = 'Boulder %{x}<br>Ascents: %{y}<br>%{customdata:.1f}% of climbers<br>French Grade: %{text}<extra></extra>'
+                            custom_data = list(zip(climber_percentages, french_grades_for_chart))
+                            hover_text = french_grades_for_chart
+                        else:
+                            # Fallback to original format if no grades available
+                            text_values = [f"{a}<br>{p:.1f}%" for a, p in zip(ascents_list, climber_percentages)]
+                            hover_template = 'Boulder %{x}<br>Ascents: %{y}<br>%{customdata:.1f}% of climbers<extra></extra>'
+                            custom_data = climber_percentages
+                            hover_text = None
                         
                         # Create popularity chart
                         fig_pop = go.Figure()
+                        
+                        # Prepare hover template and custom data for proper display
+                        if hover_text:
+                            # Enhanced hover with French grades
+                            hovertemplate_final = 'Boulder %{x}<br>Ascents: %{y}<br>%{customdata[0]:.1f}% of climbers<br>French Grade: %{customdata[1]}<extra></extra>'
+                            customdata_final = custom_data
+                        else:
+                            # Standard hover without French grades
+                            hovertemplate_final = 'Boulder %{x}<br>Ascents: %{y}<br>%{customdata:.1f}% of climbers<extra></extra>'
+                            customdata_final = custom_data
+                        
                         fig_pop.add_trace(go.Bar(
                             x=sorted_boulders_for_chart,
                             y=ascents_list,
@@ -445,16 +509,20 @@ def display_gym_stats(
                                     color=['#ff7c24' if boulder in selected_climber_boulders else 'rgba(0,0,0,0)' for boulder in sorted_boulders_for_chart]
                                 )
                             ),
-                            hovertemplate='Boulder %{x}<br>Ascents: %{y}<br>%{customdata:.1f}% of climbers<extra></extra>',
-                            customdata=climber_percentages,
+                            hovertemplate=hovertemplate_final,
+                            customdata=customdata_final,
                             text=text_values,
                             textposition='outside',
                             cliponaxis=False,
                             showlegend=False
                         ))
                         
-                        # Text settings
-                        fig_pop.update_traces(textangle=0, texttemplate='%{text}', textposition='outside')
+                        # Text settings - show the enhanced text values on the chart
+                        fig_pop.update_traces(
+                            textangle=0, 
+                            texttemplate='%{text}',
+                            textposition='outside'
+                        )
                         
                         # Chart layout
                         fig_pop.update_layout(
@@ -481,6 +549,12 @@ def display_gym_stats(
                                 lambda boulder: "✓" if boulder in selected_climber_boulders else ""
                             )
                         
+                        # Add French Grade column if grading system is available
+                        if processed_data and hasattr(processed_data, 'grading_system') and processed_data.grading_system:
+                            display_df['French Grade'] = display_df['Boulder'].apply(
+                                lambda boulder: get_boulder_french_grade(processed_data.grading_system, selected_gym, str(boulder))
+                            )
+                        
                         # Display table
                         st.dataframe(
                             display_df,
@@ -492,8 +566,8 @@ def display_gym_stats(
                                 "Ascents": st.column_config.NumberColumn("Ascents", format="%d"),
                                 "Success Rate": st.column_config.NumberColumn("Success Rate (%)", format="%.1f%%"),
                                 "Difficulty": st.column_config.NumberColumn("Difficulty (1-10)", format="%d", help="1=easiest, 10=hardest"),
-                                "Completed by You": st.column_config.TextColumn("Completed", help="Boulders you have topped") 
-                                 if 'Completed by You' in display_df.columns else None
+                                "Completed by You": st.column_config.TextColumn("Completed", help="Boulders you have topped") if 'Completed by You' in display_df.columns else None,
+                                "French Grade": st.column_config.TextColumn("Est. French Grade", help="Estimated French boulder grade") if 'French Grade' in display_df.columns else None
                             }
                         )
 

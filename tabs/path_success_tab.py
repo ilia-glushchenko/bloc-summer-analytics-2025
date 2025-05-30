@@ -12,6 +12,13 @@ from recommendations import find_similar_climbers, recommend_boulders
 from utils import get_debug_mode, get_default_selected_climber
 import config # Import config
 
+# Try to import grading system
+try:
+    from grading_system import FrenchGradingSystem
+    GRADING_SYSTEM_AVAILABLE = True
+except ImportError:
+    GRADING_SYSTEM_AVAILABLE = False
+
 # Configuration values moved to config.py
 # TARGET_RANK = 10 
 # SIMILARITY_N = 5 
@@ -111,7 +118,8 @@ def create_recommendation_dataframe(
         return pd.DataFrame()
 
 def display_visited_gyms_recommendations(visited_gyms_list: List[str], rec_df: pd.DataFrame, 
-                                   enhanced_recommendations: Optional[Dict[str, List[Tuple[str, float, str]]]] = None) -> None:
+                                   enhanced_recommendations: Optional[Dict[str, List[Tuple[str, float, str]]]] = None,
+                                   processed_data: Optional[Any] = None) -> None:
     """Display recommendations for gyms the climber has already visited."""
     if visited_gyms_list:
         # Add custom CSS to ensure tables don't get scrollbars and to make the layout responsive
@@ -216,6 +224,13 @@ def display_visited_gyms_recommendations(visited_gyms_list: List[str], rec_df: p
                     # For the new Bayesian model, we don't have enhanced recommendations with insights
                     # Just display the basic recommendation data
                     gym_recs_display = gym_recs[['Boulder', 'Probability', 'Success Probability']].copy()
+                    
+                    # Add French Grade column if grading system is available
+                    if processed_data and hasattr(processed_data, 'grading_system') and processed_data.grading_system:
+                        gym_recs_display['French Grade'] = gym_recs_display['Boulder'].apply(
+                            lambda boulder: get_boulder_french_grade_for_display(processed_data.grading_system, gym_name, str(boulder))
+                        )
+                    
                     st.dataframe(
                         gym_recs_display,
                         use_container_width=True,
@@ -232,7 +247,11 @@ def display_visited_gyms_recommendations(visited_gyms_list: List[str], rec_df: p
                                 "Success Rate (%)",  # Restored original label
                                 help="Historical completion rate",
                                 format="%.1f%%"
-                            )
+                            ),
+                            "French Grade": st.column_config.TextColumn(
+                                "Est. Grade",
+                                help="Estimated French boulder grade"
+                            ) if 'French Grade' in gym_recs_display.columns else None
                         }
                     )
                 else:
@@ -244,7 +263,8 @@ def display_unvisited_gyms_recommendations(
     unvisited_gyms_list: List[str],
     rec_df: pd.DataFrame,
     similar_climbers: List[Tuple[str, float, int, int]],
-    climber_gym_boulders: Dict[str, Dict[str, List[str]]]
+    climber_gym_boulders: Dict[str, Dict[str, List[str]]],
+    processed_data: Optional[Any] = None
 ) -> None:
     """Display recommendations for gyms the climber hasn't visited yet."""
     if unvisited_gyms_list:
@@ -336,8 +356,16 @@ def display_unvisited_gyms_recommendations(
                         st.write("None of your similar climbers have visited this gym.")
                 else:
                     # Display actual recommendations
+                    gym_recs_display = gym_recs[['Boulder', 'Probability', 'Success Probability']].copy()
+                    
+                    # Add French Grade column if grading system is available
+                    if processed_data and hasattr(processed_data, 'grading_system') and processed_data.grading_system:
+                        gym_recs_display['French Grade'] = gym_recs_display['Boulder'].apply(
+                            lambda boulder: get_boulder_french_grade_for_display(processed_data.grading_system, gym_name, str(boulder))
+                        )
+                    
                     st.dataframe(
-                        gym_recs[['Boulder', 'Probability', 'Success Probability']],
+                        gym_recs_display,
                         use_container_width=True,
                         hide_index=True,
                         column_config={
@@ -351,14 +379,38 @@ def display_unvisited_gyms_recommendations(
                                 "Success Rate (%)",  # Restored original label
                                 format="%.1f%%",
                                 help="Historical completion rate"
-                            )
+                            ),
+                            "French Grade": st.column_config.TextColumn(
+                                "Est. Grade",
+                                help="Estimated French boulder grade"
+                            ) if 'French Grade' in gym_recs_display.columns else None
                         }
                     )
 
+def get_boulder_french_grade_for_display(grading_system, gym_name: str, boulder_id: str) -> str:
+    """
+    Get the estimated French grade for a boulder for display purposes.
+    
+    Args:
+        grading_system: FrenchGradingSystem instance
+        gym_name: Name of the gym
+        boulder_id: ID of the boulder
+        
+    Returns:
+        French grade string or "N/A" if not available
+    """
+    if not grading_system:
+        return "N/A"
+    
+    boulder_grade = grading_system.get_boulder_grade(gym_name, boulder_id)
+    if boulder_grade:
+        return boulder_grade.french_grade
+    return "N/A"
+
 # --- Main function for the tab ---
 
-def display_path_success(data: List[Dict], climbers_df: pd.DataFrame, gym_boulder_counts: Dict, participation_counts: Dict, sync_callback: Optional[Callable] = None) -> None:
-    """Displays the Path to Success tab content."""
+def display_path_success(data: List[Dict], climbers_df: pd.DataFrame, gym_boulder_counts: Dict, participation_counts: Dict, sync_callback: Optional[Callable] = None, processed_data: Optional[Any] = None) -> None:
+    """Displays the Path to Success tab content with French grading when available."""
     st.markdown("### Path to Success Analysis")
 
     if climbers_df.empty:
@@ -536,7 +588,7 @@ def display_path_success(data: List[Dict], climbers_df: pd.DataFrame, gym_boulde
         # Original UI Structure: Show visited gyms first, then unvisited
         if visited_gyms_with_recs:
             render_section_header("Boulders in Visited Gyms", level=5)
-            display_visited_gyms_recommendations(visited_gyms_with_recs, rec_df)
+            display_visited_gyms_recommendations(visited_gyms_with_recs, rec_df, None, processed_data)
         
         if unvisited_gyms_list:
             render_section_header("Boulders in Unvisited Gyms", level=5)
@@ -544,7 +596,8 @@ def display_path_success(data: List[Dict], climbers_df: pd.DataFrame, gym_boulde
                 unvisited_gyms_list, 
                 rec_df, 
                 similar_climbers,
-                climber_gym_boulders
+                climber_gym_boulders,
+                processed_data
             )
         
         # --- Optimized Path Section --- 
@@ -739,28 +792,46 @@ def display_path_success(data: List[Dict], climbers_df: pd.DataFrame, gym_boulde
                                             boulder_completion_count = gym_boulder_counts.get(gym, {}).get(boulder, 0)
                                             total_climbers_at_gym = participation_counts.get(gym, 0)
                                             success_rate = boulder_completion_count / total_climbers_at_gym * 100 if total_climbers_at_gym > 0 else 0
-                                            boulder_rows.append({
+                                            
+                                            boulder_row = {
                                                 "Boulder": boulder, 
                                                 "Probability": f"{score*100:.1f}%",
                                                 "Success Rate": f"{success_rate:.1f}%"
-                                            })
+                                            }
+                                            
+                                            # Add French Grade if grading system is available
+                                            if processed_data and hasattr(processed_data, 'grading_system') and processed_data.grading_system:
+                                                french_grade = get_boulder_french_grade_for_display(processed_data.grading_system, gym, str(boulder))
+                                                boulder_row["French Grade"] = french_grade
+                                            
+                                            boulder_rows.append(boulder_row)
                                         
                                         boulder_df = pd.DataFrame(boulder_rows)
+                                        
+                                        # Configure column config based on available columns
+                                        column_config = {
+                                            "Boulder": st.column_config.TextColumn("Boulder", help="Boulder to complete"),
+                                            "Probability": st.column_config.TextColumn(
+                                                "Completion Probability", 
+                                                help="Personalized probability of completion based on Bayesian analysis"
+                                            ),
+                                            "Success Rate": st.column_config.TextColumn(
+                                                "Historical Success", 
+                                                help="Percentage of all climbers who completed this boulder"
+                                            )
+                                        }
+                                        
+                                        if "French Grade" in boulder_df.columns:
+                                            column_config["French Grade"] = st.column_config.TextColumn(
+                                                "Est. Grade",
+                                                help="Estimated French boulder grade"
+                                            )
+                                        
                                         st.dataframe(
                                             boulder_df,
                                             use_container_width=True,
                                             hide_index=True,
-                                            column_config={
-                                                "Boulder": st.column_config.TextColumn("Boulder", help="Boulder to complete"),
-                                                "Probability": st.column_config.TextColumn(
-                                                    "Completion Probability", 
-                                                    help="Personalized probability of completion based on Bayesian analysis"
-                                                ),
-                                                "Success Rate": st.column_config.TextColumn(
-                                                    "Historical Success", 
-                                                    help="Percentage of all climbers who completed this boulder"
-                                                )
-                                            }
+                                            column_config=column_config
                                         )
                                     else:
                                         st.write("No specific boulder recommendations for this gym.")

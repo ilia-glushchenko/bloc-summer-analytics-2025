@@ -155,4 +155,15 @@ This project is open source and available under the MIT License.
 ## Acknowledgments
 
 - Boulder Summer Series for providing the competition data
-- The open source community for the excellent libraries that made this project possible 
+- The open source community for the excellent libraries that made this project possible
+
+## Recent Enhancements
+
+### French Grading System Integration
+- **Estimated French Grades**: Added comprehensive French grade estimation system for all boulders
+- **Enhanced Charts**: Boulder Popularity Chart now displays French grades alongside ascent counts and success rates
+- **Boulder Tables**: All boulder recommendation and analysis tables now include estimated French grades
+- **Grading Analysis**: Dedicated grading tab with comprehensive grade distribution analysis
+- **Path Planning**: Boulder recommendations now include French grades to help with difficulty assessment
+
+The grading system uses Bayesian inference to estimate French boulder grades based on completion rates, climber performance data, and gym-specific difficulty factors. 

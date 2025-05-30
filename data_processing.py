@@ -3,12 +3,20 @@ import pandas as pd
 import numpy as np
 import json
 import traceback
-from typing import List, Dict, Tuple, Optional
+from typing import List, Dict, Tuple, Optional, Any
 from dataclasses import dataclass
 
 # Local module import (assuming stats.py is in the same directory or PYTHONPATH)
-from stats import load_results, compute_gym_stats
+from stats import load_results, compute_gym_stats, compute_boulder_grades
 import config
+
+# Try to import grading system
+try:
+    from grading_system import FrenchGradingSystem
+    GRADING_SYSTEM_AVAILABLE = True
+except ImportError:
+    GRADING_SYSTEM_AVAILABLE = False
+    st.warning("Grading system module not available. Grade-related features will be disabled.")
 
 #------------------------------------------------------------------------------
 # DATACLASS FOR PROCESSED DATA
@@ -23,6 +31,7 @@ class ProcessedData:
     climbers_df: pd.DataFrame
     gyms_df: pd.DataFrame
     outlier_warning_message: Optional[str]
+    grading_system: Optional[Any] = None  # FrenchGradingSystem instance
 
 #------------------------------------------------------------------------------
 # DATA VALIDATION
@@ -84,7 +93,8 @@ def process_data(gender: str = 'men') -> ProcessedData:
         participation_counts={},
         climbers_df=pd.DataFrame(),
         gyms_df=pd.DataFrame(),
-        outlier_warning_message="Data validation failed." # Default error message
+        outlier_warning_message="Data validation failed.", # Default error message
+        grading_system=None
     )
     try:
         data = load_results(gender=gender)
@@ -201,6 +211,16 @@ def process_data(gender: str = 'men') -> ProcessedData:
         
         gyms_df = pd.DataFrame(gym_data)
         
+        # Compute French boulder grades if grading system is available
+        grading_system = None
+        if GRADING_SYSTEM_AVAILABLE:
+            try:
+                grading_system = compute_boulder_grades(data, gender)
+                # Removed notification: if grading_system:
+                #     st.success(f"Computed French boulder grades for {len(grading_system.boulder_grades)} gyms")
+            except Exception as e:
+                st.warning(f"Failed to compute boulder grades: {str(e)}")
+        
         # Return the results packaged in the dataclass
         return ProcessedData(
             raw_data=data,
@@ -209,7 +229,8 @@ def process_data(gender: str = 'men') -> ProcessedData:
             participation_counts=participation_counts,
             climbers_df=climbers_df,
             gyms_df=gyms_df,
-            outlier_warning_message=outlier_warning_message
+            outlier_warning_message=outlier_warning_message,
+            grading_system=grading_system
         )
     except Exception as e:
         st.error(f"Error loading data: {str(e)}")

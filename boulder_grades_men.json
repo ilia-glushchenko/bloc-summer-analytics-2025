@@ -1,0 +1,1290 @@
+{
+  "Boulderbar Wienerberg": {
+    "1": {
+      "french_grade": "5c",
+      "numeric_grade": 3.0,
+      "completion_rate": 0.680365296803653,
+      "confidence": 1.0,
+      "total_climbers": 219,
+      "completed_count": 149
+    },
+    "2": {
+      "french_grade": "5b",
+      "numeric_grade": 2.0,
+      "completion_rate": 0.817351598173516,
+      "confidence": 1.0,
+      "total_climbers": 219,
+      "completed_count": 179
+    },
+    "3": {
+      "french_grade": "5a",
+      "numeric_grade": 1.0,
+      "completion_rate": 0.8721461187214612,
+      "confidence": 1.0,
+      "total_climbers": 219,
+      "completed_count": 191
+    },
+    "4": {
+      "french_grade": "7c+",
+      "numeric_grade": 9.257373395005082,
+      "completion_rate": 0.1506849315068493,
+      "confidence": 1.0,
+      "total_climbers": 219,
+      "completed_count": 33
+    },
+    "5": {
+      "french_grade": "8a",
+      "numeric_grade": 10.0,
+      "completion_rate": 0.0547945205479452,
+      "confidence": 1.0,
+      "total_climbers": 219,
+      "completed_count": 12
+    },
+    "6": {
+      "french_grade": "5a",
+      "numeric_grade": 1.0,
+      "completion_rate": 0.8584474885844748,
+      "confidence": 1.0,
+      "total_climbers": 219,
+      "completed_count": 188
+    },
+    "7": {
+      "french_grade": "7a",
+      "numeric_grade": 6.946520822961028,
+      "completion_rate": 0.4383561643835616,
+      "confidence": 1.0,
+      "total_climbers": 219,
+      "completed_count": 96
+    },
+    "8": {
+      "french_grade": "5b",
+      "numeric_grade": 2.0,
+      "completion_rate": 0.776255707762557,
+      "confidence": 1.0,
+      "total_climbers": 219,
+      "completed_count": 170
+    },
+    "9": {
+      "french_grade": "5b",
+      "numeric_grade": 2.0,
+      "completion_rate": 0.7671232876712328,
+      "confidence": 1.0,
+      "total_climbers": 219,
+      "completed_count": 168
+    },
+    "10": {
+      "french_grade": "7b+",
+      "numeric_grade": 8.401899807869949,
+      "completion_rate": 0.2237442922374429,
+      "confidence": 1.0,
+      "total_climbers": 219,
+      "completed_count": 49
+    },
+    "11": {
+      "french_grade": "5b",
+      "numeric_grade": 2.0,
+      "completion_rate": 0.7899543378995434,
+      "confidence": 1.0,
+      "total_climbers": 219,
+      "completed_count": 173
+    },
+    "12": {
+      "french_grade": "5c",
+      "numeric_grade": 3.0,
+      "completion_rate": 0.7214611872146118,
+      "confidence": 1.0,
+      "total_climbers": 219,
+      "completed_count": 158
+    },
+    "13": {
+      "french_grade": "7a",
+      "numeric_grade": 7.110364427593165,
+      "completion_rate": 0.4063926940639269,
+      "confidence": 1.0,
+      "total_climbers": 219,
+      "completed_count": 89
+    },
+    "14": {
+      "french_grade": "7a+",
+      "numeric_grade": 7.539227735722736,
+      "completion_rate": 0.3333333333333333,
+      "confidence": 1.0,
+      "total_climbers": 219,
+      "completed_count": 73
+    },
+    "15": {
+      "french_grade": "7a",
+      "numeric_grade": 7.110364427593165,
+      "completion_rate": 0.4063926940639269,
+      "confidence": 1.0,
+      "total_climbers": 219,
+      "completed_count": 89
+    },
+    "16": {
+      "french_grade": "5c",
+      "numeric_grade": 3.0,
+      "completion_rate": 0.7488584474885844,
+      "confidence": 1.0,
+      "total_climbers": 219,
+      "completed_count": 164
+    },
+    "17": {
+      "french_grade": "7c+",
+      "numeric_grade": 9.392670108462449,
+      "completion_rate": 0.1415525114155251,
+      "confidence": 1.0,
+      "total_climbers": 219,
+      "completed_count": 31
+    },
+    "18": {
+      "french_grade": "5b",
+      "numeric_grade": 2.0,
+      "completion_rate": 0.8356164383561644,
+      "confidence": 1.0,
+      "total_climbers": 219,
+      "completed_count": 183
+    },
+    "19": {
+      "french_grade": "8a",
+      "numeric_grade": 9.858180289380675,
+      "completion_rate": 0.1141552511415525,
+      "confidence": 1.0,
+      "total_climbers": 219,
+      "completed_count": 25
+    },
+    "20": {
+      "french_grade": "8a",
+      "numeric_grade": 10.0,
+      "completion_rate": 0.0136986301369863,
+      "confidence": 0.3,
+      "total_climbers": 219,
+      "completed_count": 3
+    },
+    "21": {
+      "french_grade": "8a",
+      "numeric_grade": 10.0,
+      "completion_rate": 0.0365296803652968,
+      "confidence": 0.8,
+      "total_climbers": 219,
+      "completed_count": 8
+    },
+    "22": {
+      "french_grade": "8a",
+      "numeric_grade": 10.0,
+      "completion_rate": 0.0639269406392694,
+      "confidence": 1.0,
+      "total_climbers": 219,
+      "completed_count": 14
+    },
+    "23": {
+      "french_grade": "8a",
+      "numeric_grade": 10.0,
+      "completion_rate": 0.1004566210045662,
+      "confidence": 1.0,
+      "total_climbers": 219,
+      "completed_count": 22
+    },
+    "24": {
+      "french_grade": "7b",
+      "numeric_grade": 8.0,
+      "completion_rate": 0.2694063926940639,
+      "confidence": 1.0,
+      "total_climbers": 219,
+      "completed_count": 59
+    },
+    "25": {
+      "french_grade": "6c",
+      "numeric_grade": 5.933977210935724,
+      "completion_rate": 0.593607305936073,
+      "confidence": 1.0,
+      "total_climbers": 219,
+      "completed_count": 130
+    },
+    "26": {
+      "french_grade": "6c",
+      "numeric_grade": 5.933977210935724,
+      "completion_rate": 0.593607305936073,
+      "confidence": 1.0,
+      "total_climbers": 219,
+      "completed_count": 130
+    },
+    "27": {
+      "french_grade": "8a",
+      "numeric_grade": 10.0,
+      "completion_rate": 0.0365296803652968,
+      "confidence": 0.8,
+      "total_climbers": 219,
+      "completed_count": 8
+    },
+    "28": {
+      "french_grade": "7b+",
+      "numeric_grade": 8.492081296526306,
+      "completion_rate": 0.2146118721461187,
+      "confidence": 1.0,
+      "total_climbers": 219,
+      "completed_count": 47
+    },
+    "29": {
+      "french_grade": "6b+",
+      "numeric_grade": 5.521790588719876,
+      "completion_rate": 0.634703196347032,
+      "confidence": 1.0,
+      "total_climbers": 219,
+      "completed_count": 139
+    },
+    "30": {
+      "french_grade": "6c",
+      "numeric_grade": 5.980391017640553,
+      "completion_rate": 0.589041095890411,
+      "confidence": 1.0,
+      "total_climbers": 219,
+      "completed_count": 129
+    },
+    "31": {
+      "french_grade": "6c+",
+      "numeric_grade": 6.5,
+      "completion_rate": 0.5388127853881278,
+      "confidence": 1.0,
+      "total_climbers": 219,
+      "completed_count": 118
+    },
+    "32": {
+      "french_grade": "5a",
+      "numeric_grade": 1.0,
+      "completion_rate": 0.8767123287671232,
+      "confidence": 1.0,
+      "total_climbers": 219,
+      "completed_count": 192
+    },
+    "33": {
+      "french_grade": "5b",
+      "numeric_grade": 2.0,
+      "completion_rate": 0.817351598173516,
+      "confidence": 1.0,
+      "total_climbers": 219,
+      "completed_count": 179
+    },
+    "34": {
+      "french_grade": "6b+",
+      "numeric_grade": 5.612560013958407,
+      "completion_rate": 0.6255707762557078,
+      "confidence": 1.0,
+      "total_climbers": 219,
+      "completed_count": 137
+    },
+    "35": {
+      "french_grade": "8a",
+      "numeric_grade": 10.0,
+      "completion_rate": 0.091324200913242,
+      "confidence": 1.0,
+      "total_climbers": 219,
+      "completed_count": 20
+    },
+    "36": {
+      "french_grade": "8a",
+      "numeric_grade": 10.0,
+      "completion_rate": 0.0684931506849315,
+      "confidence": 1.0,
+      "total_climbers": 219,
+      "completed_count": 15
+    },
+    "37": {
+      "french_grade": "5c",
+      "numeric_grade": 3.0,
+      "completion_rate": 0.6986301369863014,
+      "confidence": 1.0,
+      "total_climbers": 219,
+      "completed_count": 153
+    },
+    "38": {
+      "french_grade": "5a",
+      "numeric_grade": 1.0,
+      "completion_rate": 0.867579908675799,
+      "confidence": 1.0,
+      "total_climbers": 219,
+      "completed_count": 190
+    },
+    "39": {
+      "french_grade": "5c",
+      "numeric_grade": 3.0,
+      "completion_rate": 0.6894977168949772,
+      "confidence": 1.0,
+      "total_climbers": 219,
+      "completed_count": 151
+    },
+    "40": {
+      "french_grade": "7a",
+      "numeric_grade": 6.794213783267934,
+      "completion_rate": 0.4703196347031963,
+      "confidence": 1.0,
+      "total_climbers": 219,
+      "completed_count": 103
+    }
+  },
+  "BigWall": {
+    "1": {
+      "french_grade": "5a",
+      "numeric_grade": 1.0,
+      "completion_rate": 0.8214285714285714,
+      "confidence": 1.0,
+      "total_climbers": 168,
+      "completed_count": 138
+    },
+    "2": {
+      "french_grade": "7b+",
+      "numeric_grade": 8.53822634494083,
+      "completion_rate": 0.17857142857142858,
+      "confidence": 1.0,
+      "total_climbers": 168,
+      "completed_count": 30
+    },
+    "3": {
+      "french_grade": "5a",
+      "numeric_grade": 1.0,
+      "completion_rate": 0.8273809523809523,
+      "confidence": 1.0,
+      "total_climbers": 168,
+      "completed_count": 139
+    },
+    "4": {
+      "french_grade": "5a",
+      "numeric_grade": 1.0,
+      "completion_rate": 0.7619047619047619,
+      "confidence": 1.0,
+      "total_climbers": 168,
+      "completed_count": 128
+    },
+    "5": {
+      "french_grade": "5a",
+      "numeric_grade": 1.0,
+      "completion_rate": 0.7976190476190477,
+      "confidence": 1.0,
+      "total_climbers": 168,
+      "completed_count": 134
+    },
+    "6": {
+      "french_grade": "7c",
+      "numeric_grade": 9.021118487271874,
+      "completion_rate": 0.14285714285714285,
+      "confidence": 1.0,
+      "total_climbers": 168,
+      "completed_count": 24
+    },
+    "7": {
+      "french_grade": "5a",
+      "numeric_grade": 1.0,
+      "completion_rate": 0.8214285714285714,
+      "confidence": 1.0,
+      "total_climbers": 168,
+      "completed_count": 138
+    },
+    "8": {
+      "french_grade": "5a",
+      "numeric_grade": 1.0,
+      "completion_rate": 0.7738095238095238,
+      "confidence": 1.0,
+      "total_climbers": 168,
+      "completed_count": 130
+    },
+    "9": {
+      "french_grade": "7a+",
+      "numeric_grade": 7.266230985108405,
+      "completion_rate": 0.32142857142857145,
+      "confidence": 1.0,
+      "total_climbers": 168,
+      "completed_count": 54
+    },
+    "10": {
+      "french_grade": "5a",
+      "numeric_grade": 1.0,
+      "completion_rate": 0.7857142857142857,
+      "confidence": 1.0,
+      "total_climbers": 168,
+      "completed_count": 132
+    },
+    "11": {
+      "french_grade": "5a",
+      "numeric_grade": 1.0,
+      "completion_rate": 0.8690476190476191,
+      "confidence": 1.0,
+      "total_climbers": 168,
+      "completed_count": 146
+    },
+    "12": {
+      "french_grade": "5a",
+      "numeric_grade": 1.0,
+      "completion_rate": 0.8452380952380952,
+      "confidence": 1.0,
+      "total_climbers": 168,
+      "completed_count": 142
+    },
+    "13": {
+      "french_grade": "5a",
+      "numeric_grade": 1.0,
+      "completion_rate": 0.8988095238095238,
+      "confidence": 1.0,
+      "total_climbers": 168,
+      "completed_count": 151
+    },
+    "14": {
+      "french_grade": "5a",
+      "numeric_grade": 1.0,
+      "completion_rate": 0.8928571428571429,
+      "confidence": 1.0,
+      "total_climbers": 168,
+      "completed_count": 150
+    },
+    "15": {
+      "french_grade": "5a",
+      "numeric_grade": 1.0,
+      "completion_rate": 0.8273809523809523,
+      "confidence": 1.0,
+      "total_climbers": 168,
+      "completed_count": 139
+    },
+    "16": {
+      "french_grade": "7a",
+      "numeric_grade": 6.967267772773295,
+      "completion_rate": 0.36904761904761907,
+      "confidence": 1.0,
+      "total_climbers": 168,
+      "completed_count": 62
+    },
+    "18": {
+      "french_grade": "5a",
+      "numeric_grade": 1.0,
+      "completion_rate": 0.8035714285714286,
+      "confidence": 1.0,
+      "total_climbers": 168,
+      "completed_count": 135
+    },
+    "19": {
+      "french_grade": "5b",
+      "numeric_grade": 2.0,
+      "completion_rate": 0.6904761904761905,
+      "confidence": 1.0,
+      "total_climbers": 168,
+      "completed_count": 116
+    },
+    "20": {
+      "french_grade": "7b",
+      "numeric_grade": 7.970458910060235,
+      "completion_rate": 0.23214285714285715,
+      "confidence": 1.0,
+      "total_climbers": 168,
+      "completed_count": 39
+    },
+    "21": {
+      "french_grade": "5a",
+      "numeric_grade": 1.0,
+      "completion_rate": 0.8333333333333334,
+      "confidence": 1.0,
+      "total_climbers": 168,
+      "completed_count": 140
+    },
+    "22": {
+      "french_grade": "6c+",
+      "numeric_grade": 6.555334202609786,
+      "completion_rate": 0.44642857142857145,
+      "confidence": 1.0,
+      "total_climbers": 168,
+      "completed_count": 75
+    },
+    "23": {
+      "french_grade": "5c",
+      "numeric_grade": 3.0,
+      "completion_rate": 0.6369047619047619,
+      "confidence": 1.0,
+      "total_climbers": 168,
+      "completed_count": 107
+    },
+    "24": {
+      "french_grade": "7b",
+      "numeric_grade": 8.204637712936158,
+      "completion_rate": 0.20833333333333334,
+      "confidence": 1.0,
+      "total_climbers": 168,
+      "completed_count": 35
+    },
+    "25": {
+      "french_grade": "5a",
+      "numeric_grade": 1.0,
+      "completion_rate": 0.7797619047619048,
+      "confidence": 1.0,
+      "total_climbers": 168,
+      "completed_count": 131
+    },
+    "26": {
+      "french_grade": "5a",
+      "numeric_grade": 1.0,
+      "completion_rate": 0.7619047619047619,
+      "confidence": 1.0,
+      "total_climbers": 168,
+      "completed_count": 128
+    },
+    "27": {
+      "french_grade": "5a",
+      "numeric_grade": 1.0,
+      "completion_rate": 0.8214285714285714,
+      "confidence": 1.0,
+      "total_climbers": 168,
+      "completed_count": 138
+    },
+    "28": {
+      "french_grade": "7a",
+      "numeric_grade": 6.932642353103733,
+      "completion_rate": 0.375,
+      "confidence": 1.0,
+      "total_climbers": 168,
+      "completed_count": 63
+    },
+    "29": {
+      "french_grade": "7c+",
+      "numeric_grade": 9.52667096818823,
+      "completion_rate": 0.1130952380952381,
+      "confidence": 1.0,
+      "total_climbers": 168,
+      "completed_count": 19
+    },
+    "30": {
+      "french_grade": "8a",
+      "numeric_grade": 10.0,
+      "completion_rate": 0.047619047619047616,
+      "confidence": 0.8,
+      "total_climbers": 168,
+      "completed_count": 8
+    },
+    "31": {
+      "french_grade": "8a",
+      "numeric_grade": 10.0,
+      "completion_rate": 0.011904761904761904,
+      "confidence": 0.2,
+      "total_climbers": 168,
+      "completed_count": 2
+    },
+    "32": {
+      "french_grade": "6c+",
+      "numeric_grade": 6.495761576990929,
+      "completion_rate": 0.4583333333333333,
+      "confidence": 1.0,
+      "total_climbers": 168,
+      "completed_count": 77
+    },
+    "33": {
+      "french_grade": "8a",
+      "numeric_grade": 10.0,
+      "completion_rate": 0.06547619047619048,
+      "confidence": 1.0,
+      "total_climbers": 168,
+      "completed_count": 11
+    },
+    "34": {
+      "french_grade": "8a",
+      "numeric_grade": 10.0,
+      "completion_rate": 0.047619047619047616,
+      "confidence": 0.8,
+      "total_climbers": 168,
+      "completed_count": 8
+    },
+    "35": {
+      "french_grade": "7c",
+      "numeric_grade": 8.766230985108404,
+      "completion_rate": 0.16071428571428573,
+      "confidence": 1.0,
+      "total_climbers": 168,
+      "completed_count": 27
+    },
+    "36": {
+      "french_grade": "6b+",
+      "numeric_grade": 5.7057123393102165,
+      "completion_rate": 0.5238095238095238,
+      "confidence": 1.0,
+      "total_climbers": 168,
+      "completed_count": 88
+    },
+    "37": {
+      "french_grade": "8a",
+      "numeric_grade": 10.0,
+      "completion_rate": 0.08333333333333333,
+      "confidence": 1.0,
+      "total_climbers": 168,
+      "completed_count": 14
+    },
+    "38": {
+      "french_grade": "8a",
+      "numeric_grade": 10.0,
+      "completion_rate": 0.05357142857142857,
+      "confidence": 0.9,
+      "total_climbers": 168,
+      "completed_count": 9
+    },
+    "39": {
+      "french_grade": "5a",
+      "numeric_grade": 1.0,
+      "completion_rate": 0.7261904761904762,
+      "confidence": 1.0,
+      "total_climbers": 168,
+      "completed_count": 122
+    },
+    "40": {
+      "french_grade": "5a",
+      "numeric_grade": 1.0,
+      "completion_rate": 0.8690476190476191,
+      "confidence": 1.0,
+      "total_climbers": 168,
+      "completed_count": 146
+    },
+    "17": {
+      "french_grade": "8a",
+      "numeric_grade": 10.0,
+      "completion_rate": 0.041666666666666664,
+      "confidence": 0.7,
+      "total_climbers": 168,
+      "completed_count": 7
+    }
+  },
+  "Blockfabrik": {
+    "1": {
+      "french_grade": "8a",
+      "numeric_grade": 10.0,
+      "completion_rate": 0.05420054200542006,
+      "confidence": 1.0,
+      "total_climbers": 369,
+      "completed_count": 20
+    },
+    "2": {
+      "french_grade": "5a",
+      "numeric_grade": 1.0,
+      "completion_rate": 0.6314363143631436,
+      "confidence": 1.0,
+      "total_climbers": 369,
+      "completed_count": 233
+    },
+    "3": {
+      "french_grade": "5a",
+      "numeric_grade": 1.0,
+      "completion_rate": 0.7940379403794038,
+      "confidence": 1.0,
+      "total_climbers": 369,
+      "completed_count": 293
+    },
+    "4": {
+      "french_grade": "8a",
+      "numeric_grade": 10.0,
+      "completion_rate": 0.037940379403794036,
+      "confidence": 1.0,
+      "total_climbers": 369,
+      "completed_count": 14
+    },
+    "5": {
+      "french_grade": "7a",
+      "numeric_grade": 7.132978571131434,
+      "completion_rate": 0.2872628726287263,
+      "confidence": 1.0,
+      "total_climbers": 369,
+      "completed_count": 106
+    },
+    "6": {
+      "french_grade": "7b+",
+      "numeric_grade": 8.632978571131435,
+      "completion_rate": 0.14363143631436315,
+      "confidence": 1.0,
+      "total_climbers": 369,
+      "completed_count": 53
+    },
+    "7": {
+      "french_grade": "5a",
+      "numeric_grade": 1.0,
+      "completion_rate": 0.8563685636856369,
+      "confidence": 1.0,
+      "total_climbers": 369,
+      "completed_count": 316
+    },
+    "8": {
+      "french_grade": "5a",
+      "numeric_grade": 1.0,
+      "completion_rate": 0.8211382113821138,
+      "confidence": 1.0,
+      "total_climbers": 369,
+      "completed_count": 303
+    },
+    "9": {
+      "french_grade": "8a",
+      "numeric_grade": 10.0,
+      "completion_rate": 0.02981029810298103,
+      "confidence": 1.0,
+      "total_climbers": 369,
+      "completed_count": 11
+    },
+    "10": {
+      "french_grade": "5a",
+      "numeric_grade": 1.0,
+      "completion_rate": 0.8021680216802168,
+      "confidence": 1.0,
+      "total_climbers": 369,
+      "completed_count": 296
+    },
+    "11": {
+      "french_grade": "5a",
+      "numeric_grade": 1.0,
+      "completion_rate": 0.7100271002710027,
+      "confidence": 1.0,
+      "total_climbers": 369,
+      "completed_count": 262
+    },
+    "12": {
+      "french_grade": "7c+",
+      "numeric_grade": 9.352967982810855,
+      "completion_rate": 0.10298102981029811,
+      "confidence": 1.0,
+      "total_climbers": 369,
+      "completed_count": 38
+    },
+    "13": {
+      "french_grade": "5a",
+      "numeric_grade": 1.0,
+      "completion_rate": 0.7750677506775068,
+      "confidence": 1.0,
+      "total_climbers": 369,
+      "completed_count": 286
+    },
+    "14": {
+      "french_grade": "7b+",
+      "numeric_grade": 8.437887760284875,
+      "completion_rate": 0.15718157181571815,
+      "confidence": 1.0,
+      "total_climbers": 369,
+      "completed_count": 58
+    },
+    "15": {
+      "french_grade": "5a",
+      "numeric_grade": 1.0,
+      "completion_rate": 0.7913279132791328,
+      "confidence": 1.0,
+      "total_climbers": 369,
+      "completed_count": 292
+    },
+    "16": {
+      "french_grade": "7c+",
+      "numeric_grade": 9.410679204532808,
+      "completion_rate": 0.1002710027100271,
+      "confidence": 1.0,
+      "total_climbers": 369,
+      "completed_count": 37
+    },
+    "17": {
+      "french_grade": "8a",
+      "numeric_grade": 10.0,
+      "completion_rate": 0.04065040650406504,
+      "confidence": 1.0,
+      "total_climbers": 369,
+      "completed_count": 15
+    },
+    "18": {
+      "french_grade": "8a",
+      "numeric_grade": 10.0,
+      "completion_rate": 0.04336043360433604,
+      "confidence": 1.0,
+      "total_climbers": 369,
+      "completed_count": 16
+    },
+    "19": {
+      "french_grade": "7a",
+      "numeric_grade": 6.7589393677263585,
+      "completion_rate": 0.34146341463414637,
+      "confidence": 1.0,
+      "total_climbers": 369,
+      "completed_count": 126
+    },
+    "20": {
+      "french_grade": "5c",
+      "numeric_grade": 3.0,
+      "completion_rate": 0.5121951219512195,
+      "confidence": 1.0,
+      "total_climbers": 369,
+      "completed_count": 189
+    },
+    "21": {
+      "french_grade": "5a",
+      "numeric_grade": 1.0,
+      "completion_rate": 0.7831978319783198,
+      "confidence": 1.0,
+      "total_climbers": 369,
+      "completed_count": 289
+    },
+    "22": {
+      "french_grade": "8a",
+      "numeric_grade": 10.0,
+      "completion_rate": 0.04878048780487805,
+      "confidence": 1.0,
+      "total_climbers": 369,
+      "completed_count": 18
+    },
+    "23": {
+      "french_grade": "5a",
+      "numeric_grade": 1.0,
+      "completion_rate": 0.6910569105691057,
+      "confidence": 1.0,
+      "total_climbers": 369,
+      "completed_count": 255
+    },
+    "24": {
+      "french_grade": "7c+",
+      "numeric_grade": 9.658268073938554,
+      "completion_rate": 0.08943089430894309,
+      "confidence": 1.0,
+      "total_climbers": 369,
+      "completed_count": 33
+    },
+    "25": {
+      "french_grade": "5b",
+      "numeric_grade": 2.0,
+      "completion_rate": 0.5501355013550135,
+      "confidence": 1.0,
+      "total_climbers": 369,
+      "completed_count": 203
+    },
+    "26": {
+      "french_grade": "5a",
+      "numeric_grade": 1.0,
+      "completion_rate": 0.8401084010840109,
+      "confidence": 1.0,
+      "total_climbers": 369,
+      "completed_count": 310
+    },
+    "27": {
+      "french_grade": "6c",
+      "numeric_grade": 6.1455182632834715,
+      "completion_rate": 0.4092140921409214,
+      "confidence": 1.0,
+      "total_climbers": 369,
+      "completed_count": 151
+    },
+    "28": {
+      "french_grade": "5a",
+      "numeric_grade": 1.0,
+      "completion_rate": 0.6097560975609756,
+      "confidence": 1.0,
+      "total_climbers": 369,
+      "completed_count": 225
+    },
+    "29": {
+      "french_grade": "7c",
+      "numeric_grade": 8.987079608481721,
+      "completion_rate": 0.12195121951219512,
+      "confidence": 1.0,
+      "total_climbers": 369,
+      "completed_count": 45
+    },
+    "30": {
+      "french_grade": "7c+",
+      "numeric_grade": 9.658268073938554,
+      "completion_rate": 0.08943089430894309,
+      "confidence": 1.0,
+      "total_climbers": 369,
+      "completed_count": 33
+    },
+    "31": {
+      "french_grade": "5a",
+      "numeric_grade": 1.0,
+      "completion_rate": 0.6314363143631436,
+      "confidence": 1.0,
+      "total_climbers": 369,
+      "completed_count": 233
+    },
+    "32": {
+      "french_grade": "6c+",
+      "numeric_grade": 6.724859252976233,
+      "completion_rate": 0.34688346883468835,
+      "confidence": 1.0,
+      "total_climbers": 369,
+      "completed_count": 128
+    },
+    "33": {
+      "french_grade": "8a",
+      "numeric_grade": 10.0,
+      "completion_rate": 0.02710027100271003,
+      "confidence": 1.0,
+      "total_climbers": 369,
+      "completed_count": 10
+    },
+    "34": {
+      "french_grade": "8a",
+      "numeric_grade": 10.0,
+      "completion_rate": 0.04065040650406504,
+      "confidence": 1.0,
+      "total_climbers": 369,
+      "completed_count": 15
+    },
+    "35": {
+      "french_grade": "5b",
+      "numeric_grade": 2.0,
+      "completion_rate": 0.5663956639566395,
+      "confidence": 1.0,
+      "total_climbers": 369,
+      "completed_count": 209
+    },
+    "36": {
+      "french_grade": "7a",
+      "numeric_grade": 6.919312173601126,
+      "completion_rate": 0.3170731707317073,
+      "confidence": 1.0,
+      "total_climbers": 369,
+      "completed_count": 117
+    },
+    "37": {
+      "french_grade": "5a",
+      "numeric_grade": 1.0,
+      "completion_rate": 0.7831978319783198,
+      "confidence": 1.0,
+      "total_climbers": 369,
+      "completed_count": 289
+    },
+    "38": {
+      "french_grade": "7c+",
+      "numeric_grade": 9.469971750812764,
+      "completion_rate": 0.0975609756097561,
+      "confidence": 1.0,
+      "total_climbers": 369,
+      "completed_count": 36
+    },
+    "39": {
+      "french_grade": "5a",
+      "numeric_grade": 1.0,
+      "completion_rate": 0.7967479674796748,
+      "confidence": 1.0,
+      "total_climbers": 369,
+      "completed_count": 294
+    },
+    "40": {
+      "french_grade": "5a",
+      "numeric_grade": 1.0,
+      "completion_rate": 0.7479674796747967,
+      "confidence": 1.0,
+      "total_climbers": 369,
+      "completed_count": 276
+    }
+  },
+  "Boulder Monkeys": {
+    "1": {
+      "french_grade": "5a",
+      "numeric_grade": 1.0,
+      "completion_rate": 0.8942731277533039,
+      "confidence": 1.0,
+      "total_climbers": 227,
+      "completed_count": 203
+    },
+    "2": {
+      "french_grade": "5a",
+      "numeric_grade": 1.0,
+      "completion_rate": 0.8942731277533039,
+      "confidence": 1.0,
+      "total_climbers": 227,
+      "completed_count": 203
+    },
+    "3": {
+      "french_grade": "5a",
+      "numeric_grade": 1.0,
+      "completion_rate": 0.9118942731277533,
+      "confidence": 1.0,
+      "total_climbers": 227,
+      "completed_count": 207
+    },
+    "4": {
+      "french_grade": "5a",
+      "numeric_grade": 1.0,
+      "completion_rate": 0.8942731277533039,
+      "confidence": 1.0,
+      "total_climbers": 227,
+      "completed_count": 203
+    },
+    "5": {
+      "french_grade": "5b",
+      "numeric_grade": 2.0,
+      "completion_rate": 0.5462555066079295,
+      "confidence": 1.0,
+      "total_climbers": 227,
+      "completed_count": 124
+    },
+    "6": {
+      "french_grade": "5b",
+      "numeric_grade": 2.0,
+      "completion_rate": 0.5506607929515418,
+      "confidence": 1.0,
+      "total_climbers": 227,
+      "completed_count": 125
+    },
+    "7": {
+      "french_grade": "5a",
+      "numeric_grade": 1.0,
+      "completion_rate": 0.8722466960352423,
+      "confidence": 1.0,
+      "total_climbers": 227,
+      "completed_count": 198
+    },
+    "8": {
+      "french_grade": "5a",
+      "numeric_grade": 1.0,
+      "completion_rate": 0.8942731277533039,
+      "confidence": 1.0,
+      "total_climbers": 227,
+      "completed_count": 203
+    },
+    "9": {
+      "french_grade": "5a",
+      "numeric_grade": 1.0,
+      "completion_rate": 0.8678414096916299,
+      "confidence": 1.0,
+      "total_climbers": 227,
+      "completed_count": 197
+    },
+    "10": {
+      "french_grade": "5b",
+      "numeric_grade": 2.0,
+      "completion_rate": 0.5462555066079295,
+      "confidence": 1.0,
+      "total_climbers": 227,
+      "completed_count": 124
+    },
+    "11": {
+      "french_grade": "5a",
+      "numeric_grade": 1.0,
+      "completion_rate": 0.8722466960352423,
+      "confidence": 1.0,
+      "total_climbers": 227,
+      "completed_count": 198
+    },
+    "12": {
+      "french_grade": "5b",
+      "numeric_grade": 2.0,
+      "completion_rate": 0.5947136563876652,
+      "confidence": 1.0,
+      "total_climbers": 227,
+      "completed_count": 135
+    },
+    "13": {
+      "french_grade": "5a",
+      "numeric_grade": 1.0,
+      "completion_rate": 0.6740088105726872,
+      "confidence": 1.0,
+      "total_climbers": 227,
+      "completed_count": 153
+    },
+    "14": {
+      "french_grade": "5a",
+      "numeric_grade": 1.0,
+      "completion_rate": 0.6343612334801763,
+      "confidence": 1.0,
+      "total_climbers": 227,
+      "completed_count": 144
+    },
+    "15": {
+      "french_grade": "5a",
+      "numeric_grade": 1.0,
+      "completion_rate": 0.8370044052863436,
+      "confidence": 1.0,
+      "total_climbers": 227,
+      "completed_count": 190
+    },
+    "16": {
+      "french_grade": "5a",
+      "numeric_grade": 1.0,
+      "completion_rate": 0.7797356828193832,
+      "confidence": 1.0,
+      "total_climbers": 227,
+      "completed_count": 177
+    },
+    "17": {
+      "french_grade": "5a",
+      "numeric_grade": 1.0,
+      "completion_rate": 0.8810572687224669,
+      "confidence": 1.0,
+      "total_climbers": 227,
+      "completed_count": 200
+    },
+    "18": {
+      "french_grade": "5b",
+      "numeric_grade": 2.0,
+      "completion_rate": 0.5330396475770925,
+      "confidence": 1.0,
+      "total_climbers": 227,
+      "completed_count": 121
+    },
+    "19": {
+      "french_grade": "5a",
+      "numeric_grade": 1.0,
+      "completion_rate": 0.8590308370044053,
+      "confidence": 1.0,
+      "total_climbers": 227,
+      "completed_count": 195
+    },
+    "20": {
+      "french_grade": "5a",
+      "numeric_grade": 1.0,
+      "completion_rate": 0.6255506607929515,
+      "confidence": 1.0,
+      "total_climbers": 227,
+      "completed_count": 142
+    },
+    "21": {
+      "french_grade": "8a",
+      "numeric_grade": 10.0,
+      "completion_rate": 0.05726872246696035,
+      "confidence": 1.0,
+      "total_climbers": 227,
+      "completed_count": 13
+    },
+    "22": {
+      "french_grade": "7b",
+      "numeric_grade": 8.093418949405612,
+      "completion_rate": 0.18061674008810572,
+      "confidence": 1.0,
+      "total_climbers": 227,
+      "completed_count": 41
+    },
+    "23": {
+      "french_grade": "7a",
+      "numeric_grade": 6.786518920588915,
+      "completion_rate": 0.3303964757709251,
+      "confidence": 1.0,
+      "total_climbers": 227,
+      "completed_count": 75
+    },
+    "24": {
+      "french_grade": "5a",
+      "numeric_grade": 1.0,
+      "completion_rate": 0.8370044052863436,
+      "confidence": 1.0,
+      "total_climbers": 227,
+      "completed_count": 190
+    },
+    "25": {
+      "french_grade": "5a",
+      "numeric_grade": 1.0,
+      "completion_rate": 0.8986784140969163,
+      "confidence": 1.0,
+      "total_climbers": 227,
+      "completed_count": 204
+    },
+    "26": {
+      "french_grade": "5a",
+      "numeric_grade": 1.0,
+      "completion_rate": 0.8237885462555066,
+      "confidence": 1.0,
+      "total_climbers": 227,
+      "completed_count": 187
+    },
+    "27": {
+      "french_grade": "5a",
+      "numeric_grade": 1.0,
+      "completion_rate": 0.9030837004405287,
+      "confidence": 1.0,
+      "total_climbers": 227,
+      "completed_count": 205
+    },
+    "28": {
+      "french_grade": "5a",
+      "numeric_grade": 1.0,
+      "completion_rate": 0.8722466960352423,
+      "confidence": 1.0,
+      "total_climbers": 227,
+      "completed_count": 198
+    },
+    "29": {
+      "french_grade": "5a",
+      "numeric_grade": 1.0,
+      "completion_rate": 0.7665198237885462,
+      "confidence": 1.0,
+      "total_climbers": 227,
+      "completed_count": 174
+    },
+    "30": {
+      "french_grade": "8a",
+      "numeric_grade": 10.0,
+      "completion_rate": 0.048458149779735685,
+      "confidence": 1.0,
+      "total_climbers": 227,
+      "completed_count": 11
+    },
+    "31": {
+      "french_grade": "7b+",
+      "numeric_grade": 8.257855686167359,
+      "completion_rate": 0.16740088105726872,
+      "confidence": 1.0,
+      "total_climbers": 227,
+      "completed_count": 38
+    },
+    "32": {
+      "french_grade": "5a",
+      "numeric_grade": 1.0,
+      "completion_rate": 0.8634361233480177,
+      "confidence": 1.0,
+      "total_climbers": 227,
+      "completed_count": 196
+    },
+    "33": {
+      "french_grade": "8a",
+      "numeric_grade": 10.0,
+      "completion_rate": 0.030837004405286344,
+      "confidence": 0.7,
+      "total_climbers": 227,
+      "completed_count": 7
+    },
+    "34": {
+      "french_grade": "6c+",
+      "numeric_grade": 6.7295671452903845,
+      "completion_rate": 0.3392070484581498,
+      "confidence": 1.0,
+      "total_climbers": 227,
+      "completed_count": 77
+    },
+    "35": {
+      "french_grade": "5b",
+      "numeric_grade": 2.0,
+      "completion_rate": 0.5726872246696035,
+      "confidence": 1.0,
+      "total_climbers": 227,
+      "completed_count": 130
+    },
+    "36": {
+      "french_grade": "7a+",
+      "numeric_grade": 7.380411935085624,
+      "completion_rate": 0.2511013215859031,
+      "confidence": 1.0,
+      "total_climbers": 227,
+      "completed_count": 57
+    },
+    "37": {
+      "french_grade": "5a",
+      "numeric_grade": 1.0,
+      "completion_rate": 0.8458149779735683,
+      "confidence": 1.0,
+      "total_climbers": 227,
+      "completed_count": 192
+    },
+    "38": {
+      "french_grade": "5a",
+      "numeric_grade": 1.0,
+      "completion_rate": 0.9074889867841409,
+      "confidence": 1.0,
+      "total_climbers": 227,
+      "completed_count": 206
+    },
+    "39": {
+      "french_grade": "5a",
+      "numeric_grade": 1.0,
+      "completion_rate": 0.9162995594713657,
+      "confidence": 1.0,
+      "total_climbers": 227,
+      "completed_count": 208
+    },
+    "40": {
+      "french_grade": "5a",
+      "numeric_grade": 1.0,
+      "completion_rate": 0.7533039647577092,
+      "confidence": 1.0,
+      "total_climbers": 227,
+      "completed_count": 171
+    }
+  }
+}

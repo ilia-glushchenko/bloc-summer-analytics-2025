@@ -8,12 +8,24 @@ visualization data.
 """
 
 import json
+import logging
 from collections import defaultdict, Counter
 import matplotlib.pyplot as plt
 from scipy.stats import norm, gaussian_kde, trim_mean
 import numpy as np
 from scipy import stats
 from typing import Dict, List, Tuple, DefaultDict, Any, Optional, Set, Union
+
+# Set up logging
+logger = logging.getLogger(__name__)
+
+# Import the new grading system
+try:
+    from grading_system import FrenchGradingSystem, initialize_grading_system_with_known_data, BoulderGrade
+    GRADING_SYSTEM_AVAILABLE = True
+except ImportError:
+    GRADING_SYSTEM_AVAILABLE = False
+    logger.warning("Grading system module not available. Grade-related functions will be disabled.")
 
 
 def load_results(filename: str = 'results.json', gender: str = 'men') -> List[Dict[str, Any]]:
@@ -375,3 +387,259 @@ def main(gender: str = 'men') -> None:
 
 if __name__ == "__main__":
     main()
+
+
+# ==============================================================================
+# FRENCH GRADING SYSTEM INTEGRATION
+# ==============================================================================
+
+def compute_boulder_grades(data: List[Dict[str, Any]], gender: str = 'men') -> Optional[FrenchGradingSystem]:
+    """
+    Compute French boulder grades for all gyms using the completion rate method.
+    
+    Args:
+        data: List of climber dictionaries from the competition
+        gender: Gender category being analyzed
+    
+    Returns:
+        FrenchGradingSystem instance with calculated grades, or None if grading system unavailable
+    """
+    if not GRADING_SYSTEM_AVAILABLE:
+        logger.warning("Grading system not available. Cannot compute boulder grades.")
+        return None
+    
+    # Compute basic gym statistics
+    gym_boulder_counts, completion_histograms, participation_counts = compute_gym_stats(data)
+    
+    # Initialize and configure the grading system
+    grading_system = initialize_grading_system_with_known_data(gym_boulder_counts, participation_counts)
+    
+    logger.info(f"Computed French boulder grades for {len(grading_system.boulder_grades)} gyms")
+    return grading_system
+
+
+def get_gym_grade_summary(grading_system: FrenchGradingSystem, gym: str) -> Dict[str, Any]:
+    """
+    Get a summary of boulder grades for a specific gym.
+    
+    Args:
+        grading_system: Configured FrenchGradingSystem instance
+        gym: Name of the gym
+    
+    Returns:
+        Dictionary containing grade distribution and statistics
+    """
+    if gym not in grading_system.boulder_grades:
+        return {}
+    
+    boulders = grading_system.boulder_grades[gym]
+    grade_distribution = grading_system.get_gym_grade_distribution(gym)
+    
+    # Calculate statistics
+    grades_numeric = [b.grade_numeric for b in boulders.values()]
+    completion_rates = [b.completion_rate for b in boulders.values()]
+    
+    summary = {
+        'gym': gym,
+        'total_boulders': len(boulders),
+        'grade_distribution': grade_distribution,
+        'difficulty_factor': grading_system.gym_difficulty_factors.get(gym, 1.0),
+        'average_grade_numeric': np.mean(grades_numeric) if grades_numeric else 0,
+        'hardest_boulder': max(boulders.values(), key=lambda b: b.grade_numeric) if boulders else None,
+        'easiest_boulder': min(boulders.values(), key=lambda b: b.grade_numeric) if boulders else None,
+        'average_completion_rate': np.mean(completion_rates) if completion_rates else 0,
+        'grade_range': {
+            'min': min(grade_distribution.keys(), key=lambda g: grading_system.FRENCH_GRADES.get(g, 0)) if grade_distribution else None,
+            'max': max(grade_distribution.keys(), key=lambda g: grading_system.FRENCH_GRADES.get(g, 0)) if grade_distribution else None
+        }
+    }
+    
+    return summary
+
+
+def print_grading_analysis(grading_system: FrenchGradingSystem) -> None:
+    """
+    Print comprehensive grading analysis to console.
+    
+    Args:
+        grading_system: Configured FrenchGradingSystem instance
+    """
+    print("\n" + "="*80)
+    print("FRENCH BOULDER GRADING ANALYSIS")
+    print("="*80)
+    
+    # Print the full report
+    report = grading_system.generate_grading_report()
+    print(report)
+    
+    print("\n" + "-"*60)
+    print("DETAILED GYM SUMMARIES")
+    print("-"*60)
+    
+    for gym in sorted(grading_system.boulder_grades.keys()):
+        summary = get_gym_grade_summary(grading_system, gym)
+        
+        print(f"\n📍 {gym}")
+        print(f"   Total boulders: {summary['total_boulders']}")
+        print(f"   Difficulty factor: {summary['difficulty_factor']:.2f}")
+        print(f"   Average grade: {summary['average_grade_numeric']:.1f}")
+        print(f"   Grade range: {summary['grade_range']['min']} - {summary['grade_range']['max']}")
+        print(f"   Average completion rate: {summary['average_completion_rate']:.1%}")
+        
+        if summary['hardest_boulder']:
+            hardest = summary['hardest_boulder']
+            print(f"   Hardest boulder: #{hardest.boulder_id} ({hardest.french_grade}, {hardest.completion_rate:.1%} completion)")
+        
+        if summary['easiest_boulder']:
+            easiest = summary['easiest_boulder']
+            print(f"   Easiest boulder: #{easiest.boulder_id} ({easiest.french_grade}, {easiest.completion_rate:.1%} completion)")
+
+
+def plot_grade_distributions(grading_system: FrenchGradingSystem, gyms: Optional[List[str]] = None) -> None:
+    """
+    Plot grade distributions for gyms with matplotlib.
+    
+    Args:
+        grading_system: Configured FrenchGradingSystem instance
+        gyms: List of gym names to plot. If None, plots all gyms.
+    """
+    try:
+        import matplotlib.pyplot as plt
+        import numpy as np
+    except ImportError:
+        logger.error("Matplotlib not available for plotting grade distributions")
+        return
+    
+    if gyms is None:
+        gyms = sorted(grading_system.boulder_grades.keys())
+    
+    # Prepare data
+    all_grades = list(grading_system.FRENCH_GRADES.keys())
+    grade_order = sorted(all_grades, key=lambda g: grading_system.FRENCH_GRADES[g])
+    
+    n_gyms = len(gyms)
+    ncols = 2
+    nrows = (n_gyms + 1) // 2
+    
+    fig, axes = plt.subplots(nrows, ncols, figsize=(12, 6 * nrows))
+    if n_gyms == 1:
+        axes = [axes]
+    else:
+        axes = axes.flatten()
+    
+    for idx, gym in enumerate(gyms):
+        distribution = grading_system.get_gym_grade_distribution(gym)
+        
+        # Prepare data for plotting
+        grades_present = []
+        counts = []
+        
+        for grade in grade_order:
+            if grade in distribution:
+                grades_present.append(grade)
+                counts.append(distribution[grade])
+        
+        if not grades_present:
+            continue
+        
+        ax = axes[idx]
+        bars = ax.bar(grades_present, counts, alpha=0.7, color='steelblue')
+        
+        # Add count labels on bars
+        for bar, count in zip(bars, counts):
+            ax.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 0.1,
+                   str(count), ha='center', va='bottom', fontsize=10)
+        
+        ax.set_title(f"Grade Distribution - {gym}\n"
+                    f"(Difficulty Factor: {grading_system.gym_difficulty_factors.get(gym, 1.0):.2f})")
+        ax.set_xlabel("French Grade")
+        ax.set_ylabel("Number of Boulders")
+        ax.grid(True, axis='y', alpha=0.3)
+        
+        # Rotate x-axis labels for better readability
+        ax.tick_params(axis='x', rotation=45)
+    
+    # Remove unused subplots
+    for j in range(idx + 1, len(axes)):
+        fig.delaxes(axes[j])
+    
+    plt.tight_layout()
+    plt.show()
+
+
+def analyze_grade_correlations(grading_system: FrenchGradingSystem) -> Dict[str, float]:
+    """
+    Analyze correlations between completion rates and assigned grades.
+    
+    Args:
+        grading_system: Configured FrenchGradingSystem instance
+    
+    Returns:
+        Dictionary containing correlation statistics
+    """
+    all_completion_rates = []
+    all_grade_numerics = []
+    
+    for gym, boulders in grading_system.boulder_grades.items():
+        for boulder in boulders.values():
+            all_completion_rates.append(boulder.completion_rate)
+            all_grade_numerics.append(boulder.grade_numeric)
+    
+    if len(all_completion_rates) < 2:
+        return {}
+    
+    # Calculate correlations
+    correlation_completion_grade = np.corrcoef(all_completion_rates, all_grade_numerics)[0, 1]
+    
+    # Calculate R-squared
+    r_squared = correlation_completion_grade ** 2
+    
+    return {
+        'completion_rate_vs_grade_correlation': correlation_completion_grade,
+        'r_squared': r_squared,
+        'sample_size': len(all_completion_rates),
+        'grade_range': (min(all_grade_numerics), max(all_grade_numerics)),
+        'completion_rate_range': (min(all_completion_rates), max(all_completion_rates))
+    }
+
+
+def main_with_grading(gender: str = 'men') -> None:
+    """
+    Enhanced main function that includes grading analysis.
+    
+    Args:
+        gender: Gender category to analyze ('men' or 'women'). Defaults to 'men'.
+    """
+    print(f"Loading {gender} competition data...")
+    data = load_results(gender=gender)
+    
+    # Standard statistical analysis
+    gym_boulder_counts, completion_histograms, participation_counts = compute_gym_stats(data)
+    print_gym_stats(gym_boulder_counts, completion_histograms, participation_counts)
+    
+    # French grading analysis
+    grading_system = compute_boulder_grades(data, gender)
+    
+    if grading_system:
+        print_grading_analysis(grading_system)
+        
+        # Export grades
+        grading_system.export_grades_to_json(f"boulder_grades_{gender}.json")
+        
+        # Analyze correlations
+        correlations = analyze_grade_correlations(grading_system)
+        if correlations:
+            print(f"\n📊 GRADING SYSTEM VALIDATION")
+            print(f"   Completion rate vs grade correlation: {correlations['completion_rate_vs_grade_correlation']:.3f}")
+            print(f"   R-squared: {correlations['r_squared']:.3f}")
+            print(f"   Sample size: {correlations['sample_size']} boulders")
+        
+        # Generate plots
+        plot_boulder_popularity(gym_boulder_counts, completion_histograms)
+        plot_gym_completion_distributions(completion_histograms, gender)
+        plot_grade_distributions(grading_system)
+    
+    else:
+        # Fallback to standard plots if grading system unavailable
+        plot_boulder_popularity(gym_boulder_counts, completion_histograms)
+        plot_gym_completion_distributions(completion_histograms, gender)

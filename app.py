@@ -34,6 +34,7 @@ from data_processing import process_data, process_combined_division, ProcessedDa
 from tabs.gym_stats_tab import display_gym_stats
 from tabs.climber_stats_tab import display_climber_stats
 from tabs.path_success_tab import display_path_success, DEFAULT_CLIMBER
+from tabs.grading_tab import display_grading_analysis
 
 # Silence warnings (especially from scikit-learn) - Keep if needed by submodules
 # TODO (Maintainability): Consider identifying and suppressing only specific warnings
@@ -72,21 +73,22 @@ load_css(config.CSS_FILE)
 #-----------------------------------------------------------------------------
 # DEBUGGING AND UTILITIES
 #-----------------------------------------------------------------------------
-def display_session_debug_info() -> None:
-    """
-    Display session debugging information. 
-    Useful for troubleshooting user isolation issues.
-    Only shown when debug mode is enabled.
-    """
-    from utils import get_debug_mode
-    
-    if get_debug_mode():
-        with st.expander("🔧 Session Debug Info", expanded=False):
-            st.write("**Session ID:**", st.session_state.get(config.SESSION_KEY_SESSION_ID, "Not set"))
-            st.write("**Selected Gender:**", st.session_state.get(config.SESSION_KEY_SELECTED_GENDER, "Not set"))
-            st.write("**Selected Climber:**", st.session_state.get(config.SESSION_KEY_SELECTED_CLIMBER, "Not set"))
-            st.write("**Active Tab:**", st.session_state.get(config.SESSION_KEY_ACTIVE_TAB, "Not set"))
-            st.write("**All Session State Keys:**", list(st.session_state.keys()))
+# Removed session debug info function
+# def display_session_debug_info() -> None:
+#     """
+#     Display session debugging information. 
+#     Useful for troubleshooting user isolation issues.
+#     Only shown when debug mode is enabled.
+#     """
+#     from utils import get_debug_mode
+#     
+#     if get_debug_mode():
+#         with st.expander("🔧 Session Debug Info", expanded=False):
+#             st.write("**Session ID:**", st.session_state.get(config.SESSION_KEY_SESSION_ID, "Not set"))
+#             st.write("**Selected Gender:**", st.session_state.get(config.SESSION_KEY_SELECTED_GENDER, "Not set"))
+#             st.write("**Selected Climber:**", st.session_state.get(config.SESSION_KEY_SELECTED_CLIMBER, "Not set"))
+#             st.write("**Active Tab:**", st.session_state.get(config.SESSION_KEY_ACTIVE_TAB, "Not set"))
+#             st.write("**All Session State Keys:**", list(st.session_state.keys()))
 
 #-----------------------------------------------------------------------------
 # MAIN APPLICATION LOGIC
@@ -194,7 +196,7 @@ def main() -> None:
                 st.session_state[config.SESSION_KEY_SELECTED_CLIMBER] = st.session_state[config.SESSION_KEY_SELECTED_CLIMBER_PATH_TAB]
 
         # Create tabs (this needs to be a simple call to set up the UI structure)
-        tab1, tab2, tab3 = st.tabs(["🧗‍♀️ Gyms", "🏆 Rankings", "🛣️ Plan"])
+        tab1, tab2, tab3, tab4 = st.tabs(["🧗‍♀️ Gyms", "🏆 Rankings", "🛣️ Plan", "🎯 Grades"])
         
         # When a user clicks on a tab, update the active tab in session state
         # This doesn't happen automatically, but we can detect which tab to show
@@ -212,7 +214,8 @@ def main() -> None:
                 processed_data.gym_boulder_counts, 
                 processed_data.participation_counts,
                 processed_data.completion_histograms,
-                processed_data.outlier_warning_message
+                processed_data.outlier_warning_message,
+                processed_data
             )
 
         with tab2:
@@ -239,11 +242,17 @@ def main() -> None:
                 processed_data.climbers_df, 
                 processed_data.gym_boulder_counts, 
                 processed_data.participation_counts, 
-                sync_selected_climber
+                sync_selected_climber,
+                processed_data
             )
 
-        # Display debug information if debug mode is enabled
-        display_session_debug_info()
+        with tab4:
+            # Update active tab when this tab is viewed
+            if st.session_state[config.SESSION_KEY_ACTIVE_TAB] != 3:
+                st.session_state[config.SESSION_KEY_ACTIVE_TAB] = 3
+                
+            # Display content
+            display_grading_analysis(processed_data)
 
     except Exception as e:
         # User-friendly error message
