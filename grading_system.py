@@ -45,8 +45,12 @@ class FrenchGradingSystem:
     """
     Implements French boulder grading system based on completion rates.
     
-    Uses calibration points (boulders with known grades) to establish
-    grade boundaries and extrapolates to other boulders and gyms.
+    CORRECTED APPROACH: Uses calibration points (boulders with known grades) to establish
+    absolute difficulty grades. Boulder difficulty is treated as absolute - a 6c+ is 6c+
+    everywhere, regardless of gym. Different completion rates at different gyms reflect
+    population strength differences, not boulder difficulty differences.
+    
+    Uses Boulder 31 at Boulderbar Wienerberg (6c) as primary calibration point.
     """
     
     # French grade scale mapping to numeric values
@@ -86,7 +90,7 @@ class FrenchGradingSystem:
         
         For the reference gym (Boulderbar Wienerberg), it uses interpolation based on:
         - Target CR for 5a (e.g., 0.90) -> Numeric Grade 1.0
-        - Boulder 31's CR -> Numeric Grade 6.5 (for 6c+)
+        - Boulder 31's CR -> Numeric Grade 6.0 (for 6c)
         - Target CR for 8a (e.g., 0.03) -> Numeric Grade 10.0
         
         For other gyms, it currently relies on the reference gym's calculation after
@@ -94,7 +98,7 @@ class FrenchGradingSystem:
 
         Real-world constraints:
         - Boulderbar Wienerberg: max grade 8a (10.0 in numeric scale)
-        - Boulder 31 at Boulderbar Wienerberg: 6c+ (6.5 in numeric scale)
+        - Boulder 31 at Boulderbar Wienerberg: 6c (6.0 in numeric scale)
         - Full range for Boulderbar Wienerberg: 5a to 8a (1.0 to 10.0 in numeric scale)
         """
         REFERENCE_GYM_MAX_GRADE = 10.0  # 8a for Boulderbar Wienerberg
@@ -107,7 +111,7 @@ class FrenchGradingSystem:
 
         # Numeric grades corresponding to these points
         NUMERIC_GRADE_5A = 1.0
-        NUMERIC_GRADE_6C_PLUS = 6.5
+        NUMERIC_GRADE_6C = 6.0
         NUMERIC_GRADE_8A = 10.0
 
         if reference_gym_name == "Boulderbar Wienerberg":
@@ -131,26 +135,26 @@ class FrenchGradingSystem:
                 elif completion_rate <= TARGET_CR_8A:
                     estimated_grade = NUMERIC_GRADE_8A
                 elif completion_rate >= cr_boulder_31: # Between Boulder 31 and 5a
-                    # Interpolate between (cr_boulder_31, NUMERIC_GRADE_6C_PLUS) and (TARGET_CR_5A, NUMERIC_GRADE_5A)
+                    # Interpolate between (cr_boulder_31, NUMERIC_GRADE_6C) and (TARGET_CR_5A, NUMERIC_GRADE_5A)
                     # Avoid division by zero if cr_boulder_31 is very close to TARGET_CR_5A
                     if TARGET_CR_5A - cr_boulder_31 > 1e-6: # Small epsilon to prevent division by zero
-                        estimated_grade = (NUMERIC_GRADE_6C_PLUS +
+                        estimated_grade = (NUMERIC_GRADE_6C +
                                           (completion_rate - cr_boulder_31) *
-                                          (NUMERIC_GRADE_5A - NUMERIC_GRADE_6C_PLUS) /
+                                          (NUMERIC_GRADE_5A - NUMERIC_GRADE_6C) /
                                           (TARGET_CR_5A - cr_boulder_31))
                     else: # If CRs are too close, assign the lower grade of the segment
-                        estimated_grade = NUMERIC_GRADE_5A if completion_rate >= (TARGET_CR_5A + cr_boulder_31) / 2 else NUMERIC_GRADE_6C_PLUS
+                        estimated_grade = NUMERIC_GRADE_5A if completion_rate >= (TARGET_CR_5A + cr_boulder_31) / 2 else NUMERIC_GRADE_6C
 
                 else: # Between 8a and Boulder 31 (completion_rate < cr_boulder_31)
-                    # Interpolate between (TARGET_CR_8A, NUMERIC_GRADE_8A) and (cr_boulder_31, NUMERIC_GRADE_6C_PLUS)
+                    # Interpolate between (TARGET_CR_8A, NUMERIC_GRADE_8A) and (cr_boulder_31, NUMERIC_GRADE_6C)
                     # Avoid division by zero if cr_boulder_31 is very close to TARGET_CR_8A
                     if cr_boulder_31 - TARGET_CR_8A > 1e-6: # Small epsilon
                         estimated_grade = (NUMERIC_GRADE_8A +
                                           (completion_rate - TARGET_CR_8A) *
-                                          (NUMERIC_GRADE_6C_PLUS - NUMERIC_GRADE_8A) /
+                                          (NUMERIC_GRADE_6C - NUMERIC_GRADE_8A) /
                                           (cr_boulder_31 - TARGET_CR_8A))
                     else: # If CRs are too close, assign the lower grade of the segment
-                        estimated_grade = NUMERIC_GRADE_6C_PLUS if completion_rate >= (cr_boulder_31 + TARGET_CR_8A) / 2 else NUMERIC_GRADE_8A
+                        estimated_grade = NUMERIC_GRADE_6C if completion_rate >= (cr_boulder_31 + TARGET_CR_8A) / 2 else NUMERIC_GRADE_8A
                 
                 # Ensure the grade is within the absolute min/max for the reference gym
                 estimated_grade = max(REFERENCE_GYM_MIN_GRADE, min(REFERENCE_GYM_MAX_GRADE, estimated_grade))
@@ -247,28 +251,30 @@ class FrenchGradingSystem:
     def calculate_boulder_grades(self, gym_boulder_counts: Dict[str, Dict[str, int]], 
                                participation_counts: Dict[str, int]) -> None:
         """
-        Calculate French grades for all boulders based on completion rates.
+        Calculate French grades for all boulders based on completion rates using absolute difficulty.
         
-        Uses Boulderbar Wienerberg as reference and extrapolates to other gyms
-        based on overlapping climber performance comparisons.
+        CORRECTED APPROACH: Uses Boulderbar Wienerberg as calibration reference to establish
+        the completion rate to grade mapping, then applies the same absolute grading scale
+        to all gyms. Boulder difficulty is absolute - different completion rates at different
+        gyms reflect population differences, not boulder difficulty differences.
         
         Args:
             gym_boulder_counts: Boulder completion counts per gym
             participation_counts: Total participants per gym
         """
-        logger.info("Calculating boulder grades with direct performance comparison...")
+        logger.info("Calculating boulder grades using absolute difficulty scale...")
         
         reference_gym = "Boulderbar Wienerberg"
         reference_gym_max_grade = 10.0  # 8a constraint
         
-        # Step 1: Calculate grades for reference gym (Boulderbar Wienerberg)
+        # Step 1: Calculate grades for reference gym (Boulderbar Wienerberg) to establish calibration
         if reference_gym in gym_boulder_counts:
             self._calculate_gym_grades(reference_gym, gym_boulder_counts[reference_gym], 
                                      participation_counts.get(reference_gym, 0), 
                                      max_grade=reference_gym_max_grade)
-            logger.info(f"Calculated reference gym {reference_gym} grades")
+            logger.info(f"Established calibration from reference gym {reference_gym}")
         
-        # Step 2: For other gyms, extrapolate based on Wienerberg reference
+        # Step 2: Apply the same absolute grading scale to all other gyms
         for gym, boulder_counts in gym_boulder_counts.items():
             if gym == reference_gym:
                 continue  # Already calculated
@@ -278,7 +284,7 @@ class FrenchGradingSystem:
                 logger.warning(f"No participants found for gym {gym}")
                 continue
             
-            # Calculate grades by comparing to Wienerberg completion rates
+            # CORRECTED: Apply absolute difficulty grading (same scale for all gyms)
             self._calculate_gym_grades_relative_to_reference(
                 gym, boulder_counts, total_participants, reference_gym
             )
@@ -293,24 +299,24 @@ class FrenchGradingSystem:
     def _calculate_gym_grades_relative_to_reference(self, gym: str, boulder_counts: Dict[str, int], 
                                                    total_participants: int, reference_gym: str) -> None:
         """
-        Calculate grades for a gym by comparing completion rates to reference gym.
+        Calculate grades for a gym using absolute difficulty principles.
         
-        For each boulder, we find the equivalent completion rate at the reference gym
-        and use that to determine the grade.
+        CORRECTED APPROACH: Boulder difficulty is absolute - a 6c+ boulder is 6c+ everywhere.
+        We grade based on completion rates using the same scale regardless of gym,
+        acknowledging that different gyms may have different populations which affect
+        completion rates, but this doesn't change the boulder's inherent difficulty.
         """
-        logger.info(f"Calculating {gym} grades relative to {reference_gym}")
+        logger.info(f"Calculating {gym} grades using absolute difficulty scale")
         
         for boulder_id, completed_count in boulder_counts.items():
             completion_rate = completed_count / total_participants
             
-            # Convert this gym's completion rate to equivalent Wienerberg completion rate
-            # This is where we'd use overlapping climber data, but for now use direct mapping
-            equivalent_wienerberg_rate = self._convert_completion_rate_to_reference(
-                completion_rate, gym, reference_gym
-            )
+            # CORRECTED: Use completion rate directly for grading
+            # No more "equivalent Wienerberg rate" conversion - boulder difficulty is absolute
+            # The completion rate at this gym reflects this boulder's difficulty with this population
             
-            # Use the reference gym's grading logic with the equivalent completion rate
-            numeric_grade = self._completion_rate_to_grade_numeric(equivalent_wienerberg_rate, reference_gym)
+            # Use the same grading scale for all gyms - difficulty is absolute
+            numeric_grade = self._completion_rate_to_grade_numeric(completion_rate, reference_gym)
             
             # Convert to French grade
             french_grade = self._numeric_to_french_grade(numeric_grade)
@@ -318,7 +324,7 @@ class FrenchGradingSystem:
             # Calculate confidence based on sample size
             confidence = min(1.0, completed_count / 10)
             
-            # Store the grade
+            # Store the grade - now consistent across all gyms for same completion rates
             boulder_grade = BoulderGrade(
                 boulder_id=boulder_id,
                 gym=gym,
@@ -372,27 +378,32 @@ class FrenchGradingSystem:
         """
         Convert a completion rate from source gym to equivalent rate at reference gym.
         
-        This is where we would use overlapping climber performance data.
-        For now, using simplified gym-level calibration.
-        """
-        # Simplified mapping based on general gym difficulty
-        # In a full implementation, this would use actual overlapping climber data
+        CORRECTED APPROACH: Boulder difficulty is absolute (6c+ is 6c+ everywhere).
+        Completion rate differences between gyms reflect population strength differences,
+        NOT boulder difficulty differences.
         
-        if source_gym == "Boulder Monkeys":
-            # Boulder Monkeys is easier - higher completion rates for same difficulty
-            # To convert to equivalent Wienerberg rate: if Monkeys is easier,
-            # then high completion at Monkeys should be even higher equivalent at Wienerberg
-            return completion_rate / 0.7  # Invert: easier gym means divide by factor
-        elif source_gym == "BigWall":
-            # BigWall is easier - similar to Boulder Monkeys  
-            return completion_rate / 0.85  # Invert: easier gym means divide by factor
-        elif source_gym == "Blockfabrik":
-            # Blockfabrik is harder - lower completion rates for same difficulty
-            # Keep multiplication: harder gym means multiply by factor > 1
-            return completion_rate * 1.4  # About 40% harder
-        else:
-            # Default: same as reference
-            return completion_rate
+        This method now returns the original completion rate without adjustment,
+        as we should grade based on absolute difficulty rather than relative completion rates.
+        """
+        # CORRECTION: Remove gym difficulty factors - boulder difficulty is absolute
+        # Different completion rates at different gyms reflect population differences,
+        # not boulder difficulty differences
+        
+        # For absolute grading, we use the same completion rate regardless of gym
+        # The completion rate reflects how that specific boulder performs with that gym's population
+        return completion_rate
+        
+        # OLD FLAWED LOGIC (removed):
+        # if source_gym == "Boulder Monkeys":
+        #     return completion_rate / 0.7  # This incorrectly assumed easier boulders
+        # elif source_gym == "BigWall":
+        #     return completion_rate / 0.85  # This incorrectly assumed easier boulders
+        # elif source_gym == "Blockfabrik":
+        #     return completion_rate * 1.4  # This incorrectly assumed harder boulders
+        
+        # The correct approach: A boulder with X% completion rate gets graded
+        # based on what X% completion rate means for boulder difficulty,
+        # regardless of which gym it's at
     
     def get_boulder_grade(self, gym: str, boulder_id: str) -> Optional[BoulderGrade]:
         """Get the grade for a specific boulder."""
@@ -465,7 +476,7 @@ def initialize_grading_system_with_known_data(gym_boulder_counts: Dict[str, Dict
     Initialize the grading system with known calibration data and real-world constraints.
     
     Real-world calibration data:
-    - Boulder 31 at Boulderbar Wienerberg = 6c+
+    - Boulder 31 at Boulderbar Wienerberg = 6c
     - Boulderbar Wienerberg maximum grade = 8a (constraint)
     - Boulderbar Wienerberg grade range = 5a to 8a
     
@@ -478,7 +489,7 @@ def initialize_grading_system_with_known_data(gym_boulder_counts: Dict[str, Dict
     """
     grading_system = FrenchGradingSystem()
     
-    # Add known calibration point: Boulder 31 at Boulderbar Wienerberg = 6c+
+    # Add known calibration point: Boulder 31 at Boulderbar Wienerberg = 6c
     # This must be added BEFORE calculate_boulder_grades is called.
     wienerberg_data = gym_boulder_counts.get("Boulderbar Wienerberg", {})
     wienerberg_participants = participation_counts.get("Boulderbar Wienerberg", 0)
@@ -490,14 +501,14 @@ def initialize_grading_system_with_known_data(gym_boulder_counts: Dict[str, Dict
         grading_system.add_calibration_point(
             boulder_id="31",
             gym="Boulderbar Wienerberg", 
-            french_grade="6c+",
+            french_grade="6c",
             completion_rate=completion_rate_31,
             total_climbers=wienerberg_participants,
             completed_count=completed_31
         )
         
         logger.info(f"Real-world constraint: Boulderbar Wienerberg max grade = 8a")
-        logger.info(f"Calibration: Boulder 31 ({grading_system.FRENCH_GRADES['6c+']}) = 6c+ with {completion_rate_31:.1%} CR.")
+        logger.info(f"Calibration: Boulder 31 ({grading_system.FRENCH_GRADES['6c']}) = 6c with {completion_rate_31:.1%} CR.")
     else:
         logger.warning("Boulder 31 data not found or no participants at Boulderbar Wienerberg. "
                        "Grading for Boulderbar Wienerberg will rely on fallback/general calibration.")
